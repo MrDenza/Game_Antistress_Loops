@@ -1,0 +1,85 @@
+/*----------------------- Info SCSS ------------------------
+1. @import "Шаблон.scss";
+2. $ИмяПеременной: Значение;
+3. %ИмяГотовогоКода {Код}
+   @extend ИмяГотовогоКода; - подставляет Код
+4. & - Родительский селектор
+5. @mixin ИмяМикс($значение) {стиль: $значение;}
+   @include ИмяМикс(значение);
+6. + - / * %
+7. == != < > >= <=
+8. and or not @if @else
+9. @ for  from 1 through 5 {
+    . definition-(знак решётки){} {width: 10px * ;} --> .definition-1 {width: 10px; }
+}
+10. @each  in aaa, bbb {
+    .(знак решётки){}-icon {bg-image: url("/img/(знак решётки){}.png")} --> .aaa-icon {bg-image: url ("/img/aaa.png")}
+}
+11. : 5;
+    @while  > 0 {
+    .el-(знак решётки){} {width: 10px*;} --> .el-5 {width: 50px;}
+    : ;
+}
+12. @function abc() { @return 300px; } --> вызов: width: abc();
+13. sin cos
+----------------------------------------------------------*/
+@import "normalize-SCSS";
+/* ------------------------- Style -------------------------- */
+body{
+	height: 100vh;
+	font-family: 'Arsenal', sans-serif;
+	line-height: 32px;
+	font-size: 32px;
+	font-weight: 400;
+	font-style: normal;
+	color: white;
+	position: relative;
+}
+.body_gradient-1{
+	background: linear-gradient(45deg, #000851 0%, #1CB5E0 100%);
+}
+.body_gradient-2{
+	background: linear-gradient(45deg, #0700b8 0%, #00ff88 100%);
+}
+.body_gradient-3{
+	background: linear-gradient(45deg, #C33764 0%, #1D2671 100%);
+}
+.body_gradient-4{
+	background: linear-gradient(45deg, #1CB5E0 0%, #000851 100%);
+}
+.body_gradient-5{
+	background: linear-gradient(45deg, #8E2DE2 0%, #4A00E0 100%);
+}
+.body_animation{
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -2;
+}
+.body__container{
+	box-sizing: border-box;
+	max-width: 1900px;
+	height: 100vh;
+	margin: 0 auto;
+	padding: 30px;
+	position: relative;
+	//display: flex;
+}
+/* -------------------- Аdaptive layout --------------------- */
+@media screen and (max-width: 1200px) {
+}
+
+@media screen and (max-width: 980px) {
+}
+
+@media screen and (max-width: 768px) {
+}
+
+@media screen and (max-width: 640px) {
+}
+
+@media screen and (max-width: 480px) {
+}
+
+@media screen and (max-width: 320px) {
+}

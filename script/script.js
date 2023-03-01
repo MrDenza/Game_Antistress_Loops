@@ -42,7 +42,7 @@ class elemBackground {
 	constructor() {
 		this.elemPosX = randomNum(0)*screenSizeW;
 		this.elemPoxY = randomNum(0)*screenSizeH;
-		this.elemRadius = randomNum(2,1,8); // размер элемента
+		this.elemRadius = randomNum(2,1,5); // размер элемента
 		this.elemAngle = randomNum(1,0.1,2)*Math.PI; // угол движения элемента
 		this.elemSpeed = randomNum(0)/20; // скорость элемента
 	}

@@ -7,6 +7,7 @@ let screenSizeW = (bodyAnimation.width = window.innerWidth); // ширина о�
 let screenSizeH = (bodyAnimation.height = window.innerHeight); // высота окна
 const bodyContainer = document.querySelector('.body__container'); // main
 
+let numElemBackground = 50; // количество элементов анимации фона
 let massElemBackground = []; // массив всех элементов анимации фона
 
 // ---------- Проверка поддержки методов / Полифилы ----------
@@ -73,15 +74,19 @@ function backgroundGame() { // установка градиента фона
 backgroundGame();
 function drawAnimBackground() {
 	bodyAnimationCanvas.clearRect(0,0, screenSizeW, screenSizeH);
-	
-	if(massElemBackground.length < 50){
+	if (screenSizeW < screenSizeH){
+		numElemBackground = 30;
+	}
+	else {
+		numElemBackground = 50;
+	}
+	if(massElemBackground.length < numElemBackground){ // генерация и поддержание нужного количества элементов анимации фона
 		do {
 			massElemBackground.push(new elemBackground());
 		}
-		while (massElemBackground.length > 50);
+		while (massElemBackground.length > numElemBackground);
 	}
-	//animation
-	for(let i = 0; i < massElemBackground.length; i++){
+	for(let i = 0; i < massElemBackground.length; i++){ // изменение координат элементов анимации фона
 		massElemBackground[i].move();
 		massElemBackground[i].show();
 		if(massElemBackground[i].elemPosX < 0 || massElemBackground[i].elemPosX > screenSizeW || massElemBackground[i].elemPoxY < 0 || massElemBackground[i].elemPoxY > screenSizeH){

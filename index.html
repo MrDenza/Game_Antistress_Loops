@@ -7,16 +7,102 @@
 		<link rel="icon" href=""> <!-- иконка 32×32 -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Arsenal&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Jura&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="style/style.css" type="text/css"> <!-- Стили общие -->
 		<title>ENERGY</title>
 	</head>
 	<body>
 		<canvas class="body_animation"></canvas>
 		<main class="body__container">
-
-			ENERGY привет
-
+			<!-- Блок 0 - Анимация загрузки -->
+			<section class="block-loading__box" style="display: none">
+				<!-- Анимация генерируется через JS -->
+			</section>
+			<!-- Блок 1 - Старт -->
+			<section class="block-start__box" style="display: none">
+				<div class="block-start__box-title">
+					<h1 class="block-start__title">ENERGY</h1>
+					<span class="block-start__text">&#169; 2023 Разработка MrDenza</span>
+				</div>
+				<div class="block-start__img-anim">
+					<!-- Заставка генерируется через JS -->
+				</div>
+			</section>
+			<!-- Блок 2 - Авторизация -->
+			<section class="block-login__box" style="display: none" >
+				<h3 class="block-login__title">Авторизация</h3>
+				<form class="block-login__form" action="" method="post" name="login">
+					<div class="block-login__box-input">
+						<label class="block-login__input-text" for="login-input">Введите ваш ник:</label>
+						<input class="block-login__input" type="text" name="nickname" id="login-input">
+						<span class="block-login__img-anim">инфо ошибки</span>
+					</div>
+					<div class="block-login__box-btn">
+						<label for="block-login__btn"></label>
+						<input type="submit" id="block-login__btn" value="Подключиться">
+					</div>
+				</form>
+			</section>
+			<!-- Блок 3 - Игра + меню + переключение уровней -->
+			<section class="block-game__box" >
+				<div class="block-game__box-menu">
+					<svg class="block-game__menu" xmlns="http://www.w3.org/2000/svg"></svg>
+				</div>
+				<div class="block-game__box-game">
+					<!-- Игровое поле генерируется через JS -->
+				</div>
+				<div class="block-game__box-lvl">
+					<div class="block-game__box-lvl-list">
+						<button class="block-game__btn-previous" type="button">
+							<svg class="block-game__btn-previous_img" width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+ 								<path class="svg__btn" d="M4 12L20 12" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+ 								<path class="svg__btn" d="M10 6L4.0625 11.9375V11.9375C4.02798 11.972 4.02798 12.028 4.0625 12.0625V12.0625L10 18" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+ 							</svg>
+						</button>
+						<span class="block-game__lvl-num">#1</span>
+						<button class="block-game__btn-next" type="button">
+							<svg class="block-game__btn-next_img" width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path class="svg__btn" d="M20 12L4 12" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								<path class="svg__btn" d="M14 18L19.9375 12.0625V12.0625C19.972 12.028 19.972 11.972 19.9375 11.9375V11.9375L14 6" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</section>
+			<!-- Блок 4 - Раздел с календарём -->
+			<section class="block-calendar__box" style="display: none">
+				<div class="block-calendar__nav">
+					<button class="block-calendar__btn-back" type="button">
+						<svg class="block-calendar__btn-back_img" width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path class="svg__btn" d="M4 12L20 12" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							<path class="svg__btn" d="M10 6L4.0625 11.9375V11.9375C4.02798 11.972 4.02798 12.028 4.0625 12.0625V12.0625L10 18" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</button>
+					<span class="block-calendar__nav-title">Ежедневное испытание</span>
+				</div>
+				<div class="block-calendar__calendar">
+					<!-- Календарь генерируется через JS -->
+				</div>
+				<div class="block-calendar__btn">
+					<button class="block-calendar__btn-game" type="button">Играть</button>
+					<button class="block-calendar__btn-trophy" type="button">Трофеи</button>
+				</div>
+			</section>
+			<!-- Блок 5 - Комната трофеев -->
+			<section class="block-trophy__box" style="display: none">
+				<div class="block-trophy__nav">
+					<button class="block-trophy__btn-back" type="button">
+						<svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M4 12L20 12" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							<path d="M10 6L4.0625 11.9375V11.9375C4.02798 11.972 4.02798 12.028 4.0625 12.0625V12.0625L10 18" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</button>
+					<span class="block-calendar__nav-title">Комната трофеев</span>
+				</div>
+				<div class="block-trophy__box-trophy">
+					<img src="" alt="" title="">
+				</div>
+			</section>
 		</main>
 		<script src="script/script.js"></script>
 	</body>

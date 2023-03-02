@@ -196,7 +196,7 @@ template {
 body {
  height: 100vh;
  height: calc(var(--vh, 1vh) * 100);
- font-family: "Arsenal", sans-serif;
+ font-family: "Jura", sans-serif;
  line-height: 32px;
  font-size: 32px;
  font-weight: 400;

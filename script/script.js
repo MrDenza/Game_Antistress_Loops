@@ -5,6 +5,7 @@ let bodyAnimation = document.querySelector('.body_animation');// canvas
 let bodyAnimationCanvas = bodyAnimation.getContext('2d'); // canvas холст для рисования
 let screenSizeW = (bodyAnimation.width = window.innerWidth); // ширина окна
 let screenSizeH = (bodyAnimation.height = window.innerHeight); // высота окна
+let vhFix = window.innerHeight * 0.01; // фикс для мобильной версии - вписать по высоте без адресной строки
 const bodyContainer = document.querySelector('.body__container'); // main
 
 let numElemBackground = 50; // количество элементов анимации фона
@@ -60,10 +61,14 @@ class elemBackground {
 	}
 }
 
-// ---------- Слушатели ----------
+// ---------- Слушатели / Адаптация ----------
+document.documentElement.style.setProperty('--vh',`${vhFix}px`); // для фикса адаптации по высоте
+
 window.addEventListener("resize", function() { // изменение размера окна
-	(screenSizeW = bodyAnimation.width = window.innerWidth); 
+	(screenSizeW = bodyAnimation.width = window.innerWidth);
 	(screenSizeH = bodyAnimation.height = window.innerHeight);
+	vhFix = window.innerHeight * 0.01;
+	document.documentElement.style.setProperty('--vh',`${vhFix}px`); // для фикса адаптации по высоте
 	massElemBackground = [];
 });
 

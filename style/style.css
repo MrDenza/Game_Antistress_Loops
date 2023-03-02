@@ -195,6 +195,7 @@ template {
 /* ------------------------- Style -------------------------- */
 body {
  height: 100vh;
+ height: calc(var(--vh, 1vh) * 100);
  font-family: "Arsenal", sans-serif;
  line-height: 32px;
  font-size: 32px;
@@ -231,6 +232,8 @@ body {
 
 .body_animation {
  position: fixed;
+ height: 100vh;
+ height: calc(var(--vh, 1vh) * 100);
  top: 0;
  left: 0;
  z-index: -2;
@@ -241,6 +244,7 @@ body {
          box-sizing: border-box;
  max-width: 1900px;
  height: 100vh;
+ height: calc(var(--vh, 1vh) * 100);
  margin: 0 auto;
  padding: 30px;
  position: relative;

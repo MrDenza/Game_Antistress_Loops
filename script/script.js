@@ -177,7 +177,6 @@ function updateGame(nowTimeFrame) { // физика игры
 				massAnimLoading.mass[(massAnimLoading.num-1)].setAttribute('stroke-width','10');
 			}
 			massAnimLoading.mass[massAnimLoading.num].setAttribute('stroke-width','25');
-			console.log(massAnimLoading.num);
 			massAnimLoading.num++;
 		}
 	}

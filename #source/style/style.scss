@@ -81,7 +81,8 @@ body{
 	}
 	&__box-svg {
 		width: 400px;
-		height: 100%;
+		height: 100vh;
+		height: calc(var(--vh,1vh)*97);
 	}
 	//&__svg {   } // создаёт JS
 	&__text {

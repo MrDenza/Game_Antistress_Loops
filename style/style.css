@@ -268,7 +268,8 @@ body {
 }
 .block-loading__box-svg {
  width: 400px;
- height: 100%;
+ height: 100vh;
+ height: calc(var(--vh, 1vh) * 97);
 }
 .block-loading__text {
  width: 320px;

@@ -12,7 +12,7 @@ let massElemBackground = []; // массив всех элементов ани�
 const svgLink = 'http://www.w3.org/2000/svg';
 let massAnimLoading = {}; // объект всех элементов анимации загрузки
 let lastTimeFrame = 0; // для выполнения функции через определённое время в цикле requestAnimationFrame
-
+let fixNum = 0; // фикс первого запуска функции gameLoop
 
 
 // ---------- Проверка поддержки методов / Полифилы ----------
@@ -148,12 +148,17 @@ function generateAnimLoad() {
 generateAnimLoad();
 // ---------- Игровой цикл ----------
 let load = true;
+
 function gameLoop(nowTimeFrame) { // цикл
-	drawAnimBackground();
-	updateGame(nowTimeFrame);
-	renderGame(nowTimeFrame);
+	if (fixNum === 1) {
+		drawAnimBackground();
+		updateGame(nowTimeFrame);
+		renderGame(nowTimeFrame);
+	}
+	else{
+		fixNum++;
+	}
 	window.requestAnimationFrame(gameLoop);
-	
 }
 gameLoop();
 function updateGame(nowTimeFrame) { // физика игры
@@ -161,7 +166,7 @@ function updateGame(nowTimeFrame) { // физика игры
 	if (load === true){
 		if(!lastTimeFrame || nowTimeFrame - lastTimeFrame >= 500) {
 			lastTimeFrame = nowTimeFrame;
-			massAnimLoading.num++;
+			
 			if (massAnimLoading.num === 9) {
 				massAnimLoading.num = 0;
 			}
@@ -172,6 +177,8 @@ function updateGame(nowTimeFrame) { // физика игры
 				massAnimLoading.mass[(massAnimLoading.num-1)].setAttribute('stroke-width','10');
 			}
 			massAnimLoading.mass[massAnimLoading.num].setAttribute('stroke-width','25');
+			console.log(massAnimLoading.num);
+			massAnimLoading.num++;
 		}
 	}
 }

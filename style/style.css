@@ -478,6 +478,91 @@ body {
       -ms-flex-order: 2;
           order: 2;
  }
+ .block-reg__box-input {
+  padding-bottom: 0;
+ }
+}
+@media screen and (max-width: 850px) and (max-height: 849px) {
+ /* ------------------------ BLOCK 2 ------------------------- */
+ .block-reg__title {
+  font-size: 2rem;
+ }
+ .block-reg__box-svg {
+  height: 50%;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 1 auto;
+          flex: 0 1 auto;
+ }
+}
+@media screen and (max-height: 520px) {
+ html {
+  font-size: 20px;
+ }
+ /* ------------------------ BLOCK 2 ------------------------- */
+ .block-reg__label_size {
+  text-align: left;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 205px;
+          flex: 0 0 205px;
+ }
+ .block-reg__box-input {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+ }
+ .block-reg__text-info {
+  height: 28px;
+ }
+ .block-reg__box-btn {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+ }
+ .block-reg__btn-reg {
+  -webkit-box-ordinal-group: 3;
+      -ms-flex-order: 2;
+          order: 2;
+  margin-bottom: 0;
+ }
+ .block-reg__btn-login {
+  -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+          order: 1;
+ }
+ .block-reg__subtitle {
+  font-size: 1.5rem;
+  padding-bottom: 2vh;
+ }
+ .block-reg__box-svg {
+  height: 55%;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 1 auto;
+          flex: 0 1 auto;
+ }
+ .block-reg__title {
+  font-size: 2.7rem;
+ }
+ .block-reg__form {
+  padding: 10px;
+ }
+ .block-reg__btn-login, .block-reg__btn-reg {
+  width: 175px;
+  margin: 0 10px;
+ }
+ .block-reg__box-form {
+  padding: 0 10px;
+ }
+ .block-reg__info {
+  padding: 0 10px;
+ }
 }
 @media all and (orientation: portrait) {
  html {

@@ -252,6 +252,77 @@ body {
 		&__btn-login {
 			order: 2;
 		}
+		&__box-input {
+			padding-bottom: 0;
+		}
+	}
+}
+@media screen and (max-width: 850px) and (max-height: 849px){
+	/* ------------------------ BLOCK 2 ------------------------- */
+	.block-reg {
+		&__title {
+			font-size: 2rem;
+		}
+		&__box-svg {
+			height: 50%;
+			flex: 0 1 auto;
+		}
+	}
+}
+@media screen and (max-height: 520px) {
+	html {
+		font-size: 20px;
+	}
+	/* ------------------------ BLOCK 2 ------------------------- */
+	.block-reg {
+		&__label {
+			&_size {
+				text-align: left;
+				flex: 0 0 205px;
+			}
+		}
+		&__box-input {
+			flex-direction: row;
+			align-items: stretch;
+		}
+		&__text-info {
+			height: 28px;
+		}
+		&__box-btn {
+			flex-direction: row;
+			align-items: center;
+		}
+		&__btn-reg {
+			order: 2;
+			margin-bottom: 0;
+		}
+		&__btn-login {
+			order: 1;
+		}
+		&__subtitle {
+			font-size: 1.5rem;
+			padding-bottom: 2vh;
+		}
+		&__box-svg {
+			height: 55%;
+			flex: 0 1 auto;
+		}
+		&__title {
+			font-size: 2.7rem;
+		}
+		&__form {
+			padding: 10px;
+		}
+		&__btn-login, &__btn-reg {
+			width: 175px;
+			margin: 0 10px;
+		}
+		&__box-form {
+			padding: 0 10px;
+		}
+		&__info {
+			padding: 0 10px;
+		}
 	}
 }
 @media all and (orientation:portrait) {

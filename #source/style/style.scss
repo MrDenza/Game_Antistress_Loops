@@ -1,65 +1,29 @@
-/*----------------------- Info SCSS ------------------------
-1. @import "Шаблон.scss";
-2. $ИмяПеременной: Значение;
-3. %ИмяГотовогоКода {Код}
-   @extend ИмяГотовогоКода; - подставляет Код
-4. & - Родительский селектор
-5. @mixin ИмяМикс($значение) {стиль: $значение;}
-   @include ИмяМикс(значение);
-6. + - / * %
-7. == != < > >= <=
-8. and or not @if @else
-9. @ for  from 1 through 5 {
-    . definition-(знак решётки){} {width: 10px * ;} --> .definition-1 {width: 10px; }
-}
-10. @each  in aaa, bbb {
-    .(знак решётки){}-icon {bg-image: url("/img/(знак решётки){}.png")} --> .aaa-icon {bg-image: url ("/img/aaa.png")}
-}
-11. : 5;
-    @while  > 0 {
-    .el-(знак решётки){} {width: 10px*;} --> .el-5 {width: 50px;}
-    : ;
-}
-12. @function abc() { @return 300px; } --> вызов: width: abc();
-13. sin cos
-----------------------------------------------------------*/
 @import "normalize-SCSS";
 /* ------------------------- Style -------------------------- */
-body{
-	height: 100vh;
-	height: calc(var(--vh, 1vh) * 100);
+html {
 	font-family: 'Jura', sans-serif;
-	line-height: 32px;
 	font-size: 32px;
 	font-weight: 400;
 	font-style: normal;
 	color: white;
+}
+body {
+	width: 100vw;
+	height: 100vh;
+	height: calc(var(--vh, 1vh) * 100);
 	position: relative;
 }
-.body_gradient-1{
-	background: linear-gradient(45deg, #000851 0%, #1CB5E0 100%);
+.body_gradient {
+	background: linear-gradient(45deg, #1CB5E0 0%, #000851 100%) fixed;
 }
-.body_gradient-2{
-	background: linear-gradient(45deg, #0700b8 0%, #00ff88 100%);
-}
-.body_gradient-3{
-	background: linear-gradient(45deg, #C33764 0%, #1D2671 100%);
-}
-.body_gradient-4{
-	background: linear-gradient(45deg, #1CB5E0 0%, #000851 100%);
-}
-.body_gradient-5{
-	background: linear-gradient(45deg, #8E2DE2 0%, #4A00E0 100%);
-}
-.body_animation{
+.body_animation {
 	position: fixed;
 	height: 100vh;
 	height: calc(var(--vh,1vh)*100);
 	top: 0;
 	left: 0;
-	z-index: -2;
 }
-.body__container{
+.body__container {
 	box-sizing: border-box;
 	max-width: 1900px;
 	height: 100vh;
@@ -67,7 +31,13 @@ body{
 	margin: 0 auto;
 	padding: 30px;
 	position: relative;
-	//display: flex;
+}
+.btn_opacity {
+	background-color: rgba(255,255,255,0.4);
+	transition: background-color 0.5s linear;
+	&:hover {
+		background-color: rgba(255,255,255,1);
+	}
 }
 /* ------------------------ BLOCK 0 ------------------------- */
 .block-loading {
@@ -89,7 +59,7 @@ body{
 		width: 320px;
 		cursor: wait;
 		& b:hover{
-			font-size: 1.1em;
+			font-size: 1.1rem;
 		}
 	}
 }
@@ -111,15 +81,215 @@ body{
 	&__img-anim {
 	}
 }
+/* ------------------------ BLOCK 2 ------------------------- */
+.block-reg {
+	&__box {
+		box-sizing: border-box;
+		max-width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
+	}
+	&__info {
+		width: 40%;
+		height: 100vh;
+		height: calc(var(--vh,1vh)*97);
+		padding: 5px 15px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+	&__title {
+		font-size: 4rem;
+		letter-spacing: 10px;
+		flex: 0 1;
+	}
+	&__box-svg {
+		flex: 0 1 700px;
+	}
+	&__box-form {
+		height: 100vh;
+		height: calc(var(--vh,1vh)*97);
+		padding: 5px 15px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+	&__subtitle {
+		font-size: 2rem;
+		padding-bottom: 10vh;
+	}
+	&__form {
+		box-sizing: border-box;
+		padding: 15px;
+		border: 2px solid var(--colorItem,#0F669F);
+		background-color: rgba(255, 255, 255, 0.2);
+		border-radius: 20px;
+	}
+	&__block-inputs {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	&__box-input {
+		display: flex;
+		padding-bottom: 10px;
+	}
+	&__label-text {
+	}
+	&__label {
+		&_size {
+			width: 320px;
+			flex: 0 0 320px;
+		}
+	}
+	&__for-input {
+		max-width: 360px;
+		flex: 0 1 auto;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+	}
+	&__input {
+		width: 98%;
+		border: 1px solid var(--colorItem,#0F669F);
+		border-radius: 7px;
+		text-transform: uppercase;
+	}
+	&__text-info {
+		width: 100%;
+		height: 52px;
+		font-size: 0.6rem;
+		font-style: italic;
+		color: yellow;
+		text-align: justify;
+	}
+	&__box-btn {
+		display: flex;
+		justify-content: center;
+	}
+	&__btn-login, &__btn-reg{
+		width: 275px;
+		margin: 0 20px;
+		box-sizing: border-box;
+		border: 1px solid var(--colorItem,#0F669F);
+		border-radius: 7px;
+		cursor: pointer;
+		color: var(--colorItem,#0F669F);
+		&:hover {
+			border-color: black;
+		}
+	}
+}
 /* -------------------- Аdaptive layout --------------------- */
+@media screen and (max-width: 1400px) {
+	/* ------------------------ BLOCK 2 ------------------------- */
+	.block-reg {
+		&__title {
+			font-size: 3rem;
+		}
+		&__box-svg {
+			flex: 0 1 500px;
+		}
+	}
+}
+@media screen and (max-width: 1200px) {
+	html{
+		font-size: 28px;
+	}
+	/* ------------------------ BLOCK 2 ------------------------- */
+	.block-reg {
+		&__title {
+			font-size: 3rem;
+		}
+		&__for-input {
+			width: 300px;
+		}
+		&__text-info {
+			height: 46px;
+		}
+		&__label {
+			&_size {
+				width: 285px;
+				flex: 0 0 285px;
+			}
+		}
+		&__box-input {
+			padding-bottom: 6px;
+		}
+	}
+}
+@media screen and (max-width: 1100px) {
+	/* ------------------------ BLOCK 2 ------------------------- */
+	.block-reg {
+		&__label {
+			&_size {
+				text-align: center;
+				width: 100%;
+				flex: 0 0 auto;
+			}
+		}
+		&__subtitle {
+			padding-bottom: 5vh;
+		}
+		&__block-inputs {
+			align-items: center;
+		}
+		&__box-input {
+			flex-direction: column;
+			align-items: stretch;
+		}
+		&__box-btn {
+			flex-direction: column;
+		}
+		&__btn-reg {
+			order: 1;
+			margin-bottom: 20px;
+		}
+		&__btn-login {
+			order: 2;
+		}
+	}
+}
 @media all and (orientation:portrait) {
+	html {
+		font-size: 20px;
+	}
 	/* ------------------------ BLOCK 0 ------------------------- */
 	.block-loading {
 		&__box {
 			flex-direction: column;
 		}
+	}
+	/* ------------------------ BLOCK 2 ------------------------- */
+	.block-reg {
+		&__box {
+			flex-direction: column;
+			justify-content: center;
+		}
+		&__info {
+			width: 100%;
+			height: 100vh;
+			height: calc(var(--vh,1vh)*60);
+			padding: 0;
+			flex: 0 1 200px;
+			flex-direction: row;
+		}
+		&__text-info {
+			font-size: 0.7rem;
+		}
+		&__box-form {
+			flex: 0 1 400px;
+		}
 		&__box-svg {
-			//width: 100%;
+			flex: 0 1 auto;
+		}
+		&__subtitle {
+			font-size: 2rem;
+			padding-bottom: 3vh;
 		}
 	}
 }
@@ -131,10 +301,25 @@ body{
 		}
 		&__text {
 			width: auto;
-			font-size: 1.3em;
+			font-size: 1.3rem;
+		}
+	}
+	/* ------------------------ BLOCK 2 ------------------------- */
+	.block-reg {
+		&__title {
+			font-size: 2.5rem;
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
 
 
 

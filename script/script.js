@@ -1,6 +1,15 @@
 "use strict"; // Строгий режим
 // ----------------------- JavaScript -----------------------
 const bodyBackground = document.body; // body
+let gradientBody = {num: 0,
+	1: ['#000851','#1CB5E0','#0E5F99'],
+	2: ['#0700b8','#00ff88','#0474A2'],
+	3: ['#C33764','#1D2671','#873169'],
+	4: ['#1CB5E0','#000851','#0F669F'],
+	5: ['#8E2DE2','#0700b8','#4414CB'],
+}
+// gradientBody - Градиент фона и цвет значков
+// num - применённый стиль, №:[1 цвет градиента, 2 цвет градиента, цвет значков]
 const bodyAnimation = document.querySelector('.body_animation');// canvas
 const bodyContainer = document.querySelector('.body__container'); // main
 let screenSizeW = (bodyAnimation.width = window.innerWidth); // ширина окна
@@ -10,10 +19,11 @@ let bodyAnimationCanvas = bodyAnimation.getContext('2d'); // canvas холст �
 let numElemBackground = 50; // количество элементов анимации фона
 let massElemBackground = []; // массив всех элементов анимации фона
 const svgLink = 'http://www.w3.org/2000/svg';
-let massAnimLoading = {}; // объект всех элементов анимации загрузки
+let massAnimLamp = {};
+// massAnimLamp объект всех линий анимации Lamp во всех дубликатах, где ключ: 
+// num - счёт от 1 до 9 линий; lot - кол-во дубликатов анимации; mass - массив всех линий
 let lastTimeFrame = 0; // для выполнения функции через определённое время в цикле requestAnimationFrame
 let fixNum = 0; // фикс первого запуска функции gameLoop
-
 
 // ---------- Проверка поддержки методов / Полифилы ----------
 if (!window.requestAnimationFrame) {
@@ -77,8 +87,10 @@ window.addEventListener("resize", function() { // изменение разме�
 });
 
 // ---------- Работа с фоном ----------
-function backgroundGame() { // установка градиента фона
-	bodyBackground.className = `body_gradient-${randomNum(2,1,5)}`;
+function backgroundGame() { // установка градиента фона и цвета для значков
+	gradientBody.num = randomNum(2,1,5);
+	bodyBackground.style.cssText = (`background: linear-gradient(45deg, ${gradientBody[gradientBody.num][0]} 0%, ${gradientBody[gradientBody.num][1]} 100%) fixed;`);
+	document.documentElement.style.setProperty('--colorItem',`${gradientBody[gradientBody.num][2]}`);
 }
 backgroundGame();
 function drawAnimBackground() {
@@ -104,7 +116,7 @@ function drawAnimBackground() {
 	}
 }
 // ---------- Анимация загрузки ----------
-function generateAnimLoad() {
+function generateAnimLamp() {
 	let svgWidth = 400;
 	let svgHeight = 400;
 	let svgAnimLoad = document.createElementNS(svgLink,'svg');
@@ -141,14 +153,17 @@ function generateAnimLoad() {
 	svgGroupImg.appendChild(svgPath);
 	svgAnimLoad.appendChild(svgGroupLine);
 	svgAnimLoad.appendChild(svgGroupImg);
-	document.querySelector('.block-loading__box-svg').appendChild(svgAnimLoad);
-	massAnimLoading.num = 0;
-	massAnimLoading.mass = document.querySelectorAll('.svg-loading_anim-line');
+	return svgAnimLoad;
 }
-generateAnimLoad();
-// ---------- Игровой цикл ----------
-let load = true;
+function addAnimLoad() {
+	document.querySelectorAll('.box-svg-lamp').forEach((item) => {item.appendChild(generateAnimLamp());});
+	massAnimLamp.num = 0;
+	massAnimLamp.mass = document.querySelectorAll('.svg-loading_anim-line');
+	massAnimLamp.lot = massAnimLamp.mass.length/9;
+}
+addAnimLoad();
 
+// ---------- Игровой цикл ----------
 function gameLoop(nowTimeFrame) { // цикл
 	if (fixNum === 1) {
 		drawAnimBackground();
@@ -162,23 +177,21 @@ function gameLoop(nowTimeFrame) { // цикл
 }
 gameLoop();
 function updateGame(nowTimeFrame) { // физика игры
-	
-	if (load === true){
-		if(!lastTimeFrame || nowTimeFrame - lastTimeFrame >= 500) {
-			lastTimeFrame = nowTimeFrame;
-			
-			if (massAnimLoading.num === 9) {
-				massAnimLoading.num = 0;
-			}
-			if (massAnimLoading.num === 0) {
-				massAnimLoading.mass[8].setAttribute('stroke-width','10');
+	if(!lastTimeFrame || nowTimeFrame - lastTimeFrame >= 500) {
+		lastTimeFrame = nowTimeFrame;
+		if (massAnimLamp.num === 9) {
+			massAnimLamp.num = 0;
+		}
+		for (let i = 0; i < massAnimLamp.lot; i++) {
+			if (massAnimLamp.num === 0) {
+				massAnimLamp.mass[8+9*i].setAttribute('stroke-width','10');
 			}
 			else {
-				massAnimLoading.mass[(massAnimLoading.num-1)].setAttribute('stroke-width','10');
+				massAnimLamp.mass[(massAnimLamp.num-1+9*i)].setAttribute('stroke-width','10');
 			}
-			massAnimLoading.mass[massAnimLoading.num].setAttribute('stroke-width','25');
-			massAnimLoading.num++;
+			massAnimLamp.mass[massAnimLamp.num+9*i].setAttribute('stroke-width','25');
 		}
+		massAnimLamp.num++;
 	}
 }
 function renderGame() { // отрисовка игры

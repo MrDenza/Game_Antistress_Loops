@@ -4,6 +4,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<meta http-equiv="cleartype" content="on"/>
 		<link rel="icon" href=""> <!-- иконка 32×32 -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,14 +12,13 @@
 		<link rel="stylesheet" href="style/style.css" type="text/css"> <!-- Стили общие -->
 		<title>ENERGY</title>
 	</head>
-	<body>
+	<body class="body_gradient">
 		<canvas class="body_animation"></canvas>
 		<main class="body__container">
 			<!-- Блок 0 - Анимация загрузки -->
-			<section class="block-loading__box">
-				<div class="block-loading__box-svg">
+			<section class="block-loading__box" style="display: none">
+				<div class="block-loading__box-svg box-svg-lamp">
 					<!-- Анимация генерируется через JS -->
-
 				</div>
 				<h2 class="block-loading__text"><b>З</b><b>а</b><b>г</b><b>р</b><b>у</b><b>з</b><b>к</b><b>а</b> . . .</h2>
 			</section>
@@ -32,18 +32,69 @@
 					<!-- Заставка генерируется через JS -->
 				</div>
 			</section>
-			<!-- Блок 2 - Авторизация -->
+			<!-- Блок 2 - Регистрация -->
+			<section class="block-reg__box">
+				<div class="block-reg__info">
+					<div class="block-reg__box-svg box-svg-lamp">
+						<!-- Анимация генерируется через JS -->
+					</div>
+					<h1 class="block-reg__title"> ENERGY</h1>
+				</div>
+				<div class="block-reg__box-form">
+					<h3 class="block-reg__subtitle">Регистрация</h3>
+					<form class="block-reg__form" action="" method="post" name="reg">
+						<div class="block-reg__block-inputs">
+							<div class="block-reg__box-input">
+								<label class="block-reg__label-text block-reg__label_size" for="reg-input-nick">Введите ваш ник:</label>
+								<div class="block-reg__for-input">
+									<input class="block-reg__input" type="text" name="nickname" id="reg-input-nick">
+									<span class="block-reg__text-info">*Логин может содержать только английские буквы и цифры</span>
+								</div>
+							</div>
+							<div class="block-reg__box-input">
+								<label class="block-reg__label-text block-reg__label_size" for="reg-input-pass">Введите ваш пароль: </label>
+								<div class="block-reg__for-input">
+									<input class="block-reg__input" type="password" name="nickname" id="reg-input-pass">
+									<span class="block-reg__text-info"></span>
+								</div>
+							</div>
+						</div>
+						<div class="block-reg__box-btn">
+							<label for="btn-login"></label>
+							<input class="block-reg__btn-login btn_opacity" type="submit" id="btn-login" onclick="#login" value="Залогиниться">
+							<label for="btn-reg"></label>
+							<input class="block-reg__btn-reg" type="submit" id="btn-reg" value="Создать аккаунт">
+						</div>
+					</form>
+				</div>
+			</section>
+			<!-- Блок 3 - Авторизация -->
 			<section class="block-login__box" style="display: none">
+				<div class="block-login__info">
+					<div class="block-login__box-svg box-svg-lamp">
+						<!-- Анимация генерируется через JS -->
+					</div>
+					<h1 class="block-login__title">ENERGY</h1>
+				</div>
 				<h3 class="block-login__title">Авторизация</h3>
 				<form class="block-login__form" action="" method="post" name="login">
-					<div class="block-login__box-input">
-						<label class="block-login__input-text" for="login-input">Введите ваш ник:</label>
-						<input class="block-login__input" type="text" name="nickname" id="login-input">
-						<span class="block-login__img-anim">инфо ошибки</span>
+					<div class="block-login__box-inputs">
+						<label class="block-login__label-text block-login__label_size" for="login-input-nick">Введите ваш ник:</label>
+						<div class="block-login__box-input">
+							<input class="block-login__input" type="text" name="nickname" id="login-input-nick">
+							<div class="block-login__img-anim">инфо ошибки</div>
+						</div>
+						<label class="block-login__label-text block-login__label_size" for="login-input-pass">Введите ваш пароль:</label>
+						<div class="">
+							<input class="block-login__input" type="text" name="nickname" id="login-input-pass">
+							<div class="block-login__img-anim">инфо ошибки</div>
+						</div>
 					</div>
 					<div class="block-login__box-btn">
-						<label for="block-login__btn"></label>
-						<input type="submit" id="block-login__btn" value="Подключиться">
+						<label for="block-login__btn-reg"></label>
+						<input type="submit" id="block-login__btn-reg" onclick="#reg" value="Зарегистрироваться">
+						<label for="block-login__btn-login"></label>
+						<input type="submit" id="block-login__btn-login" value="Залогиниться">
 					</div>
 				</form>
 			</section>
@@ -108,6 +159,7 @@
 				</div>
 			</section>
 		</main>
+		<script src="script/jquery-3.6.3.min.js"></script>
 		<script src="script/script.js"></script>
 	</body>
 </html>

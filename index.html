@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 	<head>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta http-equiv="content-type" content="text/html, charset=utf-8">
 		<meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<meta http-equiv="cleartype" content="on"/>
@@ -60,10 +60,10 @@
 							</div>
 						</div>
 						<div class="block-reg__box-btn">
-							<label for="btn-login"></label>
-							<input class="block-reg__btn-login btn_opacity" type="submit" id="btn-login" onclick="#login" value="Залогиниться">
-							<label for="btn-reg"></label>
-							<input class="block-reg__btn-reg" type="submit" id="btn-reg" value="Создать аккаунт">
+							<label for="r-btn-login"></label>
+							<input class="block-reg__btn-login btn_opacity" type="submit" id="r-btn-login" onclick="#login" value="Залогиниться">
+							<label for="r-btn-reg"></label>
+							<input class="block-reg__btn-reg" type="submit" id="r-btn-reg" value="Создать аккаунт">
 						</div>
 					</form>
 				</div>
@@ -74,29 +74,35 @@
 					<div class="block-login__box-svg box-svg-lamp">
 						<!-- Анимация генерируется через JS -->
 					</div>
-					<h1 class="block-login__title">ENERGY</h1>
+					<h1 class="block-login__title"> ENERGY</h1>
 				</div>
-				<h3 class="block-login__title">Авторизация</h3>
-				<form class="block-login__form" action="" method="post" name="login">
-					<div class="block-login__box-inputs">
-						<label class="block-login__label-text block-login__label_size" for="login-input-nick">Введите ваш ник:</label>
-						<div class="block-login__box-input">
-							<input class="block-login__input" type="text" name="nickname" id="login-input-nick">
-							<div class="block-login__img-anim">инфо ошибки</div>
+				<div class="block-login__box-form">
+					<h3 class="block-login__subtitle">Авторизация</h3>
+					<form class="block-login__form" action="" method="post" name="reg">
+						<div class="block-login__block-inputs">
+							<div class="block-login__box-input">
+								<label class="block-login__label-text block-login__label_size" for="login-input-nick">Введите ваш ник:</label>
+								<div class="block-login__for-input">
+									<input class="block-login__input" type="text" name="nickname" id="login-input-nick">
+									<span class="block-login__text-info">*Логин может содержать только английские буквы и цифры</span>
+								</div>
+							</div>
+							<div class="block-login__box-input">
+								<label class="block-login__label-text block-login__label_size" for="login-input-pass">Введите ваш пароль: </label>
+								<div class="block-login__for-input">
+									<input class="block-login__input" type="password" name="nickname" id="login-input-pass">
+									<span class="block-login__text-info"></span>
+								</div>
+							</div>
 						</div>
-						<label class="block-login__label-text block-login__label_size" for="login-input-pass">Введите ваш пароль:</label>
-						<div class="">
-							<input class="block-login__input" type="text" name="nickname" id="login-input-pass">
-							<div class="block-login__img-anim">инфо ошибки</div>
+						<div class="block-login__box-btn">
+							<label for="l-btn-reg"></label>
+							<input class="block-login__btn-reg btn_opacity" type="submit" id="l-btn-reg" onclick="#reg" value="Создать аккаунт">
+							<label for="l-btn-login"></label>
+							<input class="block-login__btn-login" type="submit" id="l-btn-login" value="Авторизоваться">
 						</div>
-					</div>
-					<div class="block-login__box-btn">
-						<label for="block-login__btn-reg"></label>
-						<input type="submit" id="block-login__btn-reg" onclick="#reg" value="Зарегистрироваться">
-						<label for="block-login__btn-login"></label>
-						<input type="submit" id="block-login__btn-login" value="Залогиниться">
-					</div>
-				</form>
+					</form>
+				</div>
 			</section>
 			<!-- Блок 3 - Игра + меню + переключение уровней -->
 			<section class="block-game__box" style="display: none">
@@ -108,14 +114,14 @@
 				</div>
 				<div class="block-game__box-lvl">
 					<div class="block-game__box-lvl-list">
-						<button class="block-game__btn-previous" type="button">
+						<button class="block-game__btn-previous" type="button" title="Предыдущий уровень">
 							<svg class="block-game__btn-previous_img" width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
  								<path class="svg__btn" d="M4 12L20 12" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
  								<path class="svg__btn" d="M10 6L4.0625 11.9375V11.9375C4.02798 11.972 4.02798 12.028 4.0625 12.0625V12.0625L10 18" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
  							</svg>
 						</button>
 						<span class="block-game__lvl-num">#1</span>
-						<button class="block-game__btn-next" type="button">
+						<button class="block-game__btn-next" type="button" title="Следующий уровень">
 							<svg class="block-game__btn-next_img" width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 								<path class="svg__btn" d="M20 12L4 12" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 								<path class="svg__btn" d="M14 18L19.9375 12.0625V12.0625C19.972 12.028 19.972 11.972 19.9375 11.9375V11.9375L14 6" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -127,7 +133,7 @@
 			<!-- Блок 4 - Раздел с календарём -->
 			<section class="block-calendar__box" style="display: none">
 				<div class="block-calendar__nav">
-					<button class="block-calendar__btn-back" type="button">
+					<button class="block-calendar__btn-back" type="button" title="Назад">
 						<svg class="block-calendar__btn-back_img" width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path class="svg__btn" d="M4 12L20 12" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 							<path class="svg__btn" d="M10 6L4.0625 11.9375V11.9375C4.02798 11.972 4.02798 12.028 4.0625 12.0625V12.0625L10 18" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -139,14 +145,14 @@
 					<!-- Календарь генерируется через JS -->
 				</div>
 				<div class="block-calendar__btn">
-					<button class="block-calendar__btn-game" type="button">Играть</button>
-					<button class="block-calendar__btn-trophy" type="button">Трофеи</button>
+					<button class="block-calendar__btn-game" type="button" title="Запустить игру">Играть</button>
+					<button class="block-calendar__btn-trophy" type="button" title="Открыть раздел с трофеями">Трофеи</button>
 				</div>
 			</section>
 			<!-- Блок 5 - Комната трофеев -->
 			<section class="block-trophy__box" style="display: none">
 				<div class="block-trophy__nav">
-					<button class="block-trophy__btn-back" type="button">
+					<button class="block-trophy__btn-back" type="button" title="Назад">
 						<svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M4 12L20 12" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 							<path d="M10 6L4.0625 11.9375V11.9375C4.02798 11.972 4.02798 12.028 4.0625 12.0625V12.0625L10 18" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

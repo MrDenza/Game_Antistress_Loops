@@ -549,7 +549,6 @@ body {
 @media screen and (max-height: 520px) and (max-width: 920px) and (orientation: landscape) {
  html {
   font-size: 20px;
-  color: red;
  }
  /* ------------------------ BLOCK 2 ------------------------- */
  .block-reg__label_size {

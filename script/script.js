@@ -4,9 +4,12 @@ const bodyBackground = document.body; // body
 let gradientBody = {num: 0,
 	1: ['#000851','#1CB5E0','#0E5F99'],
 	2: ['#0700b8','#00ff88','#0474A2'],
-	3: ['#C33764','#1D2671','#873169'],
-	4: ['#1CB5E0','#000851','#0F669F'],
-	5: ['#8E2DE2','#0700b8','#4414CB'],
+	3: ['#009b9f','#b922c3','#AB8247'],
+	4: ['#C33764','#1D2671','#873169'],
+	5: ['#1CB5E0','#000851','#0F669F'],
+	6: ['#8E2DE2','#0700b8','#4414CB'],
+	7: ['#c4c813','#7e07a2','#B1933A'],
+	8: ['#31a207','#1372c8','#238C5F'],
 }
 // gradientBody - Градиент фона и цвет значков
 // num - применённый стиль, №:[1 цвет градиента, 2 цвет градиента, цвет значков]
@@ -88,7 +91,7 @@ window.addEventListener("resize", function() { // изменение разме�
 
 // ---------- Работа с фоном ----------
 function backgroundGame() { // установка градиента фона и цвета для значков
-	gradientBody.num = randomNum(2,1,5);
+	gradientBody.num = randomNum(2,1,8);
 	bodyBackground.style.cssText = (`background: linear-gradient(45deg, ${gradientBody[gradientBody.num][0]} 0%, ${gradientBody[gradientBody.num][1]} 100%) fixed;`);
 	document.documentElement.style.setProperty('--colorItem',`${gradientBody[gradientBody.num][2]}`);
 }

@@ -191,6 +191,8 @@ function registerUser(EO) { // форма регистрации
 	EO.preventDefault();
 	let infoErrLogin = document.querySelector('.reg-input-nick');
 	let infoErrPass = document.querySelector('.reg-input-pass');
+	infoErrLogin.textContent = '';
+	infoErrPass.textContent = '';
 	let formLoginR = formInRegPage.elements['nickname'].value.toUpperCase();
 	let formPassR = formInRegPage.elements['password'].value;
 	let errLogin = false;
@@ -228,6 +230,7 @@ function registerUser(EO) { // форма регистрации
 					infoErrLogin.textContent = '*Такой логин существует!';
 					errLogin = true;
 					keyReg = false;
+					cookieUsersInfo = {};
 					break;
 				}
 			}
@@ -236,21 +239,26 @@ function registerUser(EO) { // форма регистрации
 				infoErrPass.textContent = '';
 				cookieUsersInfo[formLoginR] = {pass: formPassR, lvl: 0}; // {'ник':{pass:'пароль',lvl: значение}, ...}
 				storeAjaxInfo('reg');
-				console.log('Регистрируем пользователя...'); 
+				console.log('GAME: Регистрируем пользователя...'); 
 			}
-			//cookieUsersInfo = {};
 			return false;
 		}
 	}
 }
 function logInUser(EO) {
 	EO = EO || window.event;
+	EO.preventDefault();
 	let infoErrLogin = document.querySelector('.login-input-nick');
 	let infoErrPass = document.querySelector('.login-input-pass');
+	infoErrLogin.textContent = '';
+	infoErrPass.textContent = '';
 	let formLoginR = formInLogPage.elements['nickname'].value.toUpperCase();
 	let formPassR = formInLogPage.elements['password'].value;
 	let errLogin = false;
 	let errPass = false;
+	if (keyLog === false) {
+		cookieUsersInfo = {};
+	}
 	// проверка заполненных полей
 	if (formPassR.length === 0 || formPassR.length > 10) {
 		infoErrPass.textContent = '*Поле не заполнено, либо переполнено (>10 символов)!';
@@ -267,34 +275,44 @@ function logInUser(EO) {
 		infoErrLogin.textContent = '';
 	}
 	if (errLogin === false && errPass === false) {
-		console.log('Выполняем запрос информации с сервера...');
-		// запрос ajax списка пользователей
-		//cookieUsersInfo = ('users');
-		for (let cookieUsersInfoKey in cookieUsersInfo) {
-			if (formLoginR === cookieUsersInfoKey) {
-				errLogin = false;
-				break;
+		if (keyLog === false) { // 1 вызов функции - сначала запросим информацию
+			restoreInfo('login');
+			keyLog = true;
+			return false;
+		}
+		if (keyLog === true) { // 2 вызов функции AJAXом когда пришли данные
+			for (let cookieUsersInfoKey in cookieUsersInfo) {
+				if (formLoginR === cookieUsersInfoKey) {
+					errLogin = false;
+					keyLog = false;
+					break;
+				}
+				errLogin = true;
 			}
-			errLogin = true;
-		}
-		if (errLogin === true) {
-			infoErrLogin.textContent = '*Такого логина не существует!';
-		}
-		if (errLogin === false && cookieUsersInfo[formLoginR].pass !== formPassR){
-			infoErrPass.textContent = '*Пароль неверный!';
-			errPass = true;
-		}
-		if (errLogin === false && errPass === false){
-			infoErrLogin.textContent = '';
-			infoErrPass.textContent = '';
-			//cookieUsersInfo = {};
-			console.log('Авторизация пользователя...');
-			// код авторизации
-			// сохранить пользователя отдельно
+			if (errLogin === true) {
+				infoErrLogin.textContent = '*Такого логина не существует!';
+			}
+			if (errLogin === false && cookieUsersInfo[formLoginR].pass !== formPassR){
+				infoErrPass.textContent = '*Пароль неверный!';
+				cookieUsersInfo = {};
+				keyLog = false;
+				errPass = true;
+			}
+			if (errLogin === false && errPass === false){
+				infoErrLogin.textContent = '';
+				infoErrPass.textContent = '';
+				console.log('GAME: Авторизация пользователя...');
+				userInfo = {nick: (formLoginR), pass: (cookieUsersInfo[formLoginR].pass), lvl: (cookieUsersInfo[formLoginR].lvl)};
+				// !!! сохранить пользователя отдельно !!!
+				// !!! смена раздела !!!
+				document.querySelector('.js-login_visible').style.display = 'none'; // временно
+				document.querySelector('.js-start_visible').style.display = 'flex'; // временно
+				cookieUsersInfo = {};
+				console.log('GAME: Пользователь авторизован!');
+			}
+			return false;
 		}
 	}
-	EO.preventDefault();
-	return false;
 }
 // ---------- Работа с AJAX ----------
 // Работа с записью по AJAX = временная блокировка изменения БД
@@ -346,6 +364,7 @@ function updateReady(callresult) {
 		if (keyReg === true) {
 			// !!! меняем обратно на раздел с которого ушли !!!
 			keyReg = false;
+			cookieUsersInfo = {};
 			document.querySelector('.js-loading_visible').style.display = 'none'; // временно
 			document.querySelector('.js-start_visible').style.display = 'flex'; // временно
 		}
@@ -441,7 +460,7 @@ function gameLoop(nowTimeFrame) { // цикл
 }
 gameLoop();
 function updateGame(nowTimeFrame) { // физика игры
-	if(!lastTimeFrame || nowTimeFrame - lastTimeFrame >= 100) {
+	if(!lastTimeFrame || nowTimeFrame - lastTimeFrame >= 500) {
 		lastTimeFrame = nowTimeFrame;
 		if (massAnimLamp.num === 9) {
 			massAnimLamp.num = 0;

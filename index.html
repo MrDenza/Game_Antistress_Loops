@@ -16,14 +16,14 @@
 		<canvas class="body_animation"></canvas>
 		<main class="body__container">
 			<!-- Блок 0 - Анимация загрузки -->
-			<section class="block-loading__box" style="display: none">
+			<section class="block-loading__box js-loading_visible" style="display: none">
 				<div class="block-loading__box-svg box-svg-lamp">
 					<!-- Анимация генерируется через JS -->
 				</div>
-				<h2 class="block-loading__text"><b>З</b><b>а</b><b>г</b><b>р</b><b>у</b><b>з</b><b>к</b><b>а</b> . . .</h2>
+				<h2 class="block-loading__text"><b>З</b><b>а</b><b>г</b><b>р</b><b>у</b><b>з</b><b>к</b><b>а</b> <b>.</b> <b>.</b> <b>.</b></h2>
 			</section>
 			<!-- Блок 1 - Старт -->
-			<section class="block-start__box" style="display: none">
+			<section class="block-start__box js-start_visible" style="display: none">
 				<div class="block-start__box-title">
 					<h1 class="block-start__title">ENERGY</h1>
 					<span class="block-start__text">&#169; 2023 Разработка MrDenza</span>
@@ -33,79 +33,79 @@
 				</div>
 			</section>
 			<!-- Блок 2 - Регистрация -->
-			<section class="block-reg__box">
-				<div class="block-reg__info">
-					<div class="block-reg__box-svg box-svg-lamp">
+			<section class="block-connect__box js-reg_visible">
+				<div class="block-connect__info">
+					<div class="block-connect__box-svg box-svg-lamp">
 						<!-- Анимация генерируется через JS -->
 					</div>
-					<h1 class="block-reg__title"> ENERGY</h1>
+					<h1 class="block-connect__title"> ENERGY</h1>
 				</div>
-				<div class="block-reg__box-form">
-					<h3 class="block-reg__subtitle">Регистрация</h3>
-					<form class="block-reg__form" action="" method="post" name="reg">
-						<div class="block-reg__block-inputs">
-							<div class="block-reg__box-input">
-								<label class="block-reg__label-text block-reg__label_size" for="reg-input-nick">Введите ваш ник:</label>
-								<div class="block-reg__for-input">
-									<input class="block-reg__input" type="text" name="nickname" id="reg-input-nick">
-									<span class="block-reg__text-info">*Логин может содержать только английские буквы и цифры</span>
+				<div class="block-connect__box-form">
+					<h3 class="block-connect__subtitle">Регистрация</h3>
+					<form class="block-connect__form" action="#" method="post" name="reg-form">
+						<div class="block-connect__block-inputs">
+							<div class="block-connect__box-input">
+								<label class="block-connect__label-text block-connect__label_size" for="reg-input-nick">Введите ваш ник:</label>
+								<div class="block-connect__for-input">
+									<input class="block-connect__input" type="text" name="nickname" id="reg-input-nick">
+									<span class="block-connect__text-info reg-input-nick"></span>
 								</div>
 							</div>
-							<div class="block-reg__box-input">
-								<label class="block-reg__label-text block-reg__label_size" for="reg-input-pass">Введите ваш пароль: </label>
-								<div class="block-reg__for-input">
-									<input class="block-reg__input" type="password" name="nickname" id="reg-input-pass">
-									<span class="block-reg__text-info"></span>
+							<div class="block-connect__box-input">
+								<label class="block-connect__label-text block-connect__label_size" for="reg-input-pass">Введите ваш пароль: </label>
+								<div class="block-connect__for-input">
+									<input class="block-connect__input" type="password" name="password" id="reg-input-pass">
+									<span class="block-connect__text-info reg-input-pass"></span>
 								</div>
 							</div>
 						</div>
-						<div class="block-reg__box-btn">
+						<div class="block-connect__box-btn">
 							<label for="r-btn-login"></label>
-							<input class="block-reg__btn-login btn_opacity" type="submit" id="r-btn-login" onclick="#login" value="Залогиниться">
+							<input class="block-connect__btn1-login btn_opacity" type="button" id="r-btn-login" onclick="#login" value="Залогиниться">
 							<label for="r-btn-reg"></label>
-							<input class="block-reg__btn-reg" type="submit" id="r-btn-reg" value="Создать аккаунт">
+							<input class="block-connect__btn1-reg" type="submit" id="r-btn-reg" value="Создать аккаунт">
 						</div>
 					</form>
 				</div>
 			</section>
 			<!-- Блок 3 - Авторизация -->
-			<section class="block-login__box" style="display: none">
-				<div class="block-login__info">
-					<div class="block-login__box-svg box-svg-lamp">
+			<section class="block-connect__box js-login_visible" style="display: none">
+				<div class="block-connect__info">
+					<div class="block-connect__box-svg box-svg-lamp">
 						<!-- Анимация генерируется через JS -->
 					</div>
-					<h1 class="block-login__title"> ENERGY</h1>
+					<h1 class="block-connect__title"> ENERGY</h1>
 				</div>
-				<div class="block-login__box-form">
-					<h3 class="block-login__subtitle">Авторизация</h3>
-					<form class="block-login__form" action="" method="post" name="reg">
-						<div class="block-login__block-inputs">
-							<div class="block-login__box-input">
-								<label class="block-login__label-text block-login__label_size" for="login-input-nick">Введите ваш ник:</label>
-								<div class="block-login__for-input">
-									<input class="block-login__input" type="text" name="nickname" id="login-input-nick">
-									<span class="block-login__text-info">*Логин может содержать только английские буквы и цифры</span>
+				<div class="block-connect__box-form">
+					<h3 class="block-connect__subtitle">Авторизация</h3>
+					<form class="block-connect__form" action="" method="post" name="login-form">
+						<div class="block-connect__block-inputs">
+							<div class="block-connect__box-input">
+								<label class="block-connect__label-text block-connect__label_size" for="login-input-nick">Введите ваш ник:</label>
+								<div class="block-connect__for-input">
+									<input class="block-connect__input" type="text" name="nickname" id="login-input-nick">
+									<span class="block-connect__text-info login-input-nick"></span>
 								</div>
 							</div>
-							<div class="block-login__box-input">
-								<label class="block-login__label-text block-login__label_size" for="login-input-pass">Введите ваш пароль: </label>
-								<div class="block-login__for-input">
-									<input class="block-login__input" type="password" name="nickname" id="login-input-pass">
-									<span class="block-login__text-info"></span>
+							<div class="block-connect__box-input">
+								<label class="block-connect__label-text block-connect__label_size" for="login-input-pass">Введите ваш пароль: </label>
+								<div class="block-connect__for-input">
+									<input class="block-connect__input" type="password" name="password" id="login-input-pass">
+									<span class="block-connect__text-info login-input-pass"></span>
 								</div>
 							</div>
 						</div>
-						<div class="block-login__box-btn">
+						<div class="block-connect__box-btn">
 							<label for="l-btn-reg"></label>
-							<input class="block-login__btn-reg btn_opacity" type="submit" id="l-btn-reg" onclick="#reg" value="Создать аккаунт">
+							<input class="block-connect__btn2-reg btn_opacity" type="button" id="l-btn-reg" onclick="#reg" value="Создать аккаунт">
 							<label for="l-btn-login"></label>
-							<input class="block-login__btn-login" type="submit" id="l-btn-login" value="Авторизоваться">
+							<input class="block-connect__btn2-login" type="submit" id="l-btn-login" value="Авторизоваться">
 						</div>
 					</form>
 				</div>
 			</section>
 			<!-- Блок 3 - Игра + меню + переключение уровней -->
-			<section class="block-game__box" style="display: none">
+			<section class="block-game__box js-game_visible" style="display: none">
 				<div class="block-game__box-menu">
 					<svg class="block-game__menu" xmlns="http://www.w3.org/2000/svg"></svg>
 				</div>
@@ -131,7 +131,7 @@
 				</div>
 			</section>
 			<!-- Блок 4 - Раздел с календарём -->
-			<section class="block-calendar__box" style="display: none">
+			<section class="block-calendar__box js-calendar_visible" style="display: none">
 				<div class="block-calendar__nav">
 					<button class="block-calendar__btn-back" type="button" title="Назад">
 						<svg class="block-calendar__btn-back_img" width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -150,7 +150,7 @@
 				</div>
 			</section>
 			<!-- Блок 5 - Комната трофеев -->
-			<section class="block-trophy__box" style="display: none">
+			<section class="block-trophy__box js-trophy_visible" style="display: none">
 				<div class="block-trophy__nav">
 					<button class="block-trophy__btn-back" type="button" title="Назад">
 						<svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

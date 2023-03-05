@@ -212,6 +212,8 @@ body {
  -webkit-transition: background-color 0.5s linear;
  -o-transition: background-color 0.5s linear;
  transition: background-color 0.5s linear;
+ -webkit-transform: translateZ(0);
+         transform: translateZ(0);
 }
 .btn_opacity:hover {
  background-color: rgb(255, 255, 255);
@@ -241,14 +243,15 @@ body {
 .block-loading__text {
  width: 320px;
  cursor: wait;
+ text-align: center;
 }
 .block-loading__text b:hover {
- font-size: 1.1rem;
+ color: lightgray;
 }
 
 /* ------------------------ BLOCK 1 ------------------------- */
-/* ------------------------ BLOCK 2 ------------------------- */
-.block-reg__box {
+/* ----------------------- BLOCK 2-3 ------------------------ */
+.block-connect__box {
  -webkit-box-sizing: border-box;
          box-sizing: border-box;
  max-width: 100%;
@@ -263,7 +266,7 @@ body {
      -ms-flex-align: center;
          align-items: center;
 }
-.block-reg__info {
+.block-connect__info {
  width: 40%;
  height: 100vh;
  height: calc(var(--vh, 1vh) * 97);
@@ -282,19 +285,19 @@ body {
      -ms-flex-pack: center;
          justify-content: center;
 }
-.block-reg__title {
+.block-connect__title {
  font-size: 4rem;
  letter-spacing: 10px;
  -webkit-box-flex: 0;
      -ms-flex: 0 1;
          flex: 0 1;
 }
-.block-reg__box-svg {
+.block-connect__box-svg {
  -webkit-box-flex: 0;
      -ms-flex: 0 1 700px;
          flex: 0 1 700px;
 }
-.block-reg__box-form {
+.block-connect__box-form {
  height: 100vh;
  height: calc(var(--vh, 1vh) * 97);
  padding: 5px 15px;
@@ -312,11 +315,11 @@ body {
      -ms-flex-direction: column;
          flex-direction: column;
 }
-.block-reg__subtitle {
+.block-connect__subtitle {
  font-size: 2rem;
  padding-bottom: 10vh;
 }
-.block-reg__form {
+.block-connect__form {
  -webkit-box-sizing: border-box;
          box-sizing: border-box;
  padding: 15px;
@@ -324,7 +327,7 @@ body {
  background-color: rgba(255, 255, 255, 0.2);
  border-radius: 20px;
 }
-.block-reg__block-inputs {
+.block-connect__block-inputs {
  display: -webkit-box;
  display: -ms-flexbox;
  display: flex;
@@ -336,19 +339,19 @@ body {
      -ms-flex-align: center;
          align-items: center;
 }
-.block-reg__box-input {
+.block-connect__box-input {
  display: -webkit-box;
  display: -ms-flexbox;
  display: flex;
  padding-bottom: 10px;
 }
-.block-reg__label_size {
+.block-connect__label_size {
  width: 320px;
  -webkit-box-flex: 0;
      -ms-flex: 0 0 320px;
          flex: 0 0 320px;
 }
-.block-reg__for-input {
+.block-connect__for-input {
  max-width: 360px;
  -webkit-box-flex: 0;
      -ms-flex: 0 1 auto;
@@ -363,13 +366,13 @@ body {
  -ms-flex-wrap: wrap;
      flex-wrap: wrap;
 }
-.block-reg__input {
+.block-connect__input {
  width: 98%;
  border: 1px solid var(--colorItem, #0F669F);
  border-radius: 7px;
  text-transform: uppercase;
 }
-.block-reg__text-info {
+.block-connect__text-info {
  width: 100%;
  height: 52px;
  font-size: 0.6rem;
@@ -377,7 +380,7 @@ body {
  color: yellow;
  text-align: justify;
 }
-.block-reg__box-btn {
+.block-connect__box-btn {
  display: -webkit-box;
  display: -ms-flexbox;
  display: flex;
@@ -385,7 +388,7 @@ body {
      -ms-flex-pack: center;
          justify-content: center;
 }
-.block-reg__btn-login, .block-reg__btn-reg {
+.block-connect__btn1-login, .block-connect__btn1-reg, .block-connect__btn2-login, .block-connect__btn2-reg {
  width: 275px;
  margin: 0 20px;
  -webkit-box-sizing: border-box;
@@ -395,17 +398,17 @@ body {
  cursor: pointer;
  color: var(--colorItem, #0F669F);
 }
-.block-reg__btn-login:hover, .block-reg__btn-reg:hover {
+.block-connect__btn1-login:hover, .block-connect__btn1-reg:hover, .block-connect__btn2-login:hover, .block-connect__btn2-reg:hover {
  border-color: black;
 }
 
 /* -------------------- Аdaptive layout --------------------- */
 @media screen and (max-width: 1400px) {
- /* ------------------------ BLOCK 2 ------------------------- */
- .block-reg__title {
+ /* ----------------------- BLOCK 2-3 ------------------------ */
+ .block-connect__title {
   font-size: 3rem;
  }
- .block-reg__box-svg {
+ .block-connect__box-svg {
   -webkit-box-flex: 0;
       -ms-flex: 0 1 500px;
           flex: 0 1 500px;
@@ -415,44 +418,44 @@ body {
  html {
   font-size: 28px;
  }
- /* ------------------------ BLOCK 2 ------------------------- */
- .block-reg__title {
+ /* ----------------------- BLOCK 2-3 ------------------------ */
+ .block-connect__title {
   font-size: 3rem;
  }
- .block-reg__for-input {
+ .block-connect__for-input {
   width: 300px;
  }
- .block-reg__text-info {
+ .block-connect__text-info {
   height: 46px;
  }
- .block-reg__label_size {
+ .block-connect__label_size {
   width: 285px;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 285px;
           flex: 0 0 285px;
  }
- .block-reg__box-input {
+ .block-connect__box-input {
   padding-bottom: 6px;
  }
 }
 @media screen and (max-width: 1100px) {
- /* ------------------------ BLOCK 2 ------------------------- */
- .block-reg__label_size {
+ /* ----------------------- BLOCK 2-3 ------------------------ */
+ .block-connect__label_size {
   text-align: center;
   width: 100%;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
  }
- .block-reg__subtitle {
+ .block-connect__subtitle {
   padding-bottom: 5vh;
  }
- .block-reg__block-inputs {
+ .block-connect__block-inputs {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
  }
- .block-reg__box-input {
+ .block-connect__box-input {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -461,33 +464,44 @@ body {
       -ms-flex-align: stretch;
           align-items: stretch;
  }
- .block-reg__box-btn {
+ .block-connect__box-btn {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
  }
- .block-reg__btn-reg {
+ .block-connect__btn1-reg {
   -webkit-box-ordinal-group: 2;
       -ms-flex-order: 1;
           order: 1;
   margin-bottom: 20px;
  }
- .block-reg__btn-login {
+ .block-connect__btn1-login {
   -webkit-box-ordinal-group: 3;
       -ms-flex-order: 2;
           order: 2;
  }
- .block-reg__box-input {
+ .block-connect__btn2-reg {
+  -webkit-box-ordinal-group: 3;
+      -ms-flex-order: 2;
+          order: 2;
+ }
+ .block-connect__btn2-login {
+  -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+          order: 1;
+  margin-bottom: 20px;
+ }
+ .block-connect__box-input {
   padding-bottom: 0;
  }
 }
 @media screen and (max-width: 850px) and (max-height: 849px) and (orientation: landscape) {
- /* ------------------------ BLOCK 2 ------------------------- */
- .block-reg__title {
+ /* ----------------------- BLOCK 2-3 ------------------------ */
+ .block-connect__title {
   font-size: 2rem;
  }
- .block-reg__box-svg {
+ .block-connect__box-svg {
   height: 50%;
   -webkit-box-flex: 0;
       -ms-flex: 0 1 auto;
@@ -505,8 +519,8 @@ body {
       -ms-flex-direction: column;
           flex-direction: column;
  }
- /* ------------------------ BLOCK 2 ------------------------- */
- .block-reg__box {
+ /* ----------------------- BLOCK 2-3 ------------------------ */
+ .block-connect__box {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -515,7 +529,7 @@ body {
       -ms-flex-pack: center;
           justify-content: center;
  }
- .block-reg__info {
+ .block-connect__info {
   width: 100%;
   height: 100vh;
   height: calc(var(--vh, 1vh) * 60);
@@ -528,20 +542,20 @@ body {
       -ms-flex-direction: row;
           flex-direction: row;
  }
- .block-reg__text-info {
+ .block-connect__text-info {
   font-size: 0.7rem;
  }
- .block-reg__box-form {
+ .block-connect__box-form {
   -webkit-box-flex: 0;
       -ms-flex: 0 1 400px;
           flex: 0 1 400px;
  }
- .block-reg__box-svg {
+ .block-connect__box-svg {
   -webkit-box-flex: 0;
       -ms-flex: 0 1 auto;
           flex: 0 1 auto;
  }
- .block-reg__subtitle {
+ .block-connect__subtitle {
   font-size: 2rem;
   padding-bottom: 3vh;
  }
@@ -550,14 +564,14 @@ body {
  html {
   font-size: 20px;
  }
- /* ------------------------ BLOCK 2 ------------------------- */
- .block-reg__label_size {
+ /* ----------------------- BLOCK 2-3 ------------------------ */
+ .block-connect__label_size {
   text-align: left;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 205px;
           flex: 0 0 205px;
  }
- .block-reg__box-input {
+ .block-connect__box-input {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
@@ -566,10 +580,10 @@ body {
       -ms-flex-align: stretch;
           align-items: stretch;
  }
- .block-reg__text-info {
+ .block-connect__text-info {
   height: 28px;
  }
- .block-reg__box-btn {
+ .block-connect__box-btn {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
@@ -578,41 +592,52 @@ body {
       -ms-flex-align: center;
           align-items: center;
  }
- .block-reg__btn-reg {
+ .block-connect__btn1-reg {
   -webkit-box-ordinal-group: 3;
       -ms-flex-order: 2;
           order: 2;
   margin-bottom: 0;
  }
- .block-reg__btn-login {
+ .block-connect__btn1-login {
   -webkit-box-ordinal-group: 2;
       -ms-flex-order: 1;
           order: 1;
  }
- .block-reg__subtitle {
+ .block-connect__btn2-reg {
+  -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+          order: 1;
+ }
+ .block-connect__btn2-login {
+  -webkit-box-ordinal-group: 3;
+      -ms-flex-order: 2;
+          order: 2;
+  margin-bottom: 0;
+ }
+ .block-connect__subtitle {
   font-size: 1.5rem;
   padding-bottom: 2vh;
  }
- .block-reg__box-svg {
+ .block-connect__box-svg {
   height: 55%;
   -webkit-box-flex: 0;
       -ms-flex: 0 1 auto;
           flex: 0 1 auto;
  }
- .block-reg__title {
+ .block-connect__title {
   font-size: 2.7rem;
  }
- .block-reg__form {
+ .block-connect__form {
   padding: 10px;
  }
- .block-reg__btn-login, .block-reg__btn-reg {
+ .block-connect__btn1-login, .block-connect__btn1-reg, .block-connect__btn2-login, .block-connect__btn2-reg {
   width: 175px;
   margin: 0 10px;
  }
- .block-reg__box-form {
+ .block-connect__box-form {
   padding: 0 10px;
  }
- .block-reg__info {
+ .block-connect__info {
   padding: 0 10px;
  }
 }
@@ -625,8 +650,8 @@ body {
   width: auto;
   font-size: 1.3rem;
  }
- /* ------------------------ BLOCK 2 ------------------------- */
- .block-reg__title {
+ /* ----------------------- BLOCK 2-3 ------------------------ */
+ .block-connect__title {
   font-size: 2.5rem;
  }
 }

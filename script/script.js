@@ -4,7 +4,7 @@ const bodyBackground = document.body; // body
 let gradientBody = {num: 0,
 	1: ['#000851','#1CB5E0','#0E5F99'],
 	2: ['#0700b8','#00ff88','#0474A2'],
-	3: ['#009b9f','#b922c3','#AB8247'],
+	3: ['#009b9f','#b922c3','#436FAC'],
 	4: ['#C33764','#1D2671','#873169'],
 	5: ['#1CB5E0','#000851','#0F669F'],
 	6: ['#8E2DE2','#0700b8','#4414CB'],
@@ -27,6 +27,24 @@ let massAnimLamp = {};
 // num - счёт от 1 до 9 линий; lot - кол-во дубликатов анимации; mass - массив всех линий
 let lastTimeFrame = 0; // для выполнения функции через определённое время в цикле requestAnimationFrame
 let fixNum = 0; // фикс первого запуска функции gameLoop
+const formInRegPage = document.forms['reg-form']; // форма на странице регистрации
+const formInLogPage = document.forms['login-form']; // форма на странице залогиниться
+
+const ajaxHandlerScript = "https://fe.it-academy.by/AjaxStringStorage2.php"; // серверный скрип с БД https://fe.it-academy.by/AjaxStringStorage2.php
+const ajaxListUsers = 'DUDEVICH_GAME_LOOPS_USERS'; // хранение информации пользователей {'ник':{pass:'пароль',lvl: значение}, ...}
+let updateAjaxPassword; // пароль доступа к БД
+let userInfo = {}; // данные пользователя {nick:'ник',pass:'пароль',lvl: значение}
+let cookieUsersInfo = {}; // переменная временного хранения списка пользователей
+let keyReg = false; // ключ раздела "регистрация" для асинхронного выполнения регистрации с разделом "загрузка"
+let keyLog = false; // ключ раздела "логин" для асинхронного выполнения авторизации с разделом "загрузка"
+let keyAjax = false; // служебный ключ AJAX
+let cookieUrlPage;
+// !!! перенести слушатели и элементы в другое место и добавить снятие слушателей !!!
+
+let formLoginL = formInLogPage.elements['nickname'];
+let formPassL = formInLogPage.elements['password'];
+formInRegPage.addEventListener('submit',registerUser,false);
+formInLogPage.addEventListener('submit',logInUser,false);
 
 // ---------- Проверка поддержки методов / Полифилы ----------
 if (!window.requestAnimationFrame) {
@@ -81,7 +99,7 @@ class elemBackground {
 // ---------- Слушатели / Адаптация ----------
 document.documentElement.style.setProperty('--vh',`${vhFix}px`); // для фикса адаптации по высоте
 
-window.addEventListener("resize", function() { // изменение размера окна
+window.addEventListener('resize', function() { // изменение размера окна
 	(screenSizeW = bodyAnimation.width = window.innerWidth);
 	(screenSizeH = bodyAnimation.height = window.innerHeight);
 	vhFix = screenSizeH * 0.01;
@@ -124,6 +142,7 @@ function generateAnimLamp() {
 	let svgHeight = 400;
 	let svgAnimLoad = document.createElementNS(svgLink,'svg');
 	setAttributes(svgAnimLoad,{'class':'block-loading__svg',
+		'style':'transform: translateZ(0)',
 		'width':`100%`,
 		'height':`100%`,
 		'viewBox':`0 0 ${svgWidth} ${svgHeight}`,
@@ -165,7 +184,249 @@ function addAnimLoad() {
 	massAnimLamp.lot = massAnimLamp.mass.length/9;
 }
 addAnimLoad();
+// ---------- Работа с формами ----------
 
+function registerUser(EO) { // форма регистрации
+	EO = EO || window.event;
+	EO.preventDefault();
+	let infoErrLogin = document.querySelector('.reg-input-nick');
+	let infoErrPass = document.querySelector('.reg-input-pass');
+	let formLoginR = formInRegPage.elements['nickname'].value.toUpperCase();
+	let formPassR = formInRegPage.elements['password'].value;
+	let errLogin = false;
+	let errPass = false;
+	if (keyReg === false) {
+		cookieUsersInfo = {};
+	}
+	// валидация пароля
+	if (formPassR.length < 4 || formPassR.length > 10) {
+		infoErrPass.textContent = '*Длина пароля от 4 до 10 символов!';
+		errPass = true;
+	}
+	else if (formPassR.search(/^[0-9]+$/) === -1) {
+		infoErrPass.textContent = '*Пароль может состоять только из цифр!';
+		errPass = true;
+	}
+	// валидация логина и проверка на его наличие в базе
+	if (formLoginR.length < 3 || formLoginR.length > 10) {
+		infoErrLogin.textContent = '*Длина логина от 3 до 10 символов!';
+		errLogin = true;
+	}
+	else if (formLoginR.search(/^[A-Z0-9]+$/) === -1) {
+		infoErrLogin.textContent = '*Логин может содержать только цифры и англ. буквы!';
+		errLogin = true;
+	}
+	else {
+		if (keyReg === false) { // 1 вызов функции - сначала запросим информацию
+			restoreInfo('reg');
+			keyReg = true;
+			return false;
+		}
+		if (keyReg === true) { // 2 вызов функции AJAXом когда пришли данные
+			for (let cookieUsersInfoKey in cookieUsersInfo) {
+				if (formLoginR === cookieUsersInfoKey) {
+					infoErrLogin.textContent = '*Такой логин существует!';
+					errLogin = true;
+					keyReg = false;
+					break;
+				}
+			}
+			if (errLogin === false && errPass === false) {
+				infoErrLogin.textContent = '';
+				infoErrPass.textContent = '';
+				cookieUsersInfo[formLoginR] = {pass: formPassR, lvl: 0}; // {'ник':{pass:'пароль',lvl: значение}, ...}
+				storeAjaxInfo('reg');
+				console.log('Регистрируем пользователя...'); 
+			}
+			//cookieUsersInfo = {};
+			return false;
+		}
+	}
+}
+function logInUser(EO) {
+	EO = EO || window.event;
+	let infoErrLogin = document.querySelector('.login-input-nick');
+	let infoErrPass = document.querySelector('.login-input-pass');
+	let formLoginR = formInLogPage.elements['nickname'].value.toUpperCase();
+	let formPassR = formInLogPage.elements['password'].value;
+	let errLogin = false;
+	let errPass = false;
+	// проверка заполненных полей
+	if (formPassR.length === 0 || formPassR.length > 10) {
+		infoErrPass.textContent = '*Поле не заполнено, либо переполнено (>10 символов)!';
+		errPass = true;
+	}
+	else {
+		infoErrPass.textContent = '';
+	}
+	if (formLoginR.length === 0 || formLoginR.length > 10) {
+		infoErrLogin.textContent = '*Поле не заполнено, либо переполнено (>10 символов)!';
+		errLogin = true;
+	}
+	else {
+		infoErrLogin.textContent = '';
+	}
+	if (errLogin === false && errPass === false) {
+		console.log('Выполняем запрос информации с сервера...');
+		// запрос ajax списка пользователей
+		//cookieUsersInfo = ('users');
+		for (let cookieUsersInfoKey in cookieUsersInfo) {
+			if (formLoginR === cookieUsersInfoKey) {
+				errLogin = false;
+				break;
+			}
+			errLogin = true;
+		}
+		if (errLogin === true) {
+			infoErrLogin.textContent = '*Такого логина не существует!';
+		}
+		if (errLogin === false && cookieUsersInfo[formLoginR].pass !== formPassR){
+			infoErrPass.textContent = '*Пароль неверный!';
+			errPass = true;
+		}
+		if (errLogin === false && errPass === false){
+			infoErrLogin.textContent = '';
+			infoErrPass.textContent = '';
+			//cookieUsersInfo = {};
+			console.log('Авторизация пользователя...');
+			// код авторизации
+			// сохранить пользователя отдельно
+		}
+	}
+	EO.preventDefault();
+	return false;
+}
+// ---------- Работа с AJAX ----------
+// Работа с записью по AJAX = временная блокировка изменения БД
+// параметры: type - 'reg' - запрос для раздела "регистрация"
+//					 'login' - запрос для раздела "логин"
+function storeAjaxInfo(type) {
+	updateAjaxPassword = Math.random();
+	//cookieUrlPage =
+	if (type === 'reg') {
+		// !!! меняем на раздел загрузка !!!
+		document.querySelector('.js-reg_visible').style.display = 'none'; // временно
+		document.querySelector('.js-loading_visible').style.display = 'flex'; // временно
+	}
+	if (type === 'login') {
+		// !!! меняем на раздел загрузка !!!
+		document.querySelector('.js-login_visible').style.display = 'none'; // временно
+		document.querySelector('.js-loading_visible').style.display = 'flex'; // временно
+	}
+	console.log('AJAX: Подключение к серверу...');
+	$.ajax({
+		url: ajaxHandlerScript, type: 'POST', cache: false, dataType:'json',
+		data: {f: 'LOCKGET', n: ajaxListUsers, p: updateAjaxPassword},
+		success: writeAjaxUsers, error: errorAjaxUsers, timeout: 10000 
+	});
+}
+// Запись данных по AJAX
+function writeAjaxUsers(callresult) {
+	if (callresult.error != undefined)
+		alert(callresult.error +'\n\n Ошибка №1 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
+		// !!! добавить переход на главную страницу !!!
+	else {
+		console.log('AJAX: Запись нового пользователя...');
+		$.ajax({
+			url: ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
+			data: {f: 'UPDATE', n: ajaxListUsers,
+				v: JSON.stringify(cookieUsersInfo), p: updateAjaxPassword},
+			success: updateReady, error: errorAjaxUsers, timeout: 10000
+		});
+	}
+}
+// Статус записи данных по AJAX
+function updateReady(callresult) {
+	if (callresult.error != undefined) {
+		alert(callresult.error +'\n\n Ошибка №2 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
+		// !!! добавить переход на главную страницу !!!
+	}
+	else {
+		console.log('AJAX: Пользователь успешно добавлен!');
+		if (keyReg === true) {
+			// !!! меняем обратно на раздел с которого ушли !!!
+			keyReg = false;
+			document.querySelector('.js-loading_visible').style.display = 'none'; // временно
+			document.querySelector('.js-start_visible').style.display = 'flex'; // временно
+		}
+		if (keyLog === true) {
+			// !!! меняем обратно на раздел с которого ушли !!!
+			document.querySelector('.js-loading_visible').style.display = 'none'; // временно
+			document.querySelector('.js-start_visible').style.display = 'flex'; // временно
+		}
+	}
+}
+// Чтение данных по AJAX
+// параметры: type - 'reg' - запрос для раздела "регистрация"
+//					 'login' - запрос для раздела "логин"
+function restoreInfo(type) {
+	//cookieUrlPage =
+	if (type === 'reg') {
+		// !!! меняем на раздел загрузка !!!
+		document.querySelector('.js-reg_visible').style.display = 'none'; // временно
+		document.querySelector('.js-loading_visible').style.display = 'flex'; // временно
+	}
+	if (type === 'login') {
+		// !!! меняем на раздел загрузка !!!
+		document.querySelector('.js-login_visible').style.display = 'none'; // временно
+		document.querySelector('.js-loading_visible').style.display = 'flex'; // временно
+	}
+	console.log('AJAX: Запрашиваем данные...');
+	$.ajax({
+		url: ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
+		data: {f: 'READ',n: ajaxListUsers},
+		success: readReady, error: errorAjaxUsers, timeout: 10000
+	});
+}
+// работа с полученными данными по AJAX
+function readReady(callresult) {
+	if (callresult.error != undefined) {
+		alert(callresult.error +'\n\n Ошибка №3 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
+		// !!! добавить переход на главную страницу !!!
+	}
+	else if (callresult.result != "") {
+		console.log('AJAX: Данные получены!')
+		cookieUsersInfo = JSON.parse(callresult.result);
+		if (keyReg === true) {
+			// !!! меняем обратно на раздел с которого ушли !!!
+			document.querySelector('.js-loading_visible').style.display = 'none'; // временно
+			document.querySelector('.js-reg_visible').style.display = 'flex'; // временно
+			registerUser();
+		}
+		if (keyLog === true) {
+			// !!! меняем обратно на раздел с которого ушли !!!
+			document.querySelector('.js-loading_visible').style.display = 'none'; // временно
+			document.querySelector('.js-login_visible').style.display = 'flex'; // временно
+			logInUser();
+		}
+		if (keyAjax === true) {
+			console.log(cookieUsersInfo);
+			keyAjax = false;
+		}
+	}
+}
+// ошибка AJAX
+function errorAjaxUsers(jqXHR,statusStr,errorStr) {
+	alert(statusStr+' '+errorStr +'\n\n Ошибка №4 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
+	// !!! добавить переход на главную страницу !!!
+}
+// ---------- Служебные функции AJAX ----------
+// В случаи пустого содержимого или для обнуления БД выполняем: 
+// !!! Добавить проверку админа !!!
+function startAjax() {
+	updateAjaxPassword = Math.random();
+	cookieUsersInfo = {};
+	console.log('AJAX: Выполняем сброс...');
+	$.ajax({
+		url: ajaxHandlerScript, type: 'POST', cache: false, dataType:'json',
+		data: {f: 'LOCKGET', n: ajaxListUsers, p: updateAjaxPassword},
+		success: writeAjaxUsers, error: errorAjaxUsers, timeout: 10000
+	});
+}
+function getInfoAjax() {
+	keyAjax = true;
+	restoreInfo();
+}
 // ---------- Игровой цикл ----------
 function gameLoop(nowTimeFrame) { // цикл
 	if (fixNum === 1) {
@@ -180,7 +441,7 @@ function gameLoop(nowTimeFrame) { // цикл
 }
 gameLoop();
 function updateGame(nowTimeFrame) { // физика игры
-	if(!lastTimeFrame || nowTimeFrame - lastTimeFrame >= 500) {
+	if(!lastTimeFrame || nowTimeFrame - lastTimeFrame >= 100) {
 		lastTimeFrame = nowTimeFrame;
 		if (massAnimLamp.num === 9) {
 			massAnimLamp.num = 0;
@@ -202,7 +463,7 @@ function renderGame() { // отрисовка игры
 }
 
 // ---------- Вспомогательные функции ----------
-// РАНДОМ - type: 0 = обычный рандом (нецелочисленное), 
+// randomNum - type: 0 = обычный рандом (нецелочисленное),
 // 				  1 = от min до max (нецелочисленное), 
 //				  2 = от min до max (целочисленное)
 function randomNum(type, min, max) {
@@ -227,7 +488,7 @@ function randomNum(type, min, max) {
 	}
 	return num;
 }
-// Массовая установка атрибутов элементу
+// setAttributes - массовая установка атрибутов элементу
 // вызов: setAttributes(элемент,{'атрибут1':'значение1', ...})
 function setAttributes(el, attrs) {
 	for(let key in attrs) {
@@ -235,3 +496,9 @@ function setAttributes(el, attrs) {
 	}
 }
 // ----------  ----------
+/*
+document.querySelector('.block-connect__box').style.display = 'none';
+document.querySelector('.block-loading__box').style.display = 'flex';
+document.querySelector('.block-loading__box').style.display = 'none';
+document.querySelector('.block-connect__box').style.display = 'flex';
+ */

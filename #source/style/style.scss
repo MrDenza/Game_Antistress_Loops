@@ -67,19 +67,64 @@ body {
 }
 /* ------------------------ BLOCK 1 ------------------------- */
 .block-start {
+	//box-svg-lamp {  } // создаёт JS
 	&__box {
+		box-sizing: border-box;
+		max-width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
 	}
-
+	&__box-svg {
+		max-width: 700px;
+		height: 100vh;
+		height: calc(var(--vh,1vh)*97);
+	}
 	&__box-title {
+		text-align: center;
 	}
-
 	&__title {
+		font-size: 5rem;
 	}
-
 	&__text {
+		margin-top: 10px;
 	}
-
-	&__img-anim {
+	&__btn {
+		width: 275px;
+		margin: 50px 0;
+		box-sizing: border-box;
+		border: 1px solid var(--colorItem,#0F669F);
+		border-radius: 7px;
+		cursor: pointer;
+		color: var(--colorItem,#0F669F);
+		&:hover {
+			border-color: black;
+		}
+	}
+	&__copyright {
+		font-size: 0.7rem;
+		margin: 0;
+	}
+	&__link {
+		color: white;
+		text-decoration: none;
+		position: relative;
+		&:after {
+			display: block;
+			content: "";
+			background-color: white;
+			height: 1px;
+			width: 0;
+			position: absolute;
+			left: 50%;
+			top: 105%;
+			transition: width .5s ease-in-out;
+			transform: translateX(-50%);
+		}
+		&:hover:after {
+			width: 100%;
+		}
 	}
 }
 /* ----------------------- BLOCK 2-3 ------------------------ */
@@ -256,10 +301,7 @@ body {
 			order: 1;
 			margin-bottom: 20px;
 		}
-		&__btn1-login {
-			order: 2;
-		}
-		&__btn2-reg {
+		&__link {
 			order: 2;
 		}
 		&__btn2-login {
@@ -272,6 +314,18 @@ body {
 	}
 }
 @media screen and (max-width: 850px) and (max-height: 849px) and (orientation:landscape) {
+	/* ------------------------ BLOCK 1 ------------------------- */
+	.block-start {
+		&__title {
+			font-size: 4rem;
+		}
+		&__btn {
+			margin: 20px 0;
+		}
+		&__text {
+			margin-top: 0;
+		}
+	}
 	/* ----------------------- BLOCK 2-3 ------------------------ */
 	.block-connect {
 		&__title {
@@ -289,6 +343,13 @@ body {
 	}
 	/* ------------------------ BLOCK 0 ------------------------- */
 	.block-loading {
+		&__box {
+			flex-direction: column;
+		}
+	}
+
+	/* ------------------------ BLOCK 1 ------------------------- */
+	.block-start {
 		&__box {
 			flex-direction: column;
 		}
@@ -327,6 +388,18 @@ body {
 	html {
 		font-size: 20px;
 	}
+	/* ------------------------ BLOCK 1 ------------------------- */
+	.block-start {
+		&__title {
+			font-size: 4rem;
+		}
+		&__btn {
+			margin: 20px 0;
+		}
+		&__text {
+			margin-top: 0;
+		}
+	}
 	/* ----------------------- BLOCK 2-3 ------------------------ */
 	.block-connect {
 		&__label {
@@ -350,10 +423,7 @@ body {
 			order: 2;
 			margin-bottom: 0;
 		}
-		&__btn1-login {
-			order: 1;
-		}
-		&__btn2-reg {
+		&__link {
 			order: 1;
 		}
 		&__btn2-login {
@@ -395,6 +465,21 @@ body {
 		&__text {
 			width: auto;
 			font-size: 1.3rem;
+		}
+	}
+	/* ------------------------ BLOCK 1 ------------------------- */
+	.block-start {
+		&__box-svg {
+			height: auto;
+		}
+		&__title {
+			font-size: 4rem;
+		}
+		&__btn {
+			margin: 20px 0;
+		}
+		&__text {
+			margin-top: 0;
 		}
 	}
 	/* ----------------------- BLOCK 2-3 ------------------------ */

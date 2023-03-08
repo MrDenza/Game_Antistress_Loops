@@ -1,6 +1,8 @@
 "use strict"; // Строгий режим
 // ----------------------- JavaScript -----------------------
 const bodyBackground = document.body; // body
+// gradientBody - Градиент фона и цвет значков
+// num - применённый стиль, №:[1 цвет градиента, 2 цвет градиента, цвет значков]
 let gradientBody = {num: 0,
 	1: ['#000851','#1CB5E0','#0E5F99'],
 	2: ['#0700b8','#00ff88','#0474A2'],
@@ -11,8 +13,6 @@ let gradientBody = {num: 0,
 	7: ['#c4c813','#7e07a2','#B1933A'],
 	8: ['#31a207','#1372c8','#238C5F'],
 }
-// gradientBody - Градиент фона и цвет значков
-// num - применённый стиль, №:[1 цвет градиента, 2 цвет градиента, цвет значков]
 const bodyAnimation = document.querySelector('.body_animation');// canvas
 const bodyContainer = document.querySelector('.body__container'); // main
 let screenSizeW = (bodyAnimation.width = window.innerWidth); // ширина окна
@@ -22,9 +22,9 @@ let bodyAnimationCanvas = bodyAnimation.getContext('2d'); // canvas холст �
 let numElemBackground = 50; // количество элементов анимации фона
 let massElemBackground = []; // массив всех элементов анимации фона
 const svgLink = 'http://www.w3.org/2000/svg';
-let massAnimLamp = {};
-// massAnimLamp объект всех линий анимации Lamp во всех дубликатах, где ключ: 
+// massAnimLamp объект всех линий анимации Lamp во всех дубликатах, где ключ:
 // num - счёт от 1 до 9 линий; lot - кол-во дубликатов анимации; mass - массив всех линий
+let massAnimLamp = {};
 let lastTimeFrame = 0; // для выполнения функции через определённое время в цикле requestAnimationFrame
 let fixNum = 0; // фикс первого запуска функции gameLoop
 const formInRegPage = document.forms['reg-form']; // форма на странице регистрации
@@ -38,13 +38,8 @@ let cookieUsersInfo = {}; // переменная временного хран�
 let keyReg = false; // ключ раздела "регистрация" для асинхронного выполнения регистрации с разделом "загрузка"
 let keyLog = false; // ключ раздела "логин" для асинхронного выполнения авторизации с разделом "загрузка"
 let keyAjax = false; // служебный ключ AJAX
-let cookieUrlPage;
-// !!! перенести слушатели и элементы в другое место и добавить снятие слушателей !!!
 
-let formLoginL = formInLogPage.elements['nickname'];
-let formPassL = formInLogPage.elements['password'];
-formInRegPage.addEventListener('submit',registerUser,false);
-formInLogPage.addEventListener('submit',logInUser,false);
+let cookieUrl = {}; // переменная временного хранения закладки URL
 
 // ---------- Проверка поддержки методов / Полифилы ----------
 if (!window.requestAnimationFrame) {
@@ -75,6 +70,7 @@ if (!window.cancelAnimationFrame) {
 }
 
 // ---------- Классы ----------
+// Класс для анимации фона
 class elemBackground {
 	constructor() {
 		this.elemPosX = randomNum(0)*screenSizeW;
@@ -97,23 +93,51 @@ class elemBackground {
 }
 
 // ---------- Слушатели / Адаптация ----------
-document.documentElement.style.setProperty('--vh',`${vhFix}px`); // для фикса адаптации по высоте
-
-window.addEventListener('resize', function() { // изменение размера окна
+// Слушатель изменения URL страницы
+window.onhashchange = updateVisibleHtmlPage;
+// Фикс адаптации по высоте
+document.documentElement.style.setProperty('--vh',`${vhFix}px`);
+// Слушатель изменения размера окна
+window.addEventListener('resize', function() {
 	(screenSizeW = bodyAnimation.width = window.innerWidth);
 	(screenSizeH = bodyAnimation.height = window.innerHeight);
 	vhFix = screenSizeH * 0.01;
 	document.documentElement.style.setProperty('--vh',`${vhFix}px`); // для фикса адаптации по высоте
 	massElemBackground = [];
 });
+// Обновление слушателей страницы
+function updateListener(sectionPage) {
+	// удаляем слушателей
+	document.querySelector('.block-start__btn').removeEventListener('click',openGame,false);
+	formInRegPage.removeEventListener('submit',registerUser,false);
+	formInLogPage.removeEventListener('submit',logInUser,false);
+	// добавляем слушателей
+	switch (sectionPage) {
+		case 'start':
+			document.querySelector('.block-start__btn').addEventListener('click',openGame,false);
+			break;
+		case 'reg':
+			formInRegPage.addEventListener('submit',registerUser,false);
+			break;
+		case 'login':
+			formInLogPage.addEventListener('submit',logInUser,false);
+			break;
+		case 'game':
+			break;
+		case 'calendar':
+			break;
+	}
+}
 
 // ---------- Работа с фоном ----------
-function backgroundGame() { // установка градиента фона и цвета для значков
+// Установка градиента фона и цвета для значков
+function backgroundGame() {
 	gradientBody.num = randomNum(2,1,8);
 	bodyBackground.style.cssText = (`background: linear-gradient(45deg, ${gradientBody[gradientBody.num][0]} 0%, ${gradientBody[gradientBody.num][1]} 100%) fixed;`);
 	document.documentElement.style.setProperty('--colorItem',`${gradientBody[gradientBody.num][2]}`);
 }
 backgroundGame();
+// Генерация анимация и анимация фона
 function drawAnimBackground() {
 	bodyAnimationCanvas.clearRect(0,0, screenSizeW, screenSizeH);
 	if (screenSizeW < screenSizeH){
@@ -136,7 +160,9 @@ function drawAnimBackground() {
 		}
 	}
 }
+
 // ---------- Анимация загрузки ----------
+// Генерация SVG Логотипа
 function generateAnimLamp() {
 	let svgWidth = 400;
 	let svgHeight = 400;
@@ -177,6 +203,7 @@ function generateAnimLamp() {
 	svgAnimLoad.appendChild(svgGroupImg);
 	return svgAnimLoad;
 }
+// Добавление SVG Логотипа в нужные места HTML
 function addAnimLoad() {
 	document.querySelectorAll('.box-svg-lamp').forEach((item) => {item.appendChild(generateAnimLamp());});
 	massAnimLamp.num = 0;
@@ -184,8 +211,52 @@ function addAnimLoad() {
 	massAnimLamp.lot = massAnimLamp.mass.length/9;
 }
 addAnimLoad();
-// ---------- Работа с формами ----------
 
+// ---------- Работа с URL и содержимым страницы ----------
+// Обновление содержимого страницы
+function updateVisibleHtmlPage(load) {
+	if (load === true) {
+		document.querySelector(`.js-${cookieUrl.pagename}_visible`).style.display = 'none';
+		document.querySelector(`.js-loading_visible`).style.display = 'flex';
+	}
+	else {
+		let stateUrlHash = window.location.hash.substr(1); // убираем из URL - #
+		if (stateUrlHash !== '') {
+			cookieUrl = {pagename: stateUrlHash};
+		} else {
+			cookieUrl = {pagename: 'start'};
+		}
+		let allSectionHtml = document.getElementsByTagName('section');
+		for (let HtmlElement of allSectionHtml) {
+			HtmlElement.style.display = 'none';
+		}
+		updateListener(cookieUrl.pagename);
+		document.querySelector(`.js-${cookieUrl.pagename}_visible`).style.display = 'flex';
+		console.log(`GAME: Переход в раздел \"${cookieUrl.pagename}\"`);
+	}
+}
+updateVisibleHtmlPage();
+// Переход на другую
+function goToStatePage(newPage) {
+	// newPage = 'loading' 'start' 'reg' 'login' 'game' 'calendar' 'trophy'
+	if (newPage === 'loading') {
+		updateVisibleHtmlPage(true);
+	}
+	else if (window.location.hash.substr(1) === newPage) {
+		updateVisibleHtmlPage();
+	}
+	else {
+		location.hash = newPage;
+	}
+}
+
+// ---------- Раздел "Start" ----------
+function openGame() {
+	goToStatePage('login');
+}
+
+// ---------- Работа с формами ----------
+// Регистрация
 function registerUser(EO) { // форма регистрации
 	EO = EO || window.event;
 	EO.preventDefault();
@@ -220,7 +291,7 @@ function registerUser(EO) { // форма регистрации
 	}
 	else {
 		if (keyReg === false) { // 1 вызов функции - сначала запросим информацию
-			restoreInfo('reg');
+			restoreInfo('read');
 			keyReg = true;
 			return false;
 		}
@@ -238,13 +309,14 @@ function registerUser(EO) { // форма регистрации
 				infoErrLogin.textContent = '';
 				infoErrPass.textContent = '';
 				cookieUsersInfo[formLoginR] = {pass: formPassR, lvl: 0}; // {'ник':{pass:'пароль',lvl: значение}, ...}
-				storeAjaxInfo('reg');
+				storeAjaxInfo('write');
 				console.log('GAME: Регистрируем пользователя...'); 
 			}
 			return false;
 		}
 	}
 }
+// Авторизация
 function logInUser(EO) {
 	EO = EO || window.event;
 	EO.preventDefault();
@@ -252,22 +324,22 @@ function logInUser(EO) {
 	let infoErrPass = document.querySelector('.login-input-pass');
 	infoErrLogin.textContent = '';
 	infoErrPass.textContent = '';
-	let formLoginR = formInLogPage.elements['nickname'].value.toUpperCase();
-	let formPassR = formInLogPage.elements['password'].value;
+	let formLoginL = formInLogPage.elements['nickname'].value.toUpperCase();
+	let formPassL = formInLogPage.elements['password'].value;
 	let errLogin = false;
 	let errPass = false;
 	if (keyLog === false) {
 		cookieUsersInfo = {};
 	}
 	// проверка заполненных полей
-	if (formPassR.length === 0 || formPassR.length > 10) {
+	if (formPassL.length === 0 || formPassL.length > 10) {
 		infoErrPass.textContent = '*Поле не заполнено, либо переполнено (>10 символов)!';
 		errPass = true;
 	}
 	else {
 		infoErrPass.textContent = '';
 	}
-	if (formLoginR.length === 0 || formLoginR.length > 10) {
+	if (formLoginL.length === 0 || formLoginL.length > 10) {
 		infoErrLogin.textContent = '*Поле не заполнено, либо переполнено (>10 символов)!';
 		errLogin = true;
 	}
@@ -276,13 +348,13 @@ function logInUser(EO) {
 	}
 	if (errLogin === false && errPass === false) {
 		if (keyLog === false) { // 1 вызов функции - сначала запросим информацию
-			restoreInfo('login');
+			restoreInfo('read');
 			keyLog = true;
 			return false;
 		}
 		if (keyLog === true) { // 2 вызов функции AJAXом когда пришли данные
 			for (let cookieUsersInfoKey in cookieUsersInfo) {
-				if (formLoginR === cookieUsersInfoKey) {
+				if (formLoginL === cookieUsersInfoKey) {
 					errLogin = false;
 					keyLog = false;
 					break;
@@ -292,7 +364,7 @@ function logInUser(EO) {
 			if (errLogin === true) {
 				infoErrLogin.textContent = '*Такого логина не существует!';
 			}
-			if (errLogin === false && cookieUsersInfo[formLoginR].pass !== formPassR){
+			if (errLogin === false && cookieUsersInfo[formLoginL].pass !== formPassL){
 				infoErrPass.textContent = '*Пароль неверный!';
 				cookieUsersInfo = {};
 				keyLog = false;
@@ -302,34 +374,26 @@ function logInUser(EO) {
 				infoErrLogin.textContent = '';
 				infoErrPass.textContent = '';
 				console.log('GAME: Авторизация пользователя...');
-				userInfo = {nick: (formLoginR), pass: (cookieUsersInfo[formLoginR].pass), lvl: (cookieUsersInfo[formLoginR].lvl)};
-				// !!! сохранить пользователя отдельно !!!
-				// !!! смена раздела !!!
-				document.querySelector('.js-login_visible').style.display = 'none'; // временно
-				document.querySelector('.js-start_visible').style.display = 'flex'; // временно
-				cookieUsersInfo = {};
+				userInfo = {nick: (formLoginL), pass: (cookieUsersInfo[formLoginL].pass), lvl: (cookieUsersInfo[formLoginL].lvl)};
+				// todo: локально сохранить пользователя
 				console.log('GAME: Пользователь авторизован!');
+				cookieUsersInfo = {};
+				formInLogPage.reset();
+				goToStatePage('game');
 			}
 			return false;
 		}
 	}
+	return false;
 }
+
 // ---------- Работа с AJAX ----------
-// Работа с записью по AJAX = временная блокировка изменения БД
-// параметры: type - 'reg' - запрос для раздела "регистрация"
-//					 'login' - запрос для раздела "логин"
+// Временная блокировка изменения БД
 function storeAjaxInfo(type) {
+	// параметры: type - 'write' - запись в БД с экраном "Загрузка"
 	updateAjaxPassword = Math.random();
-	//cookieUrlPage =
-	if (type === 'reg') {
-		// !!! меняем на раздел загрузка !!!
-		document.querySelector('.js-reg_visible').style.display = 'none'; // временно
-		document.querySelector('.js-loading_visible').style.display = 'flex'; // временно
-	}
-	if (type === 'login') {
-		// !!! меняем на раздел загрузка !!!
-		document.querySelector('.js-login_visible').style.display = 'none'; // временно
-		document.querySelector('.js-loading_visible').style.display = 'flex'; // временно
+	if (type === 'write') {
+		goToStatePage('loading');
 	}
 	console.log('AJAX: Подключение к серверу...');
 	$.ajax({
@@ -340,55 +404,56 @@ function storeAjaxInfo(type) {
 }
 // Запись данных по AJAX
 function writeAjaxUsers(callresult) {
-	if (callresult.error != undefined)
-		alert(callresult.error +'\n\n Ошибка №1 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
-		// !!! добавить переход на главную страницу !!!
+	if (callresult.error !== undefined) {
+		alert(callresult.error + '\n\n Ошибка №1 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
+		if (keyReg === true) {
+			goToStatePage('reg');
+			keyReg = false;
+		} else {
+			goToStatePage('login');
+			keyLog = false;
+		}
+	}
 	else {
 		console.log('AJAX: Запись нового пользователя...');
 		$.ajax({
 			url: ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
-			data: {f: 'UPDATE', n: ajaxListUsers,
-				v: JSON.stringify(cookieUsersInfo), p: updateAjaxPassword},
+			data: {f: 'UPDATE', n: ajaxListUsers, v: JSON.stringify(cookieUsersInfo), p: updateAjaxPassword},
 			success: updateReady, error: errorAjaxUsers, timeout: 10000
 		});
 	}
 }
 // Статус записи данных по AJAX
 function updateReady(callresult) {
-	if (callresult.error != undefined) {
+	if (callresult.error !== undefined) {
 		alert(callresult.error +'\n\n Ошибка №2 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
-		// !!! добавить переход на главную страницу !!!
+		if (keyReg === true) {
+			goToStatePage('reg');
+			keyReg = false;
+		} else {
+			goToStatePage('login');
+			keyLog = false;
+		}
 	}
 	else {
-		console.log('AJAX: Пользователь успешно добавлен!');
 		if (keyReg === true) {
-			// !!! меняем обратно на раздел с которого ушли !!!
 			keyReg = false;
 			cookieUsersInfo = {};
-			document.querySelector('.js-loading_visible').style.display = 'none'; // временно
-			document.querySelector('.js-start_visible').style.display = 'flex'; // временно
+			formInRegPage.reset();
+			console.log('AJAX: Пользователь успешно добавлен!');
+			goToStatePage('game');
 		}
-		if (keyLog === true) {
-			// !!! меняем обратно на раздел с которого ушли !!!
-			document.querySelector('.js-loading_visible').style.display = 'none'; // временно
-			document.querySelector('.js-start_visible').style.display = 'flex'; // временно
+		else {
+			console.log('AJAX: Данный пользователя успешно обновлены!');
 		}
+		// todo: локально сохранить пользователя
 	}
 }
 // Чтение данных по AJAX
-// параметры: type - 'reg' - запрос для раздела "регистрация"
-//					 'login' - запрос для раздела "логин"
 function restoreInfo(type) {
-	//cookieUrlPage =
-	if (type === 'reg') {
-		// !!! меняем на раздел загрузка !!!
-		document.querySelector('.js-reg_visible').style.display = 'none'; // временно
-		document.querySelector('.js-loading_visible').style.display = 'flex'; // временно
-	}
-	if (type === 'login') {
-		// !!! меняем на раздел загрузка !!!
-		document.querySelector('.js-login_visible').style.display = 'none'; // временно
-		document.querySelector('.js-loading_visible').style.display = 'flex'; // временно
+	// параметры: type - 'read' - обращение в БД с экраном "Загрузка"
+	if (type === 'read') {
+		goToStatePage('loading');
 	}
 	console.log('AJAX: Запрашиваем данные...');
 	$.ajax({
@@ -397,40 +462,48 @@ function restoreInfo(type) {
 		success: readReady, error: errorAjaxUsers, timeout: 10000
 	});
 }
-// работа с полученными данными по AJAX
+// Работа с полученными данными по AJAX
 function readReady(callresult) {
-	if (callresult.error != undefined) {
+	if (callresult.error !== undefined) {
 		alert(callresult.error +'\n\n Ошибка №3 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
-		// !!! добавить переход на главную страницу !!!
+		if (keyReg === true) {
+			goToStatePage('reg');
+			keyReg = false;
+		} else {
+			goToStatePage('login');
+			keyLog = false;
+		}
 	}
-	else if (callresult.result != "") {
+	else if (callresult.result !== "") {
 		console.log('AJAX: Данные получены!')
 		cookieUsersInfo = JSON.parse(callresult.result);
 		if (keyReg === true) {
-			// !!! меняем обратно на раздел с которого ушли !!!
-			document.querySelector('.js-loading_visible').style.display = 'none'; // временно
-			document.querySelector('.js-reg_visible').style.display = 'flex'; // временно
+			goToStatePage('reg');
 			registerUser();
 		}
 		if (keyLog === true) {
-			// !!! меняем обратно на раздел с которого ушли !!!
-			document.querySelector('.js-loading_visible').style.display = 'none'; // временно
-			document.querySelector('.js-login_visible').style.display = 'flex'; // временно
+			goToStatePage('login');
 			logInUser();
 		}
-		if (keyAjax === true) {
+		if (keyAjax === true) { // админ
 			console.log(cookieUsersInfo);
 			keyAjax = false;
 		}
 	}
 }
-// ошибка AJAX
+// Ошибка AJAX
 function errorAjaxUsers(jqXHR,statusStr,errorStr) {
 	alert(statusStr+' '+errorStr +'\n\n Ошибка №4 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
-	// !!! добавить переход на главную страницу !!!
+	if (keyReg === true) {
+		goToStatePage('reg');
+		keyReg = false;
+	} else {
+		goToStatePage('login');
+		keyLog = false;
+	}
 }
+
 // ---------- Служебные функции AJAX ----------
-// В случаи пустого содержимого или для обнуления БД выполняем: 
 // !!! Добавить проверку админа !!!
 function startAjax() {
 	updateAjaxPassword = Math.random();
@@ -446,12 +519,12 @@ function getInfoAjax() {
 	keyAjax = true;
 	restoreInfo();
 }
+
 // ---------- Игровой цикл ----------
 function gameLoop(nowTimeFrame) { // цикл
 	if (fixNum === 1) {
 		drawAnimBackground();
 		updateGame(nowTimeFrame);
-		renderGame(nowTimeFrame);
 	}
 	else{
 		fixNum++;
@@ -459,7 +532,7 @@ function gameLoop(nowTimeFrame) { // цикл
 	window.requestAnimationFrame(gameLoop);
 }
 gameLoop();
-function updateGame(nowTimeFrame) { // физика игры
+function updateGame(nowTimeFrame) {
 	if(!lastTimeFrame || nowTimeFrame - lastTimeFrame >= 500) {
 		lastTimeFrame = nowTimeFrame;
 		if (massAnimLamp.num === 9) {
@@ -476,16 +549,15 @@ function updateGame(nowTimeFrame) { // физика игры
 		}
 		massAnimLamp.num++;
 	}
-}
-function renderGame() { // отрисовка игры
-	
+	// todo: анимация вспышки
 }
 
 // ---------- Вспомогательные функции ----------
-// randomNum - type: 0 = обычный рандом (нецелочисленное),
-// 				  1 = от min до max (нецелочисленное), 
-//				  2 = от min до max (целочисленное)
+// Случайное значение
 function randomNum(type, min, max) {
+	// параметры - type: 0 = обычный рандом (нецелочисленное),
+	// 				  1 = от min до max (нецелочисленное),
+	//				  2 = от min до max (целочисленное)
 	let num = 0;
 	switch (type) {
 		case 0: 
@@ -507,17 +579,11 @@ function randomNum(type, min, max) {
 	}
 	return num;
 }
-// setAttributes - массовая установка атрибутов элементу
-// вызов: setAttributes(элемент,{'атрибут1':'значение1', ...})
+// Массовая установка атрибутов элементу
 function setAttributes(el, attrs) {
+	// вызов: setAttributes(элемент,{'атрибут1':'значение1', ...})
 	for(let key in attrs) {
 		el.setAttribute(key, attrs[key]);
 	}
 }
 // ----------  ----------
-/*
-document.querySelector('.block-connect__box').style.display = 'none';
-document.querySelector('.block-loading__box').style.display = 'flex';
-document.querySelector('.block-loading__box').style.display = 'none';
-document.querySelector('.block-connect__box').style.display = 'flex';
- */

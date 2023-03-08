@@ -24,16 +24,18 @@
 			</section>
 			<!-- Блок 1 - Старт -->
 			<section class="block-start__box js-start_visible" style="display: none">
+				<div class="block-start__box-svg box-svg-lamp">
+					<!-- Анимация генерируется через JS -->
+				</div>
 				<div class="block-start__box-title">
 					<h1 class="block-start__title">ENERGY</h1>
-					<span class="block-start__text">&#169; 2023 Разработка MrDenza</span>
-				</div>
-				<div class="block-start__img-anim">
-					<!-- Заставка генерируется через JS -->
+					<h2 class="block-start__text">Петли Анти-Стресс</h2>
+					<button class="block-start__btn">Играть</button>
+					<p class="block-start__copyright">&#169; 2023 Разработка <a class="block-start__link" href="https://t.me/aimpik" title="Телеграмм для связи">MrDenza</a></p>
 				</div>
 			</section>
 			<!-- Блок 2 - Регистрация -->
-			<section class="block-connect__box js-reg_visible">
+			<section class="block-connect__box js-reg_visible" style="display: none">
 				<div class="block-connect__info">
 					<div class="block-connect__box-svg box-svg-lamp">
 						<!-- Анимация генерируется через JS -->
@@ -60,8 +62,12 @@
 							</div>
 						</div>
 						<div class="block-connect__box-btn">
+							<!-- <label for="r-btn-login"></label>
+ 							<input class="block-connect__btn1-login btn_opacity" type="button" id="r-btn-login" value="Залогиниться"> -->
 							<label for="r-btn-login"></label>
-							<input class="block-connect__btn1-login btn_opacity" type="button" id="r-btn-login" onclick="#login" value="Залогиниться">
+							<a class="block-connect__link" href="#login" title="Перейти на страницу авторизации">
+								<input class="block-connect__btn1-login btn_opacity" type="button" id="r-btn-login" value="Залогиниться">
+							</a>
 							<label for="r-btn-reg"></label>
 							<input class="block-connect__btn1-reg" type="submit" id="r-btn-reg" value="Создать аккаунт">
 						</div>
@@ -78,7 +84,7 @@
 				</div>
 				<div class="block-connect__box-form">
 					<h3 class="block-connect__subtitle">Авторизация</h3>
-					<form class="block-connect__form" action="" method="post" name="login-form">
+					<form class="block-connect__form" action="#" method="post" name="login-form">
 						<div class="block-connect__block-inputs">
 							<div class="block-connect__box-input">
 								<label class="block-connect__label-text block-connect__label_size" for="login-input-nick">Введите ваш ник:</label>
@@ -97,14 +103,16 @@
 						</div>
 						<div class="block-connect__box-btn">
 							<label for="l-btn-reg"></label>
-							<input class="block-connect__btn2-reg btn_opacity" type="button" id="l-btn-reg" onclick="#reg" value="Создать аккаунт">
+							<a class="block-connect__link" href="#reg" title="Перейти на страницу регистрации">
+								<input class="block-connect__btn2-reg btn_opacity" type="button" id="l-btn-reg" value="Создать аккаунт">
+							</a>
 							<label for="l-btn-login"></label>
 							<input class="block-connect__btn2-login" type="submit" id="l-btn-login" value="Авторизоваться">
 						</div>
 					</form>
 				</div>
 			</section>
-			<!-- Блок 3 - Игра + меню + переключение уровней -->
+			<!-- Блок 4 - Игра + меню + переключение уровней -->
 			<section class="block-game__box js-game_visible" style="display: none">
 				<div class="block-game__box-menu">
 					<svg class="block-game__menu" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -130,7 +138,7 @@
 					</div>
 				</div>
 			</section>
-			<!-- Блок 4 - Раздел с календарём -->
+			<!-- Блок 5 - Раздел с календарём -->
 			<section class="block-calendar__box js-calendar_visible" style="display: none">
 				<div class="block-calendar__nav">
 					<button class="block-calendar__btn-back" type="button" title="Назад">
@@ -149,7 +157,7 @@
 					<button class="block-calendar__btn-trophy" type="button" title="Открыть раздел с трофеями">Трофеи</button>
 				</div>
 			</section>
-			<!-- Блок 5 - Комната трофеев -->
+			<!-- Блок 6 - Комната трофеев -->
 			<section class="block-trophy__box js-trophy_visible" style="display: none">
 				<div class="block-trophy__nav">
 					<button class="block-trophy__btn-back" type="button" title="Назад">

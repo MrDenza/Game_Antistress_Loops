@@ -25,6 +25,7 @@ const svgLink = 'http://www.w3.org/2000/svg';
 // massAnimLamp объект всех линий анимации Lamp во всех дубликатах, где ключ:
 // num - счёт от 1 до 9 линий; lot - кол-во дубликатов анимации; mass - массив всех линий
 let massAnimLamp = {};
+let animUpdate = {key: false, count: 0, obj: document.querySelector('.body__update')}; // ключ запуска анимации вспышки
 let lastTimeFrame = 0; // для выполнения функции через определённое время в цикле requestAnimationFrame
 let fixNum = 0; // фикс первого запуска функции gameLoop
 const formInRegPage = document.forms['reg-form']; // форма на странице регистрации
@@ -35,9 +36,11 @@ const ajaxListUsers = 'DUDEVICH_GAME_LOOPS_USERS'; // хранение инфо�
 let updateAjaxPassword; // пароль доступа к БД
 let userInfo = {}; // данные пользователя {nick:'ник',pass:'пароль',lvl: значение}
 let cookieUsersInfo = {}; // переменная временного хранения списка пользователей
-let keyReg = false; // ключ раздела "регистрация" для асинхронного выполнения регистрации с разделом "загрузка"
-let keyLog = false; // ключ раздела "логин" для асинхронного выполнения авторизации с разделом "загрузка"
+let keyReg = false; // ключ раздела "регистрация" для "асинхронного" выполнения регистрации с разделом "загрузка"
+let keyLog = false; // ключ раздела "логин" для "асинхронного" выполнения авторизации с разделом "загрузка"
 let keyAjax = false; // служебный ключ AJAX
+let keyStart = false; // ключ раздела "старт" для "асинхронного" выполнения подключения с разделом "загрузка"
+let keyWarUpdate = false; // ключ предупреждения о несохранённых данных
 
 let cookieUrl = {}; // переменная временного хранения закладки URL
 
@@ -128,6 +131,19 @@ function updateListener(sectionPage) {
 			break;
 	}
 }
+// Активация ключа о потери данных
+function checkUpdatePage(EO) {
+	EO = EO || window.event;
+	keyWarUpdate = true;
+}
+// Слушатель несохранённых изменений
+window.onbeforeunload = (EO) => {
+	EO = EO || window.event;
+	if (keyWarUpdate === true) {
+		EO.returnValue = 'Есть несохранённые данные!';
+	}
+};
+
 
 // ---------- Работа с фоном ----------
 // Установка градиента фона и цвета для значков
@@ -215,6 +231,7 @@ addAnimLoad();
 // ---------- Работа с URL и содержимым страницы ----------
 // Обновление содержимого страницы
 function updateVisibleHtmlPage(load) {
+	animUpdate.key = true;
 	if (load === true) {
 		document.querySelector(`.js-${cookieUrl.pagename}_visible`).style.display = 'none';
 		document.querySelector(`.js-loading_visible`).style.display = 'flex';
@@ -232,7 +249,7 @@ function updateVisibleHtmlPage(load) {
 		}
 		updateListener(cookieUrl.pagename);
 		document.querySelector(`.js-${cookieUrl.pagename}_visible`).style.display = 'flex';
-		console.log(`GAME: Переход в раздел \"${cookieUrl.pagename}\"`);
+		console.log(`GAME: Переход в раздел \"${cookieUrl.pagename}\".`);
 	}
 }
 updateVisibleHtmlPage();
@@ -252,7 +269,25 @@ function goToStatePage(newPage) {
 
 // ---------- Раздел "Start" ----------
 function openGame() {
-	goToStatePage('login');
+	if (keyStart === false){
+		if (readLocalStorage() === true){
+			keyStart = true;
+			restoreInfo('read');
+		}
+		else {
+			goToStatePage('login');
+		}
+	}
+	else {
+		keyStart = false;
+		if ((userInfo.name in cookieUsersInfo) && (userInfo.pass === cookieUsersInfo[userInfo.name].pass)) {
+			userInfo.lvl = cookieUsersInfo[userInfo.name].lvl;
+			cookieUsersInfo = {};
+			console.log('GAME: Успешная автоматическая авторизация пользователя!');
+			goToStatePage('game');
+
+		}
+	}
 }
 
 // ---------- Работа с формами ----------
@@ -262,8 +297,7 @@ function registerUser(EO) { // форма регистрации
 	EO.preventDefault();
 	let infoErrLogin = document.querySelector('.reg-input-nick');
 	let infoErrPass = document.querySelector('.reg-input-pass');
-	infoErrLogin.textContent = '';
-	infoErrPass.textContent = '';
+	infoErrLogin.textContent = infoErrPass.textContent = '';
 	let formLoginR = formInRegPage.elements['nickname'].value.toUpperCase();
 	let formPassR = formInRegPage.elements['password'].value;
 	let errLogin = false;
@@ -290,6 +324,7 @@ function registerUser(EO) { // форма регистрации
 		errLogin = true;
 	}
 	else {
+		keyWarUpdate = true;
 		if (keyReg === false) { // 1 вызов функции - сначала запросим информацию
 			restoreInfo('read');
 			keyReg = true;
@@ -306,10 +341,11 @@ function registerUser(EO) { // форма регистрации
 				}
 			}
 			if (errLogin === false && errPass === false) {
-				infoErrLogin.textContent = '';
-				infoErrPass.textContent = '';
+				infoErrLogin.textContent = infoErrPass.textContent = '';
 				cookieUsersInfo[formLoginR] = {pass: formPassR, lvl: 0}; // {'ник':{pass:'пароль',lvl: значение}, ...}
 				storeAjaxInfo('write');
+				userInfo = {name: (formLoginR), pass: (formPassR), lvl: 0};
+				// обнуляем форму, сброс ключа keyWarUpdate и переход по странице - после успешной записи в БД
 				console.log('GAME: Регистрируем пользователя...'); 
 			}
 			return false;
@@ -322,8 +358,7 @@ function logInUser(EO) {
 	EO.preventDefault();
 	let infoErrLogin = document.querySelector('.login-input-nick');
 	let infoErrPass = document.querySelector('.login-input-pass');
-	infoErrLogin.textContent = '';
-	infoErrPass.textContent = '';
+	infoErrLogin.textContent = infoErrPass.textContent = '';
 	let formLoginL = formInLogPage.elements['nickname'].value.toUpperCase();
 	let formPassL = formInLogPage.elements['password'].value;
 	let errLogin = false;
@@ -346,6 +381,7 @@ function logInUser(EO) {
 	else {
 		infoErrLogin.textContent = '';
 	}
+	keyWarUpdate = true;
 	if (errLogin === false && errPass === false) {
 		if (keyLog === false) { // 1 вызов функции - сначала запросим информацию
 			restoreInfo('read');
@@ -371,13 +407,13 @@ function logInUser(EO) {
 				errPass = true;
 			}
 			if (errLogin === false && errPass === false){
-				infoErrLogin.textContent = '';
-				infoErrPass.textContent = '';
+				infoErrLogin.textContent = infoErrPass.textContent = '';
 				console.log('GAME: Авторизация пользователя...');
-				userInfo = {nick: (formLoginL), pass: (cookieUsersInfo[formLoginL].pass), lvl: (cookieUsersInfo[formLoginL].lvl)};
-				// todo: локально сохранить пользователя
+				userInfo = {name: (formLoginL), pass: (cookieUsersInfo[formLoginL].pass), lvl: (cookieUsersInfo[formLoginL].lvl)};
+				writeLocalStorage();
 				console.log('GAME: Пользователь авторизован!');
 				cookieUsersInfo = {};
+				keyWarUpdate = false;
 				formInLogPage.reset();
 				goToStatePage('game');
 			}
@@ -387,7 +423,7 @@ function logInUser(EO) {
 	return false;
 }
 
-// ---------- Работа с AJAX ----------
+// ---------- Работа с AJAX и локальным хранилищем ----------
 // Временная блокировка изменения БД
 function storeAjaxInfo(type) {
 	// параметры: type - 'write' - запись в БД с экраном "Загрузка"
@@ -436,17 +472,22 @@ function updateReady(callresult) {
 		}
 	}
 	else {
+		writeLocalStorage();
 		if (keyReg === true) {
 			keyReg = false;
 			cookieUsersInfo = {};
 			formInRegPage.reset();
+			keyWarUpdate = false;
 			console.log('AJAX: Пользователь успешно добавлен!');
 			goToStatePage('game');
+		}
+		if (keyAjax === true) {
+			keyAjax = false;
+			goToStatePage('reg');
 		}
 		else {
 			console.log('AJAX: Данный пользователя успешно обновлены!');
 		}
-		// todo: локально сохранить пользователя
 	}
 }
 // Чтение данных по AJAX
@@ -485,6 +526,9 @@ function readReady(callresult) {
 			goToStatePage('login');
 			logInUser();
 		}
+		if (keyStart === true) {
+			openGame();
+		}
 		if (keyAjax === true) { // админ
 			console.log(cookieUsersInfo);
 			keyAjax = false;
@@ -502,11 +546,33 @@ function errorAjaxUsers(jqXHR,statusStr,errorStr) {
 		keyLog = false;
 	}
 }
+// Запись в LocalStorage
+function writeLocalStorage() {
+	localStorage.setItem('name', userInfo.name);
+	localStorage.setItem('pass', userInfo.pass);
+	console.log('LocalStorage: Данные записаны!');
+	return true;
+}
+// Чтение из LocalStorage
+function readLocalStorage() {
+	let localStorageName = localStorage.getItem('name');
+	let localStoragePass = localStorage.getItem('pass');
+	if (localStorageName && localStoragePass) {
+		userInfo = {name: (localStorageName), pass: (localStoragePass)};
+		console.log('LocalStorage: Данные прочитаны!');
+		return true;
+	}
+	else {
+		console.log('LocalStorage: Данные отсутствуют!');
+		return false;
+	}
+}
 
-// ---------- Служебные функции AJAX ----------
-// !!! Добавить проверку админа !!!
+// ---------- Служебные функции ----------
+// Добавить проверку админа !!!
 function startAjax() {
 	updateAjaxPassword = Math.random();
+	keyAjax = true;
 	cookieUsersInfo = {};
 	console.log('AJAX: Выполняем сброс...');
 	$.ajax({
@@ -514,12 +580,17 @@ function startAjax() {
 		data: {f: 'LOCKGET', n: ajaxListUsers, p: updateAjaxPassword},
 		success: writeAjaxUsers, error: errorAjaxUsers, timeout: 10000
 	});
+	goToStatePage('reg');
 }
 function getInfoAjax() {
 	keyAjax = true;
 	restoreInfo();
 }
-
+function resetLocalStorage() {
+	localStorage.removeItem('name');
+	localStorage.removeItem('pass');
+	console.log('LocalStorage: Данные обнулены!');
+}
 // ---------- Игровой цикл ----------
 function gameLoop(nowTimeFrame) { // цикл
 	if (fixNum === 1) {
@@ -534,6 +605,7 @@ function gameLoop(nowTimeFrame) { // цикл
 gameLoop();
 function updateGame(nowTimeFrame) {
 	if(!lastTimeFrame || nowTimeFrame - lastTimeFrame >= 500) {
+		// анимация лампы с частотой 500мс
 		lastTimeFrame = nowTimeFrame;
 		if (massAnimLamp.num === 9) {
 			massAnimLamp.num = 0;
@@ -549,7 +621,18 @@ function updateGame(nowTimeFrame) {
 		}
 		massAnimLamp.num++;
 	}
-	// todo: анимация вспышки
+	if (animUpdate.key === true) {
+		// разовый запуск анимации вспышки
+		animUpdate.obj.style.opacity = '1';
+		animUpdate.count += 5; // скорость перехода
+		animUpdate.obj.style.width = `${animUpdate.count}%`;
+		animUpdate.obj.style.height = `${animUpdate.count}%`;
+		if (animUpdate.count > 500) { // длительность анимации
+			animUpdate.obj.style.opacity = '0';
+			animUpdate.key = false;
+			animUpdate.count = 0;
+		}
+	}
 }
 
 // ---------- Вспомогательные функции ----------

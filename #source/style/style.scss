@@ -827,7 +827,12 @@ body {
 @media screen and (max-height: 700px) {
 	/* ------------------------ BLOCK 5 ------------------------- */
 	.block-calendar {
+		&__box-svg {
+			//display: none;
+			padding-top: 5px;
+		}
 		&__box-calendar {
+			height: 398px;
 			display: flex;
 			flex-direction: row;
 		}
@@ -850,8 +855,7 @@ body {
 		}
 	}
 }
-@media screen and (max-height: 520px) and (max-width: 920px)
-	and (orientation:landscape) {
+@media screen and (max-height: 520px) and (max-width: 920px) and (orientation:landscape) {
 	html {
 		font-size: 20px;
 	}
@@ -1015,29 +1019,6 @@ body {
 		}
 	}
 }
-@media screen and (max-height: 760px) and (max-width: 420px) {
-	/* ------------------------ BLOCK 5 ------------------------- */
-	.block-calendar {
-		&__calendar {
-			padding: 5px;
-			& td {
-				//width: 35px;
-				//height: 35px;
-			}
-		}
-		&__btnPrv, &__btnNext {
-			width: 45px;
-			height: 45px;
-		}
-		&__box-svg {
-			height: 100px;
-			flex: 1 1 auto;
-		}
-		&__box-info {
-			flex: 1 1;
-		}
-	}
-}
 @media screen and (max-width: 480px) {
 	/* ------------------------ BLOCK 0 ------------------------- */
 	.block-loading {
@@ -1087,6 +1068,27 @@ body {
 		}
 	}
 }
+@media screen and (max-height: 760px) and (max-width: 500px) {
+	/* ------------------------ BLOCK 5 ------------------------- */
+	.block-calendar {
+		&__calendar {
+			padding: 5px;
+		}
+		&__btnPrv-2, &__btnNext-2 {
+			font-size: 1rem;
+			width: 34px;
+			height: 34px;
+		}
+		&__box-svg {
+			height: 100px;
+			flex: 1 1 auto;
+		}
+		&__box-info {
+			flex: 1 1;
+		}
+	}
+}
+
 
 
 

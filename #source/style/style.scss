@@ -13,6 +13,9 @@ body {
 	height: calc(var(--vh, 1vh) * 100);
 	position: relative;
 }
+* {
+	user-select: none;
+}
 .body_gradient {
 	background: linear-gradient(45deg, #1CB5E0 0%, #000851 100%) fixed;
 }
@@ -61,6 +64,28 @@ body {
 	top: 50%;
 	left: 0;
 	transition: opacity 0.3s linear;
+}
+@keyframes rotElem {
+	0% {
+		transform: translateY(-50%) rotate(-15deg);
+	}
+	50% {
+		transform: translateY(-50%) rotate(+15deg);
+	}
+	100% {
+		transform: translateY(-50%) rotate(-15deg);
+	}
+}
+@keyframes rotBtn {
+	0% {
+		transform: rotate(-15deg);
+	}
+	50% {
+		transform: rotate(+15deg);
+	}
+	100% {
+		transform: rotate(-15deg);
+	}
 }
 /* ------------------------ BLOCK 0 ------------------------- */
 .block-loading {
@@ -259,20 +284,6 @@ body {
 	}
 }
 /* ------------------------ BLOCK 4 ------------------------- */
-@keyframes rotElem {
-	0% {
-		transform: translateY(-50%) rotate(-15deg);
-	}
-	50% {
-		transform: translateY(-50%) rotate(+15deg);
-	}
-	100% {
-		transform: translateY(-50%) rotate(-15deg);
-	}
-}
-* {
-	user-select: none;
-}
 .block-game {
 	&__box {
 		box-sizing: border-box;
@@ -453,37 +464,26 @@ body {
 		transform: rotate(90deg);
 	}
 }
-/* ------------------------ BLOCK 5 ------------------------- */
-/* ------------------------ BLOCK 6 ------------------------- */
-@keyframes rotBtn {
-	0% {
-		transform: rotate(-15deg);
-	}
-	50% {
-		transform: rotate(+15deg);
-	}
-	100% {
-		transform: rotate(-15deg);
-	}
-}
-.block-tops {
-	&__box {
+/* ----------------------- BLOCK 5-6 ------------------------ */
+.block-style {
+	&_box {
 		box-sizing: border-box;
 		max-width: 100%;
 		height: 100%;
+		display: flex;
 		flex-direction: column;
 	}
-	&__nav {
+	&_nav {
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;
 	}
-	&__btn-back {
+	&_btn-back {
 		width: 100px;
 		height: 100px;
+		font-size: 2rem;
 		border-radius: 50%;
 		line-height: 0.7rem;
-		font-size: 2rem;
 		background-color: white;
 		color: var(--colorItem, black);
 		border: 1px solid var(--colorItem, black);
@@ -492,18 +492,105 @@ body {
 			animation: rotBtn 1s ease infinite;
 		}
 	}
-	&__nav-title {
+	&_nav-title {
 		margin-left: 50px;
 	}
-	&__box-info {
+	&_box-info {
 		display: flex;
 		justify-content: center;
+		align-items: center;
 		height: 88vh;
 		height: calc(var(--vh,1vh)*88);
 	}
-	&__box-svg {
+	&_box-svg {
 		width: 40%;
 		align-self: center;
+	}
+}
+/* ------------------------ BLOCK 5 ------------------------- */
+.block-calendar {
+	&__box {
+	}
+	&__box-info {
+		justify-content: space-evenly;
+	}
+	&__box-calendar {
+		align-items: center;
+	}
+	&__box-btn {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 10px;
+	}
+	&__btnPrv-2, &__btnNext-2 {
+		display: none;
+	}
+	&__btnPrv, &__btnNext, &__btnPrv-2, &__btnNext-2 {
+		width: 80px;
+		height: 80px;
+		border-radius: 50%;
+		line-height: 0.7rem;
+		font-size: 1.5rem;
+		background-color: white;
+		color: var(--colorItem, black);
+		border: 1px solid var(--colorItem, black);
+		box-shadow: none;
+		&:hover {
+			animation: rotBtn 1s ease infinite;
+		}
+	}
+	&__btnPrv {
+	}
+	&__btnNext {
+	}
+	&__subtitle {
+		margin: 0 15px;
+	}
+	&__calendar {
+		padding: 20px;
+		border: 1px solid var(--colorItem, black);
+		border-radius: 15px;
+		background-color: rgba(255, 255, 255, 0.5);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		& table {
+			border: 1px solid var(--colorItem, black);
+			border-collapse: collapse;
+			color: var(--colorItem, black);
+			font-size: 1.3rem;
+			background-color: white;
+		}
+		& thead td {
+		}
+		& td {
+			width: 55px;
+			height: 55px;
+			text-align: center;
+			vertical-align: middle;
+			border: 1px solid #dcdcff;
+		}
+	}
+	&__table-i-days {
+		font-weight: bold;
+	}
+	&__table-i-dayNotCur {
+		color: lightgray;
+	}
+	&__table-i-dayNow {
+		color: red;
+	}
+	&__table-i-dayNorm {
+		color: black;
+	}
+	&__table-i-dayNow:active, &__table-i-dayNorm:active {
+		font-weight: bold;
+	}
+}
+/* ------------------------ BLOCK 6 ------------------------- */
+.block-tops {
+	&__box {
 	}
 	&__box-table {
 		width: 60%;
@@ -526,7 +613,6 @@ body {
 			& td {
 				text-align: center;
 				border-bottom: 1px solid var(--colorItem, black);
-
 			}
 			& td:nth-child(1) {
 				width: 100px;
@@ -580,11 +666,18 @@ body {
 			padding-bottom: 6px;
 		}
 	}
-	/* ------------------------ BLOCK 6 ------------------------- */
-	.block-tops {
-		&__btn-back {
+	/* ----------------------- BLOCK 5-6 ------------------------ */
+	.block-style {
+		&_btn-back {
 			width: 80px;
 			height: 80px;
+		}
+	}
+	/* ------------------------ BLOCK 5 ------------------------- */
+	.block-calendar {
+		&__btnPrv, &__btnNext, &__btnPrv-2, &__btnNext-2 {
+			width: 60px;
+			height: 60px;
 		}
 	}
 }
@@ -661,7 +754,6 @@ body {
 			flex-direction: column;
 		}
 	}
-
 	/* ------------------------ BLOCK 1 ------------------------- */
 	.block-start {
 		&__box {
@@ -696,26 +788,65 @@ body {
 			padding-bottom: 3vh;
 		}
 	}
-	/* ------------------------ BLOCK 6 ------------------------- */
-	.block-tops {
-		&__nav-title {
+	/* ----------------------- BLOCK 5-6 ------------------------ */
+	.block-style {
+		&_nav-title {
 			margin-left: 30px;
 		}
-		&__btn-back {
+		&_btn-back {
 			width: 60px;
 			height: 60px;
 		}
-		&__box-info {
+		&_box-info {
 			flex-direction: column;
 			align-items: center;
 		}
-		&__box-svg {
+		&_box-svg {
 			width: auto;
 			height: 30vh;
 			margin-bottom: 15px;
 		}
+	}
+	/* ------------------------ BLOCK 5 ------------------------- */
+	.block-calendar {
+		&__calendar {
+			padding: 10px;
+			& td {
+				width: 40px;
+				height: 40px;
+			}
+		}
+	}
+	/* ------------------------ BLOCK 6 ------------------------- */
+	.block-tops {
 		&__box-table {
 			width: 80%;
+		}
+	}
+}
+@media screen and (max-height: 700px) {
+	/* ------------------------ BLOCK 5 ------------------------- */
+	.block-calendar {
+		&__box-calendar {
+			display: flex;
+			flex-direction: row;
+		}
+		&__calendar {
+			padding: 10px;
+			margin: 0 10px;
+			& table {
+				font-size: 1.2rem;
+			}
+			& td {
+				width: 45px;
+				height: 45px;
+			}
+		}
+		&__box-btn {
+			display: none;
+		}
+		&__btnPrv-2, &__btnNext-2 {
+			display: block;
 		}
 	}
 }
@@ -791,26 +922,47 @@ body {
 			padding: 0 10px;
 		}
 	}
-	/* ------------------------ BLOCK 6 ------------------------- */
-	.block-tops {
-		&__btn-back {
+	/* ----------------------- BLOCK 5-6 ------------------------ */
+	.block-style {
+		&_btn-back {
 			width: 50px;
 			height: 50px;
 			font-size: 1.5rem;
 		}
-		&__nav-title {
+		&_nav-title {
 			margin-left: 25px;
 		}
-		&__box-info {
+		&_box-info {
 			height: 80vh;
 			height: calc(var(--vh,1vh)*80);
 		}
-		&__box-svg {
+		&_box-svg {
 			width: 35%;
 			height: 60vh;
 			height: calc(var(--vh,1vh)*60);
 			flex: 0 1 auto;
 		}
+	}
+	/* ------------------------ BLOCK 5 ------------------------- */
+	.block-calendar {
+		&__calendar {
+			padding: 5px;
+			border-radius: 10px;
+			& table {
+				font-size: 1rem;
+			}
+			& td {
+				width: 32px;
+				height: 32px;
+			}
+		}
+		&__btnPrv-2, &__btnNext-2 {
+			width: 48px;
+			height: 48px;
+		}
+	}
+	/* ------------------------ BLOCK 6 ------------------------- */
+	.block-tops {
 		&__box-table {
 			height: 100%;
 			flex: 1 1 auto;
@@ -833,6 +985,56 @@ body {
 					width: 200px;
 				}
 			}
+		}
+	}
+}
+@media screen and (max-height: 380px) {
+	/* ----------------------- BLOCK 5-6 ------------------------ */
+	.block-style {
+		&_nav-title {
+			font-size: 1.2rem;
+		}
+		&_btn-back {
+			width: 38px;
+			height: 38px;
+			font-size: 1.2rem;
+		}
+	}
+	/* ------------------------ BLOCK 5 ------------------------- */
+	.block-calendar {
+		&__calendar {
+			padding: 3px;
+			border-radius: 3px;
+			& table {
+				font-size: 0.7rem;
+			}
+			& td {
+				width: 25px;
+				height: 25px;
+			}
+		}
+	}
+}
+@media screen and (max-height: 760px) and (max-width: 420px) {
+	/* ------------------------ BLOCK 5 ------------------------- */
+	.block-calendar {
+		&__calendar {
+			padding: 5px;
+			& td {
+				//width: 35px;
+				//height: 35px;
+			}
+		}
+		&__btnPrv, &__btnNext {
+			width: 45px;
+			height: 45px;
+		}
+		&__box-svg {
+			height: 100px;
+			flex: 1 1 auto;
+		}
+		&__box-info {
+			flex: 1 1;
 		}
 	}
 }
@@ -868,15 +1070,18 @@ body {
 			font-size: 2.5rem;
 		}
 	}
-	/* ------------------------ BLOCK 6 ------------------------- */
-	.block-tops {
-		&__nav-title {
+	/* ----------------------- BLOCK 5-6 ------------------------ */
+	.block-style {
+		&_nav-title {
 			margin-left: 20px;
 			font-size: 1.3rem;
 		}
-		&__box-info {
+		&_box-info {
 			justify-content: space-evenly;
 		}
+	}
+	/* ------------------------ BLOCK 6 ------------------------- */
+	.block-tops {
 		&__box-table {
 			width: 100%;
 		}

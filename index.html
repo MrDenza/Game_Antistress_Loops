@@ -155,34 +155,44 @@
 				</div>
 			</section>
 			<!-- Блок 5 - Раздел с календарём -->
-			<section class="block-calendar__box js-calendar_visible" style="display: none">
-				<div class="block-calendar__nav">
-					<button class="block-calendar__btn-back" type="button" title="Назад">
-						<svg class="block-calendar__btn-back_img" width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path class="svg__btn" d="M4 12L20 12" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-							<path class="svg__btn" d="M10 6L4.0625 11.9375V11.9375C4.02798 11.972 4.02798 12.028 4.0625 12.0625V12.0625L10 18" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-						</svg>
-					</button>
-					<span class="block-calendar__nav-title">Ежедневное испытание</span>
+			<section class="block-calendar__box block-style_box js-calendar_visible" style="display: none">
+				<div class="block-style_nav">
+					<a href="#game" title="Вернуться обратно">
+						<button class="block-style_btn-back icon-left" type="button" title="Назад"></button>
+					</a>
+					<h2 class="block-style_nav-title">Ежедневное испытание</h2>
 				</div>
-				<div class="block-calendar__calendar">
-					<!-- Календарь генерируется через JS -->
+				<div class="block-calendar__box-info block-style_box-info">
+					<div class="block-calendar__box-svg block-style_box-svg box-svg-lamp">
+						<!-- Анимация генерируется через JS -->
+					</div>
+					<div class="block-calendar__box-calendar">
+						<button class="block-calendar__btnPrv-2 icon-left js-cal-btnPrv" type="button" title="Прошлый месяц"></button>
+						<div class="block-calendar__box-btn">
+							<button class="block-calendar__btnPrv icon-left js-cal-btnPrv" type="button" title="Прошлый месяц"></button>
+							<h3 class="block-calendar__subtitle">Календарь</h3>
+							<button class="block-calendar__btnNext icon-right js-cal-btnNext" type="button" title="Следующий месяц"></button>
+						</div>
+						<div class="block-calendar__calendar js-calendar">
+							<!-- Календарь генерируется через JS -->
+						</div>
+						<button class="block-calendar__btnNext-2 icon-right js-cal-btnNext" type="button" title="Следующий месяц"></button>
+					</div>
 				</div>
-				<div class="block-calendar__btn">
-					<button class="block-calendar__btn-game" type="button" title="Запустить игру">Играть</button>
-					<button class="block-calendar__btn-trophy" type="button" title="Открыть раздел с трофеями">Трофеи</button>
-				</div>
+				<!-- <div class="block-calendar__btn">
+ 					<button class="block-calendar__btn-game" type="button" title="Запустить игру">Играть</button>
+ 				</div> -->
 			</section>
 			<!-- Блок 6 - Комната топов -->
-			<section class="block-tops__box js-tops_visible" style="display: none">
-				<div class="block-tops__nav">
+			<section class="block-tops__box block-style_box js-tops_visible" style="display: none">
+				<div class="block-style_nav">
 					<a href="#game" title="Вернуться обратно">
-						<button class="block-tops__btn-back icon-left js-tops-btn" type="button" title="Назад"></button>
+						<button class="block-style_btn-back icon-left" type="button" title="Назад"></button>
 					</a>
-					<h2 class="block-tops__nav-title">Комната топ игроков</h2>
+					<h2 class="block-style_nav-title">Комната топ игроков</h2>
 				</div>
-				<div class="block-tops__box-info">
-					<div class="block-tops__box-svg box-svg-lamp">
+				<div class="block-style_box-info">
+					<div class="block-style_box-svg box-svg-lamp">
 						<!-- Анимация генерируется через JS -->
 					</div>
 					<div class="block-tops__box-table">

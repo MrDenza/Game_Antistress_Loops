@@ -42,7 +42,7 @@ let keyAjax = false; // служебный ключ AJAX
 let keyStart = false; // ключ раздела "старт" для "асинхронного" выполнения подключения с разделом "загрузка"
 let keyTops = false; // ключ раздела "топ" для "асинхронного" выполнения генерации списка с разделом "загрузка"
 let keyWarUpdate = false; // ключ предупреждения о несохранённых данных
-
+let calendar; // календарь
 let cookieUrl = {}; // переменная временного хранения закладки URL
 
 // ---------- Проверка поддержки методов / Полифилы ----------
@@ -83,20 +83,143 @@ class elemBackground {
 		this.elemAngle = randomNum(1,0.1,2)*Math.PI; // угол движения элемента
 		this.elemSpeed = randomNum(0)/20; // скорость элемента
 	}
-	move(){
+	move() {
 		this.elemPosX += this.elemSpeed * Math.cos(this.elemAngle);
 		this.elemPoxY += this.elemSpeed * Math.sin(this.elemAngle);
 		this.elemAngle += randomNum(1, 0.1,20) * Math.PI/180 - 10*Math.PI/180;
 	}
-	show(){
+	show() {
 		bodyAnimationCanvas.beginPath();
 		bodyAnimationCanvas.arc(this.elemPosX,this.elemPoxY,this.elemRadius,0,2*Math.PI);
 		bodyAnimationCanvas.fillStyle = 'rgba(255, 255, 255, 0.4)';
 		bodyAnimationCanvas.fill();
 	}
 }
+// Класс генерации календаря
+class Calendar {
+	currYear;
+	currMonth;
+	currDay;
+	classElem;
+	months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+	daysList = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+	openDate;
+	constructor(className) {
+		let nowDate = new Date();
+		this.classElem = className; // сохраняем класс бокса для календаря
+		this.currMonth = nowDate.getMonth();
+		this.currYear = nowDate.getFullYear();
+		this.currDay = nowDate.getDate();
+	}
+
+	nextMonth() { // метод перехода к следующему месяц
+		if (this.currMonth === 11) {
+			this.currMonth = 0;
+			this.currYear = this.currYear + 1;
+		}
+		else {
+			this.currMonth = this.currMonth + 1;
+		}
+		this.showCurr();
+	}
+
+	prevMonth() { // метод перехода к предыдущему месяцу
+		if (this.currMonth === 0) {
+			this.currMonth = 11;
+			this.currYear = this.currYear - 1;
+		}
+		else {
+			this.currMonth = this.currMonth - 1;
+		}
+		this.showCurr();
+	}
+
+	showCurr() { // метод запуска отображения
+		this.showMonth(this.currYear, this.currMonth);
+	}
+
+	goNowDate() { // установить актуальную дату
+		let nowDate = new Date();
+		this.currMonth = nowDate.getMonth();
+		this.currYear = nowDate.getFullYear();
+		this.currDay = nowDate.getDate();
+		this.showCurr();
+	}
+
+	showMonth(y, m) { // метод отображения нужного месяца (месяц в году)
+		let nowDate = new Date(); // ????????????
+		let firstDayOfMonth = new Date(y, m, 7).getDay(); // первый день в месяце
+		let lastDayOfMonth = new Date(y, m + 1, 0).getDate(); // последний день в месяце
+		let lastDayOfLastMonth = m === 0 ? new Date(y-1, 11, 0).getDate() : new Date(y, m, 0).getDate(); // последний день пред месяца
+
+		let codeHtml = `<table class="block-calendar__table"><thead><tr><td colspan="7">${this.months[m].toUpperCase()} ${y}</td></tr></thead>`;
+
+		codeHtml += `<tr class="block-calendar__table-i-days">`;
+		for (let i = 0; i < this.daysList.length; i++) {
+			codeHtml += `<td>${this.daysList[i]}</td>`;
+		}
+		codeHtml += `</tr>`;
+
+		let keyA = 1; // запись дней в календарь
+		do {
+			let rowN = new Date(y, m, keyA).getDay();
+			if (rowN === 1) { // ПН
+				codeHtml += `<tr>`;
+			}
+			else if (keyA === 1) {// если первый день не ПН показать дни прошлого месяца
+				codeHtml += `<tr>`;
+				let keyK = lastDayOfLastMonth - firstDayOfMonth + 1;
+				for (let j = 0; j < firstDayOfMonth; j++) {
+					codeHtml += `<td class="block-calendar__table-i-dayNotCur">${keyK}</td>`;
+					keyK++;
+				}
+			}
+			let checkY = nowDate.getFullYear();
+			let checkM = nowDate.getMonth();
+			if (checkY === this.currYear && checkM === this.currMonth && keyA === this.currDay) {
+				codeHtml += `<td class="block-calendar__table-i-dayNow">${keyA}</td>`;
+			}
+			else {
+				codeHtml += `<td class="block-calendar__table-i-dayNorm">${keyA}</td>`;
+			}
+			if (rowN === 0) { // закрываем строку в ВС
+				codeHtml += `</tr>`;
+			}
+			else if (keyA === lastDayOfMonth) { // если последний день не ВС показать дни след месяца
+				let keyB = 1;
+				for (rowN; rowN < 7; rowN++) {
+					codeHtml += `<td class="block-calendar__table-i-dayNotCur">${keyB}</td>`;
+					keyB++;
+				}
+			}
+			keyA++;
+		} while (keyA <= lastDayOfMonth);
+
+		codeHtml += `</table>`; // конец
+		document.querySelector(this.classElem).innerHTML = codeHtml;
+		document.querySelector('.block-calendar__table').onclick = () => this.getClickInfo();
+	}
+
+	getClickInfo (EO) { // вернуть дату по которой совершён клик
+		EO = EO || window.event;
+		let cellTable = EO.target.closest('td');
+		if (!cellTable) {
+			return;
+		}
+		if (!cellTable.classList[0] === false && (cellTable.classList[0].includes('dayNorm') === true || cellTable.classList[0].includes('dayNow') === true)) {
+			let clickDate = `${cellTable.innerHTML}_${this.currMonth+1}_${this.currYear}`;
+			this.openDate = clickDate;
+			console.log(`GAME: Выбрано ежедневное испытание от ${clickDate}`);
+		}
+	}
+}
 
 // ---------- Слушатели / Адаптация ----------
+window.onload = (EO) => {
+	// todo: авто авторизация или на страницу старт
+	calendar = new Calendar('.js-calendar'); // Начать календарь
+	calendar.showCurr();
+}
 // Слушатель изменения URL страницы
 window.onhashchange = updateVisibleHtmlPage;
 // Фикс адаптации по высоте
@@ -109,40 +232,6 @@ window.addEventListener('resize', function() {
 	document.documentElement.style.setProperty('--vh',`${vhFix}px`); // для фикса адаптации по высоте
 	massElemBackground = [];
 });
-// Обновление слушателей страницы
-function updateListener(sectionPage) {
-	// удаляем слушателей
-	document.querySelector('.block-start__btn').removeEventListener('click',openGame,false);
-	formInRegPage.removeEventListener('submit',registerUser,false);
-	formInLogPage.removeEventListener('submit',logInUser,false);
-	document.querySelector('.js-menu').removeEventListener('change', chekedMenu);
-	document.querySelector('.js-menu-4').removeEventListener('click', () => {goToStatePage('calendar')});
-	document.querySelector('.js-menu-5').removeEventListener('click', topsList);
-	// добавляем слушателей
-	switch (sectionPage) {
-		case 'start':
-			document.querySelector('.block-start__btn').addEventListener('click',openGame,false);
-			break;
-		case 'reg':
-			formInRegPage.addEventListener('submit',registerUser,false);
-			break;
-		case 'login':
-			formInLogPage.addEventListener('submit',logInUser,false);
-			break;
-		case 'game':
-			document.querySelector('.js-menu').addEventListener('change', chekedMenu);
-			//document.querySelector('.js-menu-1').addEventListener('click', () => {/* todo: музыка */});
-			//document.querySelector('.js-menu-2').addEventListener('click', () => {/* todo: рестарт лвл */});
-			//document.querySelector('.js-menu-3').addEventListener('click', () => {/* todo: вибро */});
-			document.querySelector('.js-menu-4').addEventListener('click', () => {goToStatePage('calendar')});
-			document.querySelector('.js-menu-5').addEventListener('click', topsList);
-			//document.querySelector('.js-lvl-prev').addEventListener('click', () => {/* todo: листаем уровни */});
-			//document.querySelector('.js-lvl-next').addEventListener('click', () => {/* todo: листаем уровни */});
-			break;
-		case 'calendar':
-			break;
-	}
-}
 // Активация ключа о потери данных
 function checkUpdatePage(EO) {
 	EO = EO || window.event;
@@ -155,6 +244,41 @@ window.onbeforeunload = (EO) => {
 		EO.returnValue = 'Есть несохранённые данные!';
 	}
 };
+
+// Обновление слушателей страницы
+function updateListener(sectionPage) { // todo: переработать обработчики
+
+	// удаляем слушателей
+	formInRegPage.removeEventListener('submit',registerUser,false);
+	formInLogPage.removeEventListener('submit',logInUser,false);
+	document.querySelector('.js-menu').removeEventListener('change', chekedMenu);
+	// добавляем слушателей
+	switch (sectionPage) {
+		case 'start':
+			document.querySelector('.block-start__btn').onclick = openGame;
+			break;
+		case 'reg':
+			formInRegPage.addEventListener('submit',registerUser,false);
+			break;
+		case 'login':
+			formInLogPage.addEventListener('submit',logInUser,false);
+			break;
+		case 'game':
+			document.querySelector('.js-menu').addEventListener('change', chekedMenu);
+			//document.querySelector('.js-menu-1').onclick = () => /* todo: музыка */ ;
+			//document.querySelector('.js-menu-2').onclick = () => /* todo: рестарт лвл */ ;
+			//document.querySelector('.js-menu-3').onclick = () => /* todo: вибро */ ;
+			document.querySelector('.js-menu-4').onclick = () => goToStatePage('calendar');
+			document.querySelector('.js-menu-5').onclick = topsList;
+			//document.querySelector('.js-lvl-prev').onclick = () => /* todo: листаем уровни */ ;
+			//document.querySelector('.js-lvl-next').onclick = () => /* todo: листаем уровни */ ;
+			break;
+		case 'calendar':
+			document.querySelectorAll('.js-cal-btnNext').forEach((el) => {el.onclick = () => calendar.nextMonth()});
+			document.querySelectorAll('.js-cal-btnPrv').forEach((el) => {el.onclick = () => calendar.prevMonth()});
+			break;
+	}
+}
 
 // ---------- Работа с фоном ----------
 // Установка градиента фона и цвета для значков
@@ -267,6 +391,9 @@ updateVisibleHtmlPage();
 // Переход на другую
 function goToStatePage(newPage) {
 	// newPage = 'loading' 'start' 'reg' 'login' 'game' 'calendar' 'tops'
+	if (newPage === 'calendar') {
+		calendar.goNowDate();
+	}
 	if (newPage === 'loading') {
 		updateVisibleHtmlPage(true);
 	}

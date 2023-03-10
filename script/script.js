@@ -156,7 +156,6 @@ window.onbeforeunload = (EO) => {
 	}
 };
 
-
 // ---------- Работа с фоном ----------
 // Установка градиента фона и цвета для значков
 function backgroundGame() {
@@ -311,17 +310,17 @@ function chekedMenu(EO) {
 	animUpdate.key = true;
 	if (this.checked) {
 		document.querySelector('.js-lvl-list').style.width = '73px';
-		document.querySelector('.js-game-click').addEventListener('click', () => {
-			document.querySelector('.js-menu').click();
-		})
+		document.querySelector('.js-game-click').addEventListener('click', clickMenu);
 	}
 	else {
 		document.querySelector('.js-lvl-list').style.width = '0';
-		document.querySelector('.js-game-click').removeEventListener('click', () => {
-			document.querySelector('.js-menu').click();
-		})
+		document.querySelector('.js-game-click').removeEventListener('click', clickMenu);
 	}
-
+}
+// Симуляция открытия меню
+function clickMenu(EO) {
+	EO = EO || window.event;
+	document.querySelector('.js-menu').click();
 }
 
 // ---------- Раздел "Tops" ----------

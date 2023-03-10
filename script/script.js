@@ -40,6 +40,7 @@ let keyReg = false; // ключ раздела "регистрация" для "
 let keyLog = false; // ключ раздела "логин" для "асинхронного" выполнения авторизации с разделом "загрузка"
 let keyAjax = false; // служебный ключ AJAX
 let keyStart = false; // ключ раздела "старт" для "асинхронного" выполнения подключения с разделом "загрузка"
+let keyTops = false; // ключ раздела "топ" для "асинхронного" выполнения генерации списка с разделом "загрузка"
 let keyWarUpdate = false; // ключ предупреждения о несохранённых данных
 
 let cookieUrl = {}; // переменная временного хранения закладки URL
@@ -114,6 +115,9 @@ function updateListener(sectionPage) {
 	document.querySelector('.block-start__btn').removeEventListener('click',openGame,false);
 	formInRegPage.removeEventListener('submit',registerUser,false);
 	formInLogPage.removeEventListener('submit',logInUser,false);
+	document.querySelector('.js-menu').removeEventListener('change', chekedMenu);
+	document.querySelector('.js-menu-4').removeEventListener('click', () => {goToStatePage('calendar')});
+	document.querySelector('.js-menu-5').removeEventListener('click', topsList);
 	// добавляем слушателей
 	switch (sectionPage) {
 		case 'start':
@@ -126,6 +130,14 @@ function updateListener(sectionPage) {
 			formInLogPage.addEventListener('submit',logInUser,false);
 			break;
 		case 'game':
+			document.querySelector('.js-menu').addEventListener('change', chekedMenu);
+			//document.querySelector('.js-menu-1').addEventListener('click', () => {/* todo: музыка */});
+			//document.querySelector('.js-menu-2').addEventListener('click', () => {/* todo: рестарт лвл */});
+			//document.querySelector('.js-menu-3').addEventListener('click', () => {/* todo: вибро */});
+			document.querySelector('.js-menu-4').addEventListener('click', () => {goToStatePage('calendar')});
+			document.querySelector('.js-menu-5').addEventListener('click', topsList);
+			//document.querySelector('.js-lvl-prev').addEventListener('click', () => {/* todo: листаем уровни */});
+			//document.querySelector('.js-lvl-next').addEventListener('click', () => {/* todo: листаем уровни */});
 			break;
 		case 'calendar':
 			break;
@@ -255,7 +267,7 @@ function updateVisibleHtmlPage(load) {
 updateVisibleHtmlPage();
 // Переход на другую
 function goToStatePage(newPage) {
-	// newPage = 'loading' 'start' 'reg' 'login' 'game' 'calendar' 'trophy'
+	// newPage = 'loading' 'start' 'reg' 'login' 'game' 'calendar' 'tops'
 	if (newPage === 'loading') {
 		updateVisibleHtmlPage(true);
 	}
@@ -285,10 +297,61 @@ function openGame() {
 			cookieUsersInfo = {};
 			console.log('GAME: Успешная автоматическая авторизация пользователя!');
 			goToStatePage('game');
-
+		}
+		else {
+			goToStatePage('login');
 		}
 	}
 }
+
+// ---------- Раздел "Game" ----------
+// Состояния меню
+function chekedMenu(EO) {
+	EO = EO || window.event;
+	animUpdate.key = true;
+	if (this.checked) {
+		document.querySelector('.js-lvl-list').style.width = '73px';
+		document.querySelector('.js-game-click').addEventListener('click', () => {
+			document.querySelector('.js-menu').click();
+		})
+	}
+	else {
+		document.querySelector('.js-lvl-list').style.width = '0';
+		document.querySelector('.js-game-click').removeEventListener('click', () => {
+			document.querySelector('.js-menu').click();
+		})
+	}
+
+}
+
+// ---------- Раздел "Tops" ----------
+// Создание таблицы топов
+function topsList(EO) {
+	EO = EO || window.event;
+	if (keyTops === false) {
+		restoreInfo('read');
+		keyTops = true;
+	}
+	else {
+		let keysSort = Object.keys(cookieUsersInfo).sort(function(a, b) {
+			return cookieUsersInfo[b].lvl - cookieUsersInfo[a].lvl
+		});
+		for (let i = 0; i < 3; i++) {
+			let rowEl = document.querySelector('.js-tops-list-'+ CSS.escape(String(i+1)));
+			rowEl.innerHTML = `<td>${i+1}</td><td>${keysSort[i+1]}</td><td>${cookieUsersInfo[keysSort[i]].lvl}</td>`;
+		}
+		cookieUsersInfo = {};
+		keyTops = false;
+		goToStatePage('tops');
+	}
+}
+// Обновление информации после перезагрузки раздела "топ"
+function autoUpdateTops() {
+	if (window.location.hash.substr(1) === 'tops') {
+		topsList();
+	}
+}
+autoUpdateTops();
 
 // ---------- Работа с формами ----------
 // Регистрация
@@ -529,6 +592,9 @@ function readReady(callresult) {
 		if (keyStart === true) {
 			openGame();
 		}
+		if (keyTops === true) {
+			topsList();
+		}
 		if (keyAjax === true) { // админ
 			console.log(cookieUsersInfo);
 			keyAjax = false;
@@ -591,6 +657,7 @@ function resetLocalStorage() {
 	localStorage.removeItem('pass');
 	console.log('LocalStorage: Данные обнулены!');
 }
+
 // ---------- Игровой цикл ----------
 function gameLoop(nowTimeFrame) { // цикл
 	if (fixNum === 1) {
@@ -669,4 +736,5 @@ function setAttributes(el, attrs) {
 		el.setAttribute(key, attrs[key]);
 	}
 }
+
 // ----------  ----------

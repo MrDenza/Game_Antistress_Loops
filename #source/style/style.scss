@@ -100,7 +100,7 @@ body {
 	}
 	&__box-svg {
 		max-width: 700px;
-		height: 100vh;
+		height: 97vh;
 		height: calc(var(--vh,1vh)*97);
 	}
 	&__box-title {
@@ -258,6 +258,291 @@ body {
 		}
 	}
 }
+/* ------------------------ BLOCK 4 ------------------------- */
+@keyframes rotElem {
+	0% {
+		transform: translateY(-50%) rotate(-15deg);
+	}
+	50% {
+		transform: translateY(-50%) rotate(+15deg);
+	}
+	100% {
+		transform: translateY(-50%) rotate(-15deg);
+	}
+}
+* {
+	user-select: none;
+}
+.block-game {
+	&__box {
+		box-sizing: border-box;
+		max-width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	&__box-block {
+		position: relative;
+		min-width: 100px;
+		transition: width 1s linear;
+	}
+	&__menu-box {
+		& .block-game__menu_size {
+			display: block;
+			width: 100px;
+			margin: 0 10px 0 0;
+			transition: all 1s linear;
+		}
+	}
+	&__menu-btn {
+		width: 100px;
+		height: 100px;
+		box-sizing: border-box;
+		border-radius: 100px;
+		position: absolute;
+		display: flex;
+		font-size: 15px;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		cursor: pointer;
+		transform: translateY(-50%);
+		background-color: white;
+		border: 2px solid var(--colorItem, black);
+		transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+		&:not(:first-child) {
+			opacity: 0;
+			-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+			z-index: -2;
+			transition: all 0.7s cubic-bezier(.87,-.41,.19,1.44);
+			&:hover {
+				animation: rotElem 1s ease infinite;
+			}
+		}
+		&:nth-child(2) {
+			top: 0;
+			left: 0;
+			transition-delay: 0s;
+		}
+		&:nth-child(3) {
+			top: 0;
+			left: 0;
+			transition-delay: 0.2s;
+		}
+		&:nth-child(4) {
+			top: 0;
+			left: 0;
+			transition-delay: 0.4s;
+		}
+		&:nth-child(5) {
+			top: 0;
+			left: 0;
+			transition-delay: 0.6s;
+		}
+		&:nth-child(6) {
+			top: 0;
+			left: 0;
+			transition-delay: 0.8s;
+		}
+	}
+	&__btn-menu, &__btn-close {
+		position: absolute;
+		transition: all 0.2s ease;
+	}
+	&__btn-close {
+		transform: translateX(50px);
+		opacity: 0;
+	}
+	&__menu {
+		position: relative;
+		display: none;
+		&:checked ~ .block-game__menu-box {
+			& .block-game__menu-btn {
+				& .block-game__btn-menu {
+					transform: translateX(-50px);
+					opacity: 0;
+				}
+				& .block-game__btn-close {
+					transform: translateX(0px);
+					opacity: 1;
+				}
+				&:not(:first-child) {
+					z-index: 1;
+					opacity: 1;
+					-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+				}
+				&:nth-child(2) {
+					top: -150px;
+				}
+				&:nth-child(3) {
+					top: -100px;
+					left: 100px;
+				}
+				&:nth-child(4) {
+					left: 150px;
+				}
+				&:nth-child(5) {
+					top: 100px;
+					left: 100px;
+				}
+				&:nth-child(6) {
+					top: 150px;
+				}
+			}
+			& .block-game__menu_size {
+				width: 300px;
+			}
+		}
+	}
+	&__btn {
+		&_font {
+			font-size: 2rem;
+			line-height: 1rem;
+			color: var(--colorItem, black);
+		}
+	}
+
+	&__box-game {
+		width: 100%;
+		height: 100%;
+		flex: 1 1;
+		margin: 0 10px 0 0;
+		background-color: rgba(255, 255, 255, 0.2);
+	}
+
+	&__box-lvl {
+		width: 0;
+		transition: all 1s linear;
+		overflow: hidden;
+	}
+	&__box-lvl-list {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		background-color: white;
+		border: 2px solid var(--colorItem, black);
+		border-radius: 15px;
+		padding: 10px;
+		color: var(--colorItem, black);
+		font-size: 1.5rem;
+		line-height: 0.7rem;
+		overflow: hidden;
+	}
+	&__btn-previous, &__btn-next {
+		width: 1.6rem;
+		cursor: pointer;
+		padding: 0;
+		color: var(--colorItem, black);
+		line-height: 0.7rem;
+		background-color: white;
+		border-radius: 1.7rem;
+		box-shadow: none;
+		border: none;
+
+	}
+	&__btn-previous {
+		transform: rotate(90deg);
+	}
+	&__lvl-num {
+		margin: 30px 0;
+		line-height: 0.8rem;
+	}
+	&__btn-next {
+		transform: rotate(90deg);
+	}
+}
+/* ------------------------ BLOCK 5 ------------------------- */
+/* ------------------------ BLOCK 6 ------------------------- */
+@keyframes rotBtn {
+	0% {
+		transform: rotate(-15deg);
+	}
+	50% {
+		transform: rotate(+15deg);
+	}
+	100% {
+		transform: rotate(-15deg);
+	}
+}
+.block-tops {
+	&__box {
+		box-sizing: border-box;
+		max-width: 100%;
+		height: 100%;
+		flex-direction: column;
+	}
+	&__nav {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+	}
+	&__btn-back {
+		width: 100px;
+		height: 100px;
+		border-radius: 50%;
+		line-height: 0.7rem;
+		font-size: 2rem;
+		background-color: white;
+		color: var(--colorItem, black);
+		border: 1px solid var(--colorItem, black);
+		box-shadow: none;
+		&:hover {
+			animation: rotBtn 1s ease infinite;
+		}
+	}
+	&__nav-title {
+		margin-left: 50px;
+	}
+	&__box-info {
+		display: flex;
+		justify-content: center;
+		height: 88vh;
+		height: calc(var(--vh,1vh)*88);
+	}
+	&__box-svg {
+		width: 40%;
+		align-self: center;
+	}
+	&__box-table {
+		width: 60%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	&__title {
+		margin-bottom: 20px;
+	}
+	&__table {
+		border: 2px solid var(--colorItem, black);
+		padding: 20px;
+		border-radius: 10px;
+		background-color: rgba(255, 255, 255, 0.8);
+		color: var(--colorItem, black);
+		& tr {
+			height: 50px;
+			& td {
+				text-align: center;
+				border-bottom: 1px solid var(--colorItem, black);
+
+			}
+			& td:nth-child(1) {
+				width: 100px;
+			}
+			& td:nth-child(2) {
+				width: 300px;
+			}
+			& td:nth-child(3) {
+				width: 300px;
+			}
+		}
+		& tr:first-child {
+			font-weight: bold;
+		}
+	}
+}
 /* -------------------- Аdaptive layout --------------------- */
 @media screen and (max-width: 1400px) {
 	/* ----------------------- BLOCK 2-3 ------------------------ */
@@ -293,6 +578,13 @@ body {
 		}
 		&__box-input {
 			padding-bottom: 6px;
+		}
+	}
+	/* ------------------------ BLOCK 6 ------------------------- */
+	.block-tops {
+		&__btn-back {
+			width: 80px;
+			height: 80px;
 		}
 	}
 }
@@ -404,6 +696,28 @@ body {
 			padding-bottom: 3vh;
 		}
 	}
+	/* ------------------------ BLOCK 6 ------------------------- */
+	.block-tops {
+		&__nav-title {
+			margin-left: 30px;
+		}
+		&__btn-back {
+			width: 60px;
+			height: 60px;
+		}
+		&__box-info {
+			flex-direction: column;
+			align-items: center;
+		}
+		&__box-svg {
+			width: auto;
+			height: 30vh;
+			margin-bottom: 15px;
+		}
+		&__box-table {
+			width: 80%;
+		}
+	}
 }
 @media screen and (max-height: 520px) and (max-width: 920px)
 	and (orientation:landscape) {
@@ -477,6 +791,50 @@ body {
 			padding: 0 10px;
 		}
 	}
+	/* ------------------------ BLOCK 6 ------------------------- */
+	.block-tops {
+		&__btn-back {
+			width: 50px;
+			height: 50px;
+			font-size: 1.5rem;
+		}
+		&__nav-title {
+			margin-left: 25px;
+		}
+		&__box-info {
+			height: 80vh;
+			height: calc(var(--vh,1vh)*80);
+		}
+		&__box-svg {
+			width: 35%;
+			height: 60vh;
+			height: calc(var(--vh,1vh)*60);
+			flex: 0 1 auto;
+		}
+		&__box-table {
+			height: 100%;
+			flex: 1 1 auto;
+		}
+		&__title {
+			margin-bottom: 5px;
+		}
+		&__table {
+			border-width: 1px;
+			padding: 0 8px;
+			& tr {
+				height: 25px;
+				& td:nth-child(1) {
+					width: 80px;
+				}
+				& td:nth-child(2) {
+					width: 150px;
+				}
+				& td:nth-child(3) {
+					width: 200px;
+				}
+			}
+		}
+	}
 }
 @media screen and (max-width: 480px) {
 	/* ------------------------ BLOCK 0 ------------------------- */
@@ -508,6 +866,19 @@ body {
 	.block-connect {
 		&__title {
 			font-size: 2.5rem;
+		}
+	}
+	/* ------------------------ BLOCK 6 ------------------------- */
+	.block-tops {
+		&__nav-title {
+			margin-left: 20px;
+			font-size: 1.3rem;
+		}
+		&__box-info {
+			justify-content: space-evenly;
+		}
+		&__box-table {
+			width: 100%;
 		}
 	}
 }

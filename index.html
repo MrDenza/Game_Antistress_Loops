@@ -9,6 +9,7 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Jura&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="font/css/Icon-Font.css"> <!-- иконочный шрифт -->
 		<link rel="stylesheet" href="style/style.css" type="text/css"> <!-- Стили общие -->
 		<title>ENERGY</title>
 	</head>
@@ -117,27 +118,39 @@
 			</section>
 			<!-- Блок 4 - Игра + меню + переключение уровней -->
 			<section class="block-game__box js-game_visible" style="display: none">
-				<div class="block-game__box-menu">
-					<svg class="block-game__menu" xmlns="http://www.w3.org/2000/svg"></svg>
+				<div class="block-game__box-block">
+					<input class="block-game__menu js-menu" type="checkbox" name="menu" id="toggle-menu">
+					<label class="block-game__menu-box" for="toggle-menu">
+						<span class="block-game__menu-btn">
+							<i class="block-game__btn_font block-game__btn-menu icon-menu"></i>
+							<i class="block-game__btn_font block-game__btn-close icon-close"></i>
+						</span>
+						<span class="block-game__menu-btn js-menu-1">
+							<i class="block-game__btn_font icon-melody"></i>
+						</span>
+						<span class="block-game__menu-btn js-menu-2">
+							<i class="block-game__btn_font icon-reset"></i>
+						</span>
+						<span class="block-game__menu-btn js-menu-3">
+							<i class="block-game__btn_font icon-vibro"></i>
+						</span>
+						<span class="block-game__menu-btn js-menu-4">
+							<i class="block-game__btn_font icon-cal"></i>
+						</span>
+						<span class="block-game__menu-btn js-menu-5">
+							<i class="block-game__btn_font icon-top"></i>
+						</span>
+						<span class="block-game__menu_size"></span>
+					</label>
 				</div>
-				<div class="block-game__box-game">
+				<div class="block-game__box-game js-game-click">
 					<!-- Игровое поле генерируется через JS -->
 				</div>
-				<div class="block-game__box-lvl">
+				<div class="block-game__box-lvl js-lvl-list">
 					<div class="block-game__box-lvl-list">
-						<button class="block-game__btn-previous" type="button" title="Предыдущий уровень">
-							<svg class="block-game__btn-previous_img" width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
- 								<path class="svg__btn" d="M4 12L20 12" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
- 								<path class="svg__btn" d="M10 6L4.0625 11.9375V11.9375C4.02798 11.972 4.02798 12.028 4.0625 12.0625V12.0625L10 18" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
- 							</svg>
-						</button>
+						<button class="block-game__btn-previous icon-left js-lvl-prev" type="button" title="Предыдущий уровень"></button>
 						<span class="block-game__lvl-num">#1</span>
-						<button class="block-game__btn-next" type="button" title="Следующий уровень">
-							<svg class="block-game__btn-next_img" width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path class="svg__btn" d="M20 12L4 12" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-								<path class="svg__btn" d="M14 18L19.9375 12.0625V12.0625C19.972 12.028 19.972 11.972 19.9375 11.9375V11.9375L14 6" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-							</svg>
-						</button>
+						<button class="block-game__btn-next icon-right js-lvl-next" type="button" title="Следующий уровень"></button>
 					</div>
 				</div>
 			</section>
@@ -160,19 +173,32 @@
 					<button class="block-calendar__btn-trophy" type="button" title="Открыть раздел с трофеями">Трофеи</button>
 				</div>
 			</section>
-			<!-- Блок 6 - Комната трофеев -->
-			<section class="block-trophy__box js-trophy_visible" style="display: none">
-				<div class="block-trophy__nav">
-					<button class="block-trophy__btn-back" type="button" title="Назад">
-						<svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M4 12L20 12" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-							<path d="M10 6L4.0625 11.9375V11.9375C4.02798 11.972 4.02798 12.028 4.0625 12.0625V12.0625L10 18" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-						</svg>
-					</button>
-					<span class="block-calendar__nav-title">Комната трофеев</span>
+			<!-- Блок 6 - Комната топов -->
+			<section class="block-tops__box js-tops_visible" style="display: none">
+				<div class="block-tops__nav">
+					<a href="#game" title="Вернуться обратно">
+						<button class="block-tops__btn-back icon-left js-tops-btn" type="button" title="Назад"></button>
+					</a>
+					<h2 class="block-tops__nav-title">Комната топ игроков</h2>
 				</div>
-				<div class="block-trophy__box-trophy">
-					<img src="" alt="" title="">
+				<div class="block-tops__box-info">
+					<div class="block-tops__box-svg box-svg-lamp">
+						<!-- Анимация генерируется через JS -->
+					</div>
+					<div class="block-tops__box-table">
+						<h3 class="block-tops__title">ТОП ИГРОКОВ</h3>
+						<table class="block-tops__table js-top-table">
+							<tr>
+								<td>Место</td>
+								<td>Ник</td>
+								<td>Пройдено уровней</td>
+							</tr>
+							<!-- Остальная часть таблицы заполняется через JS -->
+							<tr class="js-tops-list-1"></tr>
+							<tr class="js-tops-list-2"></tr>
+							<tr class="js-tops-list-3"></tr>
+						</table>
+					</div>
 				</div>
 			</section>
 		</main>

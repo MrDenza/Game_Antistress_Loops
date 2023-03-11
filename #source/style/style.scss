@@ -65,6 +65,7 @@ body {
 	left: 0;
 	transition: opacity 0.3s linear;
 }
+/* ----------------------- Animation ------------------------ */
 @keyframes rotElem {
 	0% {
 		transform: translateY(-50%) rotate(-15deg);
@@ -86,6 +87,54 @@ body {
 	100% {
 		transform: rotate(-15deg);
 	}
+}
+/* --------------------- SVG Elem Game ---------------------- */
+#svg-elem-0 {
+
+}
+#svg-elem-1 {
+
+}
+#svg-elem-2 {
+
+}
+#svg-elem-3 {
+
+}
+#svg-elem-4 {
+
+}
+#svg-elem-5 {
+
+}
+#svg-elem-6 {
+	stroke-width: 1;
+}
+#svg-elem-7 {
+	stroke-width: 1;
+	stroke-linecap: round;
+}
+#svg-elem-8 {
+	stroke-width: 1;
+	stroke-linecap: round;
+}
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ЗАМЕНА
+.svg-elem-game {
+	stroke: lightgray;
+	stroke-width: 2;
+	cursor: pointer;
+	fill: none;
+}
+.svg-elem-game use{
+	transition: transform 1s linear;
+	//transform-origin: center center;
+}
+.svg-elem-game-good use:nth-child(1) {
+	stroke: white;
+}
+.svg-elem-game-good use:nth-child(2) {
+	fill: white;
+	stroke: white;
 }
 /* ------------------------ BLOCK 0 ------------------------- */
 .block-loading {
@@ -419,6 +468,9 @@ body {
 		height: 100%;
 		flex: 1 1;
 		margin: 0 10px 0 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		background-color: rgba(255, 255, 255, 0.2);
 	}
 
@@ -462,6 +514,19 @@ body {
 	}
 	&__btn-next {
 		transform: rotate(90deg);
+	}
+}
+.js-game-grid {
+	display: grid;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	border: 1px solid red;
+	& div {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		border: 1px solid green;
 	}
 }
 /* ----------------------- BLOCK 5-6 ------------------------ */

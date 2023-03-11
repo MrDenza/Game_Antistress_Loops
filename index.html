@@ -19,6 +19,51 @@
 		</div>
 		<canvas class="body_animation"></canvas>
 		<main class="body__container">
+			<!-- Библиотека элементов игры -->
+			<svg xmlns="http://www.w3.org/2000/svg" style="display: none" xmlns:xlink="http://www.w3.org/1999/xlink">
+				<symbol id="svg-elem-1" viewBox="0 0 50 50"> <!-- прямая связь -->
+					<line x1=0 y1=25 x2=50 y2=25 />
+				</symbol>
+				<symbol id="svg-elem-2" viewBox="0 0 50 50"> <!-- угловая связь -->
+					<circle cx=50 cy=50 r=25 />
+				</symbol>
+				<symbol id="svg-elem-3" viewBox="0 0 50 50"> <!-- Т-образная связь -->
+					<circle cx=50 cy=50 r=25 />
+					<circle cx=0 cy=50 r=25 />
+				</symbol>
+				<symbol id="svg-elem-4" viewBox="0 0 50 50"> <!-- крестовая связь -->
+					<circle cx=50 cy=50 r=25 />
+					<circle cx=0 cy=50 r=25 />
+					<circle cx=0 cy=0 r=25 />
+					<circle cx=50 cy=0 r=25 />
+				</symbol>
+				<symbol id="svg-elem-5" viewBox="0 0 50 50"> <!-- основа элемента -->
+					<circle cx=25 cy=25 r=15 />
+					<line x1=25 y1=0 x2=25 y2=10 />
+				</symbol>
+				<symbol id="svg-elem-6" viewBox="0 0 50 50"> <!-- рисунок энергия -->
+					<polygon points="24,17 20,26 23,26 20,33 30,23 27,23 31,17" />
+				</symbol>
+				<symbol id="svg-elem-7" viewBox="0 0 50 50"> <!-- рисунок лампа -->
+					<circle cx=25 cy=25 r=5 />
+					<rect x=22 y=30 width=6 height=3 rx=1 ry=1 />
+					<line x1=24 y1=34 x2=26 y2=34 />
+					<line x1=19 y1=31 x2=17 y2=33 />
+					<line x1=13 y1=25 x2=17 y2=25 />
+					<line x1=17 y1=17 x2=19 y2=19 />
+					<line x1=25 y1=13 x2=25 y2=17 />
+					<line x1=33 y1=17 x2=31 y2=19 />
+					<line x1=33 y1=25 x2=37 y2=25 />
+					<line x1=31 y1=31 x2=33 y2=33 />
+				</symbol>
+				<symbol id="svg-elem-8" viewBox="0 0 50 50"> <!-- рисунок wifi -->
+					<path d="M17 19 Q 25 11 33 19" fill=none />
+					<path d="M20 23 Q 25 18 30 23" fill=none />
+					<path d="M23 27 Q 25 25 27 27" fill=none />
+					<circle cx=25 cy=33 r=2 />
+				</symbol>
+			</svg>
+
 			<!-- Блок 0 - Анимация загрузки -->
 			<section class="block-loading__box js-loading_visible" style="display: none">
 				<div class="block-loading__box-svg box-svg-lamp">
@@ -143,13 +188,13 @@
 						<span class="block-game__menu_size"></span>
 					</label>
 				</div>
-				<div class="block-game__box-game js-game-click">
+				<div class="block-game__box-game js-game">
 					<!-- Игровое поле генерируется через JS -->
 				</div>
 				<div class="block-game__box-lvl js-lvl-list">
 					<div class="block-game__box-lvl-list">
 						<button class="block-game__btn-previous icon-left js-lvl-prev" type="button" title="Предыдущий уровень"></button>
-						<span class="block-game__lvl-num">#1</span>
+						<span class="block-game__lvl-num js-lvl-numText"></span>
 						<button class="block-game__btn-next icon-right js-lvl-next" type="button" title="Следующий уровень"></button>
 					</div>
 				</div>
@@ -213,6 +258,6 @@
 			</section>
 		</main>
 		<script src="script/jquery-3.6.3.min.js"></script>
-		<script src="script/script.js"></script>
+		<script type="module" src="script/script.js"></script>
 	</body>
 </html>

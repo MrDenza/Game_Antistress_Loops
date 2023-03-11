@@ -257,6 +257,7 @@ body {
  transition: opacity 0.3s linear;
 }
 
+/* ----------------------- Animation ------------------------ */
 @-webkit-keyframes rotElem {
  0% {
   -webkit-transform: translateY(-50%) rotate(-15deg);
@@ -271,7 +272,6 @@ body {
           transform: translateY(-50%) rotate(-15deg);
  }
 }
-
 @keyframes rotElem {
  0% {
   -webkit-transform: translateY(-50%) rotate(-15deg);
@@ -314,6 +314,45 @@ body {
           transform: rotate(-15deg);
  }
 }
+/* --------------------- SVG Elem Game ---------------------- */
+#svg-elem-6 {
+ stroke-width: 1;
+}
+
+#svg-elem-7 {
+ stroke-width: 1;
+ stroke-linecap: round;
+}
+
+#svg-elem-8 {
+ stroke-width: 1;
+ stroke-linecap: round;
+}
+
+.svg-elem-game {
+ stroke: lightgray;
+ stroke-width: 2;
+ cursor: pointer;
+ fill: none;
+}
+
+.svg-elem-game use {
+ -webkit-transition: -webkit-transform 1s linear;
+ transition: -webkit-transform 1s linear;
+ -o-transition: transform 1s linear;
+ transition: transform 1s linear;
+ transition: transform 1s linear, -webkit-transform 1s linear;
+}
+
+.svg-elem-game-good use:nth-child(1) {
+ stroke: white;
+}
+
+.svg-elem-game-good use:nth-child(2) {
+ fill: white;
+ stroke: white;
+}
+
 /* ------------------------ BLOCK 0 ------------------------- */
 .block-loading__box {
  -webkit-box-sizing: border-box;
@@ -744,6 +783,15 @@ body {
      -ms-flex: 1 1;
          flex: 1 1;
  margin: 0 10px 0 0;
+ display: -webkit-box;
+ display: -ms-flexbox;
+ display: flex;
+ -webkit-box-pack: center;
+     -ms-flex-pack: center;
+         justify-content: center;
+ -webkit-box-align: center;
+     -ms-flex-align: center;
+         align-items: center;
  background-color: rgba(255, 255, 255, 0.2);
 }
 .block-game__box-lvl {
@@ -801,6 +849,23 @@ body {
  -webkit-transform: rotate(90deg);
      -ms-transform: rotate(90deg);
          transform: rotate(90deg);
+}
+
+.js-game-grid {
+ display: -ms-grid;
+ display: grid;
+ margin: 0;
+ padding: 0;
+ -webkit-box-sizing: border-box;
+         box-sizing: border-box;
+ border: 1px solid red;
+}
+.js-game-grid div {
+ margin: 0;
+ padding: 0;
+ -webkit-box-sizing: border-box;
+         box-sizing: border-box;
+ border: 1px solid green;
 }
 
 /* ----------------------- BLOCK 5-6 ------------------------ */

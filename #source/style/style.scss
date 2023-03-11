@@ -828,11 +828,10 @@ body {
 	/* ------------------------ BLOCK 5 ------------------------- */
 	.block-calendar {
 		&__box-svg {
-			//display: none;
 			padding-top: 5px;
 		}
 		&__box-calendar {
-			height: 398px;
+			//height: 398px;
 			display: flex;
 			flex-direction: row;
 		}
@@ -852,6 +851,14 @@ body {
 		}
 		&__btnPrv-2, &__btnNext-2 {
 			display: block;
+		}
+	}
+}
+@media screen and (max-height: 700px) and (orientation:portrait) {
+	/* ------------------------ BLOCK 5 ------------------------- */
+	.block-calendar {
+		&__box-calendar {
+			height: 398px;
 		}
 	}
 }

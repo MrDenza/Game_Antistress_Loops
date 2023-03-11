@@ -905,10 +905,6 @@ body {
  -webkit-box-shadow: none;
          box-shadow: none;
 }
-.block-calendar__btnPrv:hover, .block-calendar__btnNext:hover, .block-calendar__btnPrv-2:hover, .block-calendar__btnNext-2:hover {
- -webkit-animation: rotBtn 1s ease infinite;
-         animation: rotBtn 1s ease infinite;
-}
 .block-calendar__subtitle {
  margin: 0 15px;
 }
@@ -1224,7 +1220,6 @@ body {
   padding-top: 5px;
  }
  .block-calendar__box-calendar {
-  height: 398px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1249,6 +1244,12 @@ body {
  }
  .block-calendar__btnPrv-2, .block-calendar__btnNext-2 {
   display: block;
+ }
+}
+@media screen and (max-height: 700px) and (orientation: portrait) {
+ /* ------------------------ BLOCK 5 ------------------------- */
+ .block-calendar__box-calendar {
+  height: 398px;
  }
 }
 @media screen and (max-height: 520px) and (max-width: 920px) and (orientation: landscape) {

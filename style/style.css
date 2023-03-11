@@ -1215,6 +1215,9 @@ body {
  }
 }
 @media screen and (max-height: 700px) {
+ .body__container {
+  padding: 15px;
+ }
  /* ------------------------ BLOCK 5 ------------------------- */
  .block-calendar__box-svg {
   padding-top: 5px;
@@ -1425,6 +1428,9 @@ body {
  }
 }
 @media screen and (max-width: 480px) {
+ .body__container {
+  padding: 15px;
+ }
  /* ------------------------ BLOCK 0 ------------------------- */
  .block-loading__box-svg {
   width: 100%;

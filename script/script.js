@@ -222,10 +222,12 @@ class Calendar {
 }
 // Класс уровня
 class Level {
-	rotElemsUser = [];
-	rotElemsGame = [];
+	rotElemsGame = []; // массив с массивами
+	rotElemsUser = []; // массив со значениями
 	animFrameClasses = [];
-	animFrameSetting = {}; // {rotationValue: 0, stepRot: 1, opacityValue: 0.5, stepOpacity: 0.05}
+	// {начальное значение сдвига, шаг изменения сдвига 1/60с, начальное значение прозрачности, шаг изменения прозрачности 1/60с}
+	animFrameSetting = {rotationValue: 0, stepRot: 0.05, opacityValue: 0.1, stepOpacity: 0.005};
+	keyListener = true; // ключ слушателя элементов игры
 	constructor(elemDiv, textLvl, levelList, goLevel) {
 		this.gameDiv = elemDiv; // сохраняем класс бокса для игрового поля
 		this.lvlNumText = textLvl;
@@ -235,17 +237,15 @@ class Level {
 		this.levelPlayInfo = this.allLevelInfo[this.enterGameLevel];
 		this.buildGame();
 	}
-	prevLevel(){
+	prevLevel() {
 		if (!(this.enterGameLevel <= 1)) {
 			this.enterGameLevel--;
-			backgroundGame();
 			this.buildGame();
 		}
 	}
-	nextLevel(){
+	nextLevel() {
 		if (!(this.enterGameLevel >= this.maxGameLevel)) {
 			this.enterGameLevel++;
-			backgroundGame();
 			if (!(this.allLevelInfo[this.enterGameLevel])) {
 				alert('К сожалению для тебя доступные уровни закончились! Ждите обновления! Либо пройдите снова предыдущие уровни =)');
 			}
@@ -259,13 +259,15 @@ class Level {
 		}
 		//this.buildGame();
 	}
-	buildGame(){
+	buildGame() {
 		if (!(this.allLevelInfo[this.enterGameLevel])) {
 			console.log('GAME: Достигнут предел пройденных уровней!');
 			this.enterGameLevel--;
 			this.buildGame();
 			return;
 		}
+		animUpdate.key = true;
+		backgroundGame();
 		console.log(`GAME: Генерация уровня #${this.enterGameLevel}`);
 		this.rotElemsGame = [];
 		this.rotElemsUser = [];
@@ -297,14 +299,19 @@ class Level {
 		this.animFrameClasses = document.querySelectorAll('.js-anim-frame');
 		document.querySelector(this.gameDiv).onclick = () => this.getClickInfo();
 	}
+	updateKeyListener() {
+		this.keyListener = !this.keyListener;
+	}
 	getClickInfo(EO) { // вернуть дату по которой совершён клик
-		EO = EO || window.event;
-		let clickElem = EO.target.closest('svg');
-		if (!clickElem || clickElem.getAttribute('data-access-rot') === 'false') {
-			return;
-		}
-		if (clickElem.getAttribute('data-access-rot') === 'true') {
-			this.rotationElem(clickElem, clickElem.getAttribute('data-num'));
+		if (this.keyListener === true) {
+			EO = EO || window.event;
+			let clickElem = EO.target.closest('svg');
+			if (!clickElem || clickElem.getAttribute('data-access-rot') === 'false') {
+				return;
+			}
+			if (clickElem.getAttribute('data-access-rot') === 'true') {
+				this.rotationElem(clickElem, clickElem.getAttribute('data-num'));
+			}
 		}
 	}
 	rotationElem(elem, num) {
@@ -318,19 +325,33 @@ class Level {
 	validLevel() {
 		let stepRot = this.levelPlayInfo['stepRot'];
 		let keyGood = false;
-		for (let key = 0; key < this.rotElemsGame.length; key++) {
-			let a = this.rotElemsGame[key] / stepRot;
-			let b = (((this.rotElemsUser[key] / 360) % 1) * 360) / stepRot;
-			if (a !== b) {
-				keyGood = false;
+		console.log(`**********************************`)
+		for (let keyA = 0; keyA < this.rotElemsGame.length; keyA++) {
+			let validValue = this.rotElemsGame[keyA];
+			console.log(`------------`)
+			for (let enterValue of validValue) {
+				console.log(`Массив правильных чисел ` +validValue);
+				console.log(`Правильное значение ` +enterValue);
+				console.log(`Проверочное значение ` +this.rotElemsUser[keyA]);
+				let a = enterValue / stepRot;
+				let b = (((this.rotElemsUser[keyA] / 360) % 1) * 360) / stepRot;
+				if (a !==b) {
+					keyGood = false;
+				}
+				else {
+					keyGood = true;
+					break;
+				}
+				//(a !== b) ? keyGood = false : {keyGood = true break;};
+				console.log(`Ключ `+keyGood);
+			}
+			if (keyGood === false) {
 				break;
 			}
-			keyGood = true;
 		}
 		if (keyGood === true) {
 			this.updateMaxLevel();
 			animUpdate.key = true;
-			//this.animFrameSetting.
 			this.animFrameClasses.forEach((elemFrame) => elemFrame.style.display = 'none');
 			this.animFrameClasses = [];
 			document.querySelectorAll('.svg-elem-game').forEach((el) => el.classList.add('svg-elem-game-good'));
@@ -339,9 +360,7 @@ class Level {
 		}
 	}
 	animFrame() {
-		//console.log(this.animFrameClasses)
-		for (let element of this.animFrameClasses) {
-			//{rotationValue: 0, stepRot: 1, opacityValue: 0.5, stepOpacity: 0.05}
+		if (this.animFrameClasses.length >= 1) {
 			if (this.animFrameSetting.rotationValue > 1e5) {
 				this.animFrameSetting.stepRot *= -1;
 			}
@@ -350,9 +369,10 @@ class Level {
 			}
 			this.animFrameSetting.rotationValue += this.animFrameSetting.stepRot;
 			this.animFrameSetting.opacityValue += this.animFrameSetting.stepOpacity;
-			element.style.cssText = `stroke-dashoffset: ${this.animFrameSetting.rotationValue}; opacity: ${this.animFrameSetting.opacityValue}`;
+			for (let element of this.animFrameClasses) {
+				element.style.cssText = `stroke-dashoffset: ${this.animFrameSetting.rotationValue}; opacity: ${this.animFrameSetting.opacityValue}`;
+			}
 		}
-		return true;
 	}
 }
 
@@ -384,40 +404,23 @@ window.onbeforeunload = (EO) => {
 		EO.returnValue = 'Есть несохранённые данные!';
 	}
 };
-// Обновление слушателей страницы
-function updateListener(sectionPage) { // todo: переработать обработчики
-
-	// удаляем слушателей
-	formInRegPage.removeEventListener('submit',registerUser,false);
-	formInLogPage.removeEventListener('submit',logInUser,false);
-	document.querySelector('.js-menu').removeEventListener('change', chekedMenu);
-	// добавляем слушателей
-	switch (sectionPage) {
-		case 'start':
-			document.querySelector('.block-start__btn').onclick = () => {cookieUrl.pagename = 'game'; openGame();};
-			break;
-		case 'reg':
-			formInRegPage.addEventListener('submit',registerUser,false);
-			break;
-		case 'login':
-			formInLogPage.addEventListener('submit',logInUser,false);
-			break;
-		case 'game':
-			document.querySelector('.js-menu').addEventListener('change', chekedMenu);
-			//document.querySelector('.js-menu-1').onclick = () => /* todo: музыка */ ;
-			//document.querySelector('.js-menu-2').onclick = () => /* todo: рестарт лвл */ ;
-			//document.querySelector('.js-menu-3').onclick = () => /* todo: вибро */ ;
-			document.querySelector('.js-menu-4').onclick = () => goToStatePage('calendar');
-			document.querySelector('.js-menu-5').onclick = topsList;
-			document.querySelector('.js-lvl-prev').onclick = () => gameLvl.prevLevel();
-			document.querySelector('.js-lvl-next').onclick = () => gameLvl.nextLevel();
-			break;
-		case 'calendar':
-			document.querySelectorAll('.js-cal-btnNext').forEach((el) => {el.onclick = () => calendar.nextMonth()});
-			document.querySelectorAll('.js-cal-btnPrv').forEach((el) => {el.onclick = () => calendar.prevMonth()});
-			break;
-	}
+// Добавляем слушателей DOM элементам
+function updateListener(sectionPage) {
+	document.querySelector('.block-start__btn').onclick = () => {cookieUrl.pagename = 'game'; openGame();};
+	formInRegPage.addEventListener('submit',registerUser,false);
+	formInLogPage.addEventListener('submit',logInUser,false);
+	document.querySelector('.js-menu').addEventListener('change', chekedMenu);
+	//document.querySelector('.js-menu-1').onclick = () => /* todo: музыка */ ;
+	document.querySelector('.js-menu-2').onclick = (EO) => {EO.preventDefault(); gameLvl.buildGame();};
+	//document.querySelector('.js-menu-3').onclick = () => /* todo: вибро */ ;
+	document.querySelector('.js-menu-4').onclick = () => goToStatePage('calendar');
+	document.querySelector('.js-menu-5').onclick = topsList;
+	document.querySelector('.js-lvl-prev').onclick = () => gameLvl.prevLevel();
+	document.querySelector('.js-lvl-next').onclick = () => gameLvl.nextLevel();
+	document.querySelectorAll('.js-cal-btnNext').forEach((el) => {el.onclick = () => calendar.nextMonth()});
+	document.querySelectorAll('.js-cal-btnPrv').forEach((el) => {el.onclick = () => calendar.prevMonth()});
 }
+updateListener();
 
 // ---------- Работа с фоном ----------
 // Установка градиента фона и цвета для значков
@@ -524,7 +527,6 @@ function updateVisibleHtmlPage(load) {
 		for (let HtmlElement of allSectionHtml) {
 			HtmlElement.style.display = 'none';
 		}
-		updateListener(cookieUrl.pagename);
 		document.querySelector(`.js-${cookieUrl.pagename}_visible`).style.display = 'flex';
 		console.log(`GAME: Переход в раздел \"${cookieUrl.pagename}\".`);
 	}
@@ -600,14 +602,14 @@ function openGame() {
 // ---------- Раздел "Game" ----------
 // Состояния меню
 function chekedMenu(EO) {
-	//EO = EO || window.event;
+	EO = EO || window.event;
 	animUpdate.key = true;
+	document.querySelector('.js-lvl-list').classList.toggle('block-game__box-lvl_open');
+	gameLvl.updateKeyListener();
 	if (this.checked) {
-		document.querySelector('.js-lvl-list').style.width = '73px';
 		document.querySelector('.js-game').addEventListener('click', clickMenu);
 	}
 	else {
-		document.querySelector('.js-lvl-list').style.width = '0';
 		document.querySelector('.js-game').removeEventListener('click', clickMenu);
 	}
 }
@@ -989,7 +991,6 @@ function updateGame(nowTimeFrame) {
 		gameLvl.animFrame();
 	}
 	if (!lastTimeFrame || nowTimeFrame - lastTimeFrame >= 500) {
-
 		// анимация лампы с частотой 500мс
 		lastTimeFrame = nowTimeFrame;
 		if (massAnimLamp.num === 9) {

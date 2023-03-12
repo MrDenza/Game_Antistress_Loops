@@ -121,22 +121,7 @@ body {
 	stroke: white;
 	fill: none;
 }
-.svg-elem-game {
-	stroke: var(--colorItemGame, darkgrey);
-	stroke-width: 2;
-	cursor: pointer;
-	fill: none;
-}
-.svg-elem-game use{
-	transition: transform 1s linear;
-}
-.svg-elem-game-good use:nth-child(1) {
-	stroke: white;
-}
-.svg-elem-game-good use:nth-child(2) {
-	fill: white;
-	stroke: white;
-}
+
 /* ------------------------ BLOCK 0 ------------------------- */
 .block-loading {
 	//box-svg-lamp {  } // создаёт JS
@@ -345,15 +330,15 @@ body {
 	}
 	&__box-block {
 		position: relative;
-		min-width: 100px;
-		transition: width 1s linear;
 	}
 	&__menu-box {
 		& .block-game__menu_size {
 			display: block;
 			width: 100px;
-			margin: 0 10px 0 0;
+			height: 0;
+			margin: 0 15px 0 0;
 			transition: all 1s linear;
+			border: 1px solid red;
 		}
 	}
 	&__menu-btn {
@@ -363,7 +348,6 @@ body {
 		border-radius: 100px;
 		position: absolute;
 		display: flex;
-		font-size: 15px;
 		align-items: center;
 		justify-content: center;
 		overflow: hidden;
@@ -381,29 +365,23 @@ body {
 				animation: rotElem 1s ease infinite;
 			}
 		}
-		&:nth-child(2) {
+		&:nth-child(2), &:nth-child(3), &:nth-child(4), &:nth-child(5), &:nth-child(6) {
 			top: 0;
 			left: 0;
+		}
+		&:nth-child(2) {
 			transition-delay: 0s;
 		}
 		&:nth-child(3) {
-			top: 0;
-			left: 0;
 			transition-delay: 0.2s;
 		}
 		&:nth-child(4) {
-			top: 0;
-			left: 0;
 			transition-delay: 0.4s;
 		}
 		&:nth-child(5) {
-			top: 0;
-			left: 0;
 			transition-delay: 0.6s;
 		}
 		&:nth-child(6) {
-			top: 0;
-			left: 0;
 			transition-delay: 0.8s;
 		}
 	}
@@ -437,15 +415,15 @@ body {
 					top: -150px;
 				}
 				&:nth-child(3) {
-					top: -100px;
-					left: 100px;
+					top: -105px;
+					left: 105px;
 				}
 				&:nth-child(4) {
 					left: 150px;
 				}
 				&:nth-child(5) {
-					top: 100px;
-					left: 100px;
+					top: 105px;
+					left: 105px;
 				}
 				&:nth-child(6) {
 					top: 150px;
@@ -463,22 +441,25 @@ body {
 			color: var(--colorItem, black);
 		}
 	}
-
 	&__box-game {
 		width: 100%;
 		height: 100%;
+		box-sizing: border-box;
 		flex: 1 1;
 		margin: 0 10px 0 0;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		//background-color: rgba(255, 255, 255, 0.2);
+		flex-direction: column;
 	}
-
 	&__box-lvl {
 		width: 0;
+		height: auto;
 		transition: all 1s linear;
 		overflow: hidden;
+	}
+	&__box-lvl_open {
+		width: 73px;
 	}
 	&__box-lvl-list {
 		display: flex;
@@ -518,17 +499,34 @@ body {
 	}
 }
 .js-game-grid {
+	flex: 0 1;
 	display: grid;
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	//border: 1px solid red;
-	& div {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-		border: 1px solid green;
-	}
+	max-width: 100%;
+	max-height: 100%;
+}
+.svg-elem-game {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	stroke: var(--colorItemGame, darkgrey);
+	stroke-width: 2;
+	cursor: pointer;
+	fill: none;
+    width: 100%;
+	height: 100%;
+}
+.svg-elem-game use{
+	transition: transform 1s linear;
+}
+.svg-elem-game-good use:nth-child(1) {
+	stroke: white;
+}
+.svg-elem-game-good use:nth-child(2) {
+	fill: white;
+	stroke: white;
 }
 /* ----------------------- BLOCK 5-6 ------------------------ */
 .block-style {
@@ -732,6 +730,51 @@ body {
 			padding-bottom: 6px;
 		}
 	}
+	/* ------------------------ BLOCK 4 ------------------------- */
+	.block-game {
+		&__menu-box {
+			& .block-game__menu_size {
+				width: 80px;
+			}
+		}
+		&__menu-btn {
+			width: 80px;
+			height: 80px;
+			border-radius: 80px;
+		}
+		&__menu {
+			&:checked ~ .block-game__menu-box {
+				& .block-game__menu-btn {
+					&:nth-child(2) {
+						top: -120px;
+					}
+					&:nth-child(3) {
+						top: -80px;
+						left: 80px;
+					}
+					&:nth-child(4) {
+						left: 120px;
+					}
+					&:nth-child(5) {
+						top: 80px;
+						left: 80px;
+					}
+					&:nth-child(6) {
+						top: 120px;
+					}
+				}
+				& .block-game__menu_size {
+					width: 200px;
+				}
+			}
+		}
+		&__box-lvl_open {
+			width: 70px;
+		}
+		&__box-lvl-list {
+			padding: 5px;
+		}
+	}
 	/* ----------------------- BLOCK 5-6 ------------------------ */
 	.block-style {
 		&_btn-back {
@@ -852,6 +895,96 @@ body {
 		&__subtitle {
 			font-size: 2rem;
 			padding-bottom: 3vh;
+		}
+	}
+	/* ------------------------ BLOCK 4 ------------------------- */
+	.block-game {
+		&__box {
+			flex-direction: column;
+		}
+		&__box-block {
+			order: 3;
+		}
+		&__menu-box {
+			display: flex;
+			&__menu-btn {
+			}
+			& .block-game__menu_size {
+				width: 60px;
+				margin: 15px 0 0 0;
+			}
+		}
+		&__menu-btn {
+			width: 60px;
+			height: 60px;
+			border-radius: 60px;
+		}
+		&__btn-close {
+			transform: translateY(50px);
+		}
+		&__menu {
+			&:checked ~ .block-game__menu-box {
+				& .block-game__menu-btn {
+					//order: 2;
+					& .block-game__btn-menu {
+						transform: translateY(-50px);
+					}
+					& .block-game__btn-close {
+						transform: translateY(0px);
+					}
+					&:nth-child(2) {
+						top: 0;
+						left: -120px;
+					}
+					&:nth-child(3) {
+						top: -80px;
+						left: -80px;
+					}
+					&:nth-child(4) {
+						top: -120px;
+						left: 0;
+					}
+					&:nth-child(5) {
+						top: -80px;
+					}
+					&:nth-child(6) {
+						top: 0;
+						left: 120px;
+					}
+				}
+				& .block-game__menu_size {
+					order: 1;
+
+					width: 60px;
+					height: 140px;
+				}
+			}
+		}
+		&__box-game {
+			order: 2;
+			margin: 10px 0 0 0;
+		}
+		&__box-lvl {
+			order: 1;
+			width: auto;
+			height: 0;
+		}
+		&__box-lvl_open {
+			width: auto;
+			height: 45px;
+		}
+		&__box-lvl-list {
+			flex-direction: row;
+			padding: 5px;
+		}
+		&__btn-previous {
+			transform: rotate(0);
+		}
+		&__lvl-num {
+			margin: 0 30px;
+		}
+		&__btn-next {
+			transform: rotate(0);
 		}
 	}
 	/* ----------------------- BLOCK 5-6 ------------------------ */

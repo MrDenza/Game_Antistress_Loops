@@ -8,16 +8,21 @@
                 тип svg : (0-пусто, 1-линия, 2-угловая, 3-Т, 4-плюс, 5-основа для (6,7,8), 6-рис энергии (+5), 7-рис лампа (+5), 8-рис wifi (+5)),
                 изначальный поворот: число (для deg),
                 можно ли поворачивать: true/false,
-                правильное значение градусов: число (deg),
-                анимированная рамка: true/false
-            },
-            {
-                тип svg : (0-пусто, 1-линия, 2-угловая, 3-Т, 4-плюс, 5-основа для (6,7,8), 6-рис энергии (+5), 7-рис лампа (+5), 8-рис wifi (+5)),
-                изначальный поворот: число (для deg),
-                можно ли поворачивать: true/false,
-                правильное значение градусов: число (deg),
+                правильное значение градусов: [массив валидных значений (deg)],
                 анимированная рамка: true/false
             }
         ]
     }
 }
+
+
+
+0.{"type": 0, "rot": 0, "accessRot": false, "trueRot": 0, "animFrame": false},
+1.{"type": 1, "rot": 0, "accessRot": true, "trueRot": 90, "animFrame": true},
+2.{"type": 2, "rot": 90, "accessRot": true, "trueRot": 0, "animFrame": true},
+3.
+4.
+5.----------------
+6.{"type": 6, "rot": 90, "accessRot": false, "trueRot": 90, "animFrame": false},
+7.{"type": 7, "rot": 270, "accessRot": false, "trueRot": 270, "animFrame": false},
+8.{"type": 8, "rot": 90, "accessRot": true, "trueRot": 180, "animFrame": true}

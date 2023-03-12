@@ -339,30 +339,6 @@ body {
  fill: none;
 }
 
-.svg-elem-game {
- stroke: var(--colorItemGame, darkgrey);
- stroke-width: 2;
- cursor: pointer;
- fill: none;
-}
-
-.svg-elem-game use {
- -webkit-transition: -webkit-transform 1s linear;
- transition: -webkit-transform 1s linear;
- -o-transition: transform 1s linear;
- transition: transform 1s linear;
- transition: transform 1s linear, -webkit-transform 1s linear;
-}
-
-.svg-elem-game-good use:nth-child(1) {
- stroke: white;
-}
-
-.svg-elem-game-good use:nth-child(2) {
- fill: white;
- stroke: white;
-}
-
 /* ------------------------ BLOCK 0 ------------------------- */
 .block-loading__box {
  -webkit-box-sizing: border-box;
@@ -640,18 +616,16 @@ body {
 }
 .block-game__box-block {
  position: relative;
- min-width: 100px;
- -webkit-transition: width 1s linear;
- -o-transition: width 1s linear;
- transition: width 1s linear;
 }
 .block-game__menu-box .block-game__menu_size {
  display: block;
  width: 100px;
- margin: 0 10px 0 0;
+ height: 0;
+ margin: 0 15px 0 0;
  -webkit-transition: all 1s linear;
  -o-transition: all 1s linear;
  transition: all 1s linear;
+ border: 1px solid red;
 }
 .block-game__menu-btn {
  width: 100px;
@@ -663,7 +637,6 @@ body {
  display: -webkit-box;
  display: -ms-flexbox;
  display: flex;
- font-size: 15px;
  -webkit-box-align: center;
      -ms-flex-align: center;
          align-items: center;
@@ -693,37 +666,31 @@ body {
  -webkit-animation: rotElem 1s ease infinite;
          animation: rotElem 1s ease infinite;
 }
-.block-game__menu-btn:nth-child(2) {
+.block-game__menu-btn:nth-child(2), .block-game__menu-btn:nth-child(3), .block-game__menu-btn:nth-child(4), .block-game__menu-btn:nth-child(5), .block-game__menu-btn:nth-child(6) {
  top: 0;
  left: 0;
+}
+.block-game__menu-btn:nth-child(2) {
  -webkit-transition-delay: 0s;
       -o-transition-delay: 0s;
          transition-delay: 0s;
 }
 .block-game__menu-btn:nth-child(3) {
- top: 0;
- left: 0;
  -webkit-transition-delay: 0.2s;
       -o-transition-delay: 0.2s;
          transition-delay: 0.2s;
 }
 .block-game__menu-btn:nth-child(4) {
- top: 0;
- left: 0;
  -webkit-transition-delay: 0.4s;
       -o-transition-delay: 0.4s;
          transition-delay: 0.4s;
 }
 .block-game__menu-btn:nth-child(5) {
- top: 0;
- left: 0;
  -webkit-transition-delay: 0.6s;
       -o-transition-delay: 0.6s;
          transition-delay: 0.6s;
 }
 .block-game__menu-btn:nth-child(6) {
- top: 0;
- left: 0;
  -webkit-transition-delay: 0.8s;
       -o-transition-delay: 0.8s;
          transition-delay: 0.8s;
@@ -765,15 +732,15 @@ body {
  top: -150px;
 }
 .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(3) {
- top: -100px;
- left: 100px;
+ top: -105px;
+ left: 105px;
 }
 .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(4) {
  left: 150px;
 }
 .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(5) {
- top: 100px;
- left: 100px;
+ top: 105px;
+ left: 105px;
 }
 .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(6) {
  top: 150px;
@@ -789,6 +756,8 @@ body {
 .block-game__box-game {
  width: 100%;
  height: 100%;
+ -webkit-box-sizing: border-box;
+         box-sizing: border-box;
  -webkit-box-flex: 1;
      -ms-flex: 1 1;
          flex: 1 1;
@@ -802,13 +771,21 @@ body {
  -webkit-box-align: center;
      -ms-flex-align: center;
          align-items: center;
+ -webkit-box-orient: vertical;
+ -webkit-box-direction: normal;
+     -ms-flex-direction: column;
+         flex-direction: column;
 }
 .block-game__box-lvl {
  width: 0;
+ height: auto;
  -webkit-transition: all 1s linear;
  -o-transition: all 1s linear;
  transition: all 1s linear;
  overflow: hidden;
+}
+.block-game__box-lvl_open {
+ width: 73px;
 }
 .block-game__box-lvl-list {
  display: -webkit-box;
@@ -861,19 +838,47 @@ body {
 }
 
 .js-game-grid {
+ -webkit-box-flex: 0;
+     -ms-flex: 0 1;
+         flex: 0 1;
  display: -ms-grid;
  display: grid;
  margin: 0;
  padding: 0;
  -webkit-box-sizing: border-box;
          box-sizing: border-box;
+ max-width: 100%;
+ max-height: 100%;
 }
-.js-game-grid div {
+
+.svg-elem-game {
  margin: 0;
  padding: 0;
  -webkit-box-sizing: border-box;
          box-sizing: border-box;
- border: 1px solid green;
+ stroke: var(--colorItemGame, darkgrey);
+ stroke-width: 2;
+ cursor: pointer;
+ fill: none;
+ width: 100%;
+ height: 100%;
+}
+
+.svg-elem-game use {
+ -webkit-transition: -webkit-transform 1s linear;
+ transition: -webkit-transform 1s linear;
+ -o-transition: transform 1s linear;
+ transition: transform 1s linear;
+ transition: transform 1s linear, -webkit-transform 1s linear;
+}
+
+.svg-elem-game-good use:nth-child(1) {
+ stroke: white;
+}
+
+.svg-elem-game-good use:nth-child(2) {
+ fill: white;
+ stroke: white;
 }
 
 /* ----------------------- BLOCK 5-6 ------------------------ */
@@ -1108,6 +1113,41 @@ body {
  .block-connect__box-input {
   padding-bottom: 6px;
  }
+ /* ------------------------ BLOCK 4 ------------------------- */
+ .block-game__menu-box .block-game__menu_size {
+  width: 80px;
+ }
+ .block-game__menu-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 80px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(2) {
+  top: -120px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(3) {
+  top: -80px;
+  left: 80px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(4) {
+  left: 120px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(5) {
+  top: 80px;
+  left: 80px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(6) {
+  top: 120px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu_size {
+  width: 200px;
+ }
+ .block-game__box-lvl_open {
+  width: 70px;
+ }
+ .block-game__box-lvl-list {
+  padding: 5px;
+ }
  /* ----------------------- BLOCK 5-6 ------------------------ */
  .block-style_btn-back {
   width: 80px;
@@ -1251,6 +1291,110 @@ body {
  .block-connect__subtitle {
   font-size: 2rem;
   padding-bottom: 3vh;
+ }
+ /* ------------------------ BLOCK 4 ------------------------- */
+ .block-game__box {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+ }
+ .block-game__box-block {
+  -webkit-box-ordinal-group: 4;
+      -ms-flex-order: 3;
+          order: 3;
+ }
+ .block-game__menu-box {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+ }
+ .block-game__menu-box .block-game__menu_size {
+  width: 60px;
+  margin: 15px 0 0 0;
+ }
+ .block-game__menu-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
+ }
+ .block-game__btn-close {
+  -webkit-transform: translateY(50px);
+      -ms-transform: translateY(50px);
+          transform: translateY(50px);
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn .block-game__btn-menu {
+  -webkit-transform: translateY(-50px);
+      -ms-transform: translateY(-50px);
+          transform: translateY(-50px);
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn .block-game__btn-close {
+  -webkit-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+          transform: translateY(0px);
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(2) {
+  top: 0;
+  left: -120px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(3) {
+  top: -80px;
+  left: -80px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(4) {
+  top: -120px;
+  left: 0;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(5) {
+  top: -80px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(6) {
+  top: 0;
+  left: 120px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu_size {
+  -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+          order: 1;
+  width: 60px;
+  height: 140px;
+ }
+ .block-game__box-game {
+  -webkit-box-ordinal-group: 3;
+      -ms-flex-order: 2;
+          order: 2;
+  margin: 10px 0 0 0;
+ }
+ .block-game__box-lvl {
+  -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+          order: 1;
+  width: auto;
+  height: 0;
+ }
+ .block-game__box-lvl_open {
+  width: auto;
+  height: 45px;
+ }
+ .block-game__box-lvl-list {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  padding: 5px;
+ }
+ .block-game__btn-previous {
+  -webkit-transform: rotate(0);
+      -ms-transform: rotate(0);
+          transform: rotate(0);
+ }
+ .block-game__lvl-num {
+  margin: 0 30px;
+ }
+ .block-game__btn-next {
+  -webkit-transform: rotate(0);
+      -ms-transform: rotate(0);
+          transform: rotate(0);
  }
  /* ----------------------- BLOCK 5-6 ------------------------ */
  .block-style_nav-title {

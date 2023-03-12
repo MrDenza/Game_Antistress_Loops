@@ -244,8 +244,8 @@ body {
  -webkit-box-sizing: border-box;
          box-sizing: border-box;
  border-radius: 50%;
- background: -o-radial-gradient(at center, rgba(255, 255, 255, 0) 0%, rgb(255, 255, 255) 100%);
- background: radial-gradient(at center, rgba(255, 255, 255, 0) 0%, rgb(255, 255, 255) 100%);
+ background: -o-radial-gradient(at center, rgba(255, 255, 255, 0.2) 0%, rgb(255, 255, 255) 100%);
+ background: radial-gradient(at center, rgba(255, 255, 255, 0.2) 0%, rgb(255, 255, 255) 100%);
  position: fixed;
  -webkit-transform: translateY(-50%) translateX(-50%);
      -ms-transform: translateY(-50%) translateX(-50%);
@@ -317,6 +317,8 @@ body {
 /* --------------------- SVG Elem Game ---------------------- */
 #svg-elem-6 {
  stroke-width: 1;
+ stroke: white;
+ fill: white;
 }
 
 #svg-elem-7 {
@@ -329,8 +331,16 @@ body {
  stroke-linecap: round;
 }
 
+#svg-elem-9 {
+ stroke-width: 1;
+ stroke-linecap: round;
+ stroke-dasharray: 5;
+ stroke: white;
+ fill: none;
+}
+
 .svg-elem-game {
- stroke: lightgray;
+ stroke: var(--colorItemGame, darkgrey);
  stroke-width: 2;
  cursor: pointer;
  fill: none;
@@ -792,7 +802,6 @@ body {
  -webkit-box-align: center;
      -ms-flex-align: center;
          align-items: center;
- background-color: rgba(255, 255, 255, 0.2);
 }
 .block-game__box-lvl {
  width: 0;
@@ -858,7 +867,6 @@ body {
  padding: 0;
  -webkit-box-sizing: border-box;
          box-sizing: border-box;
- border: 1px solid red;
 }
 .js-game-grid div {
  margin: 0;

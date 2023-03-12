@@ -1,20 +1,24 @@
 "use strict"; // Строгий режим
 // ----------------------- JavaScript -----------------------
+
+// ---------- JSON параметры ----------
 console.log('JSON: Загружаем данные...');
 import levelJson from "../resource/level/level_list.json" assert {type: "json"};
 console.log('JSON: Данные получены!');
+
+// ---------- Переменные ----------
 const bodyBackground = document.body; // body
 // gradientBody - Градиент фона и цвет значков
-// num - применённый стиль, №:[1 цвет градиента, 2 цвет градиента, цвет значков]
+// num - применённый стиль, №:[1 цвет градиента, 2 цвет градиента, цвет значков, цвет элементов игры]
 let gradientBody = {num: 0,
-	1: ['#000851','#1CB5E0','#0E5F99'],
-	2: ['#0700b8','#00ff88','#0474A2'],
-	3: ['#009b9f','#b922c3','#436FAC'],
-	4: ['#C33764','#1D2671','#873169'],
-	5: ['#1CB5E0','#000851','#0F669F'],
-	6: ['#8E2DE2','#0700b8','#4414CB'],
-	7: ['#c4c813','#7e07a2','#B1933A'],
-	8: ['#31a207','#1372c8','#238C5F'],
+	1: ['#000851','#1CB5E0','#0E5F99','#7baed3'],
+	2: ['#0700b8','#00ff88','#0474A2','#93ccb1'],
+	3: ['#009b9f','#b922c3','#436FAC','#69bbbd'],
+	4: ['#C33764','#1D2671','#873169','#bd6482'],
+	5: ['#1CB5E0','#000851','#0F669F','#51aac5'],
+	6: ['#8E2DE2','#0700b8','#4414CB','#975dd2'],
+	7: ['#c4c813','#7e07a2','#B1933A','#b2b460'],
+	8: ['#31a207','#1372c8','#238C5F','#8fcc79'],
 }
 const bodyAnimation = document.querySelector('.body_animation');// canvas
 //const bodyContainer = document.querySelector('.body__container'); // main
@@ -220,6 +224,8 @@ class Calendar {
 class Level {
 	rotElemsUser = [];
 	rotElemsGame = [];
+	animFrameClasses = [];
+	animFrameSetting = {}; // {rotationValue: 0, stepRot: 1, opacityValue: 0.5, stepOpacity: 0.05}
 	constructor(elemDiv, textLvl, levelList, goLevel) {
 		this.gameDiv = elemDiv; // сохраняем класс бокса для игрового поля
 		this.lvlNumText = textLvl;
@@ -232,19 +238,21 @@ class Level {
 	prevLevel(){
 		if (!(this.enterGameLevel <= 1)) {
 			this.enterGameLevel--;
+			backgroundGame();
 			this.buildGame();
 		}
 	}
 	nextLevel(){
 		if (!(this.enterGameLevel >= this.maxGameLevel)) {
 			this.enterGameLevel++;
+			backgroundGame();
 			if (!(this.allLevelInfo[this.enterGameLevel])) {
 				alert('К сожалению для тебя доступные уровни закончились! Ждите обновления! Либо пройдите снова предыдущие уровни =)');
 			}
 			this.buildGame();
 		}
 	}
-	#updateMaxLevel() {
+	updateMaxLevel() {
 		if (this.maxGameLevel === this.enterGameLevel) {
 			this.maxGameLevel++;
 			saveProgress();
@@ -261,6 +269,8 @@ class Level {
 		console.log(`GAME: Генерация уровня #${this.enterGameLevel}`);
 		this.rotElemsGame = [];
 		this.rotElemsUser = [];
+		// параметры анимированных блоков
+		this.animFrameSetting = {rotationValue: 0, stepRot: 0.05, opacityValue: 0.1, stepOpacity: 0.005};
 		document.querySelector(this.lvlNumText).textContent = `#${this.enterGameLevel}`;
 		this.levelPlayInfo = this.allLevelInfo[this.enterGameLevel];
 		let codeHtml = `<div class="js-game-grid" style="grid-template-columns: repeat(${this.levelPlayInfo['column']}, auto); grid-template-rows: repeat(${this.levelPlayInfo['row']}, auto)">`;
@@ -276,11 +286,15 @@ class Level {
 			else {
 				codeHtml += `<use xlink:href="#svg-elem-${element.type}" style="transform-origin: center center; transform: rotate(${element.rot}deg);"></use>`;
 			}
+			if (element.animFrame === true) {
+				codeHtml += `<use class="js-anim-frame" style="stroke-dashoffset: ${this.animFrameSetting.rotationValue}; opacity: ${this.animFrameSetting.opacityValue}" xlink:href="#svg-elem-9"></use>`;
+			}
 			codeHtml += `</svg>`;
 			i++;
 		}
 		codeHtml += `</div>`;
 		document.querySelector(this.gameDiv).innerHTML = codeHtml;
+		this.animFrameClasses = document.querySelectorAll('.js-anim-frame');
 		document.querySelector(this.gameDiv).onclick = () => this.getClickInfo();
 	}
 	getClickInfo(EO) { // вернуть дату по которой совершён клик
@@ -314,13 +328,31 @@ class Level {
 			keyGood = true;
 		}
 		if (keyGood === true) {
-			this.#updateMaxLevel();
+			this.updateMaxLevel();
 			animUpdate.key = true;
-			backgroundGame();
+			//this.animFrameSetting.
+			this.animFrameClasses.forEach((elemFrame) => elemFrame.style.display = 'none');
+			this.animFrameClasses = [];
 			document.querySelectorAll('.svg-elem-game').forEach((el) => el.classList.add('svg-elem-game-good'));
 			document.querySelector(this.gameDiv).onclick = () => this.nextLevel();
 			console.log('GAME: Уровень пройден!');
 		}
+	}
+	animFrame() {
+		//console.log(this.animFrameClasses)
+		for (let element of this.animFrameClasses) {
+			//{rotationValue: 0, stepRot: 1, opacityValue: 0.5, stepOpacity: 0.05}
+			if (this.animFrameSetting.rotationValue > 1e5) {
+				this.animFrameSetting.stepRot *= -1;
+			}
+			if (this.animFrameSetting.opacityValue >= 1 || this.animFrameSetting.opacityValue < 0.1) {
+				this.animFrameSetting.stepOpacity *= -1;
+			}
+			this.animFrameSetting.rotationValue += this.animFrameSetting.stepRot;
+			this.animFrameSetting.opacityValue += this.animFrameSetting.stepOpacity;
+			element.style.cssText = `stroke-dashoffset: ${this.animFrameSetting.rotationValue}; opacity: ${this.animFrameSetting.opacityValue}`;
+		}
+		return true;
 	}
 }
 
@@ -393,6 +425,7 @@ function backgroundGame() {
 	gradientBody.num = randomNum(2,1,8);
 	bodyBackground.style.cssText = (`background: linear-gradient(45deg, ${gradientBody[gradientBody.num][0]} 0%, ${gradientBody[gradientBody.num][1]} 100%) fixed;`);
 	document.documentElement.style.setProperty('--colorItem',`${gradientBody[gradientBody.num][2]}`);
+	document.documentElement.style.setProperty('--colorItemGame',`${gradientBody[gradientBody.num][3]}`);
 }
 backgroundGame();
 // Генерация анимация и анимация фона
@@ -940,7 +973,7 @@ function resetLocalStorage() {
 }
 
 // ---------- Игровой цикл ----------
-function gameLoop(nowTimeFrame) { // цикл
+function gameLoop(nowTimeFrame) {
 	if (fixNum === 1) {
 		drawAnimBackground();
 		updateGame(nowTimeFrame);
@@ -952,7 +985,11 @@ function gameLoop(nowTimeFrame) { // цикл
 }
 gameLoop();
 function updateGame(nowTimeFrame) {
-	if(!lastTimeFrame || nowTimeFrame - lastTimeFrame >= 500) {
+	if (gameLvl){
+		gameLvl.animFrame();
+	}
+	if (!lastTimeFrame || nowTimeFrame - lastTimeFrame >= 500) {
+
 		// анимация лампы с частотой 500мс
 		lastTimeFrame = nowTimeFrame;
 		if (massAnimLamp.num === 9) {
@@ -975,7 +1012,7 @@ function updateGame(nowTimeFrame) {
 		animUpdate.count += 5; // скорость перехода
 		animUpdate.obj.style.width = `${animUpdate.count}%`;
 		animUpdate.obj.style.height = `${animUpdate.count}%`;
-		if (animUpdate.count > 500) { // длительность анимации
+		if (animUpdate.count > 400) { // длительность анимации
 			animUpdate.obj.style.opacity = '0';
 			animUpdate.key = false;
 			animUpdate.count = 0;

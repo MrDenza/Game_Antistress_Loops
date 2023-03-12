@@ -58,7 +58,7 @@ body {
 	height: 0;
 	box-sizing: border-box;
 	border-radius: 50%;
-	background: radial-gradient(at center, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+	background: radial-gradient(at center, rgba(255,255,255,0.2) 0%, rgba(255,255,255,1) 100%);
 	position: fixed;
 	transform: translateY(-50%) translateX(-50%);
 	top: 50%;
@@ -90,25 +90,21 @@ body {
 }
 /* --------------------- SVG Elem Game ---------------------- */
 #svg-elem-0 {
-
 }
 #svg-elem-1 {
-
 }
 #svg-elem-2 {
-
 }
 #svg-elem-3 {
-
 }
 #svg-elem-4 {
-
 }
 #svg-elem-5 {
-
 }
 #svg-elem-6 {
 	stroke-width: 1;
+	stroke: white;
+	fill: white;
 }
 #svg-elem-7 {
 	stroke-width: 1;
@@ -118,16 +114,21 @@ body {
 	stroke-width: 1;
 	stroke-linecap: round;
 }
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ЗАМЕНА
+#svg-elem-9{
+	stroke-width: 1;
+	stroke-linecap: round;
+	stroke-dasharray: 5;
+	stroke: white;
+	fill: none;
+}
 .svg-elem-game {
-	stroke: lightgray;
+	stroke: var(--colorItemGame, darkgrey);
 	stroke-width: 2;
 	cursor: pointer;
 	fill: none;
 }
 .svg-elem-game use{
 	transition: transform 1s linear;
-	//transform-origin: center center;
 }
 .svg-elem-game-good use:nth-child(1) {
 	stroke: white;
@@ -471,7 +472,7 @@ body {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background-color: rgba(255, 255, 255, 0.2);
+		//background-color: rgba(255, 255, 255, 0.2);
 	}
 
 	&__box-lvl {
@@ -521,7 +522,7 @@ body {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	border: 1px solid red;
+	//border: 1px solid red;
 	& div {
 		margin: 0;
 		padding: 0;

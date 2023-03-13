@@ -616,16 +616,18 @@ body {
 }
 .block-game__box-block {
  position: relative;
+ width: auto;
 }
-.block-game__menu-box .block-game__menu_size {
- display: block;
+.block-game__box-block .block-game__menu_size {
  width: 100px;
  height: 0;
- margin: 0 15px 0 0;
+ padding: 0 15px 0 0;
  -webkit-transition: all 1s linear;
  -o-transition: all 1s linear;
  transition: all 1s linear;
- border: 1px solid red;
+}
+.block-game__menu-box {
+ position: absolute;
 }
 .block-game__menu-btn {
  width: 100px;
@@ -654,7 +656,7 @@ body {
  -o-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-.block-game__menu-btn:not(:first-child) {
+.block-game__menu-btn:not(:nth-child(1)) {
  opacity: 0;
  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
  z-index: -2;
@@ -662,7 +664,7 @@ body {
  -o-transition: all 0.7s cubic-bezier(0.87, -0.41, 0.19, 1.44);
  transition: all 0.7s cubic-bezier(0.87, -0.41, 0.19, 1.44);
 }
-.block-game__menu-btn:not(:first-child):hover {
+.block-game__menu-btn:not(:nth-child(1)):hover {
  -webkit-animation: rotElem 1s ease infinite;
          animation: rotElem 1s ease infinite;
 }
@@ -723,7 +725,7 @@ body {
          transform: translateX(0px);
  opacity: 1;
 }
-.block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:not(:first-child) {
+.block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:not(:nth-child(1)) {
  z-index: 1;
  opacity: 1;
  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
@@ -745,8 +747,8 @@ body {
 .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(6) {
  top: 150px;
 }
-.block-game__menu:checked ~ .block-game__menu-box .block-game__menu_size {
- width: 300px;
+.block-game__menu_size-open {
+ width: 250px !important;
 }
 .block-game__btn_font {
  font-size: 2rem;
@@ -1114,7 +1116,7 @@ body {
   padding-bottom: 6px;
  }
  /* ------------------------ BLOCK 4 ------------------------- */
- .block-game__menu-box .block-game__menu_size {
+ .block-game__box-block .block-game__menu_size {
   width: 80px;
  }
  .block-game__menu-btn {
@@ -1139,14 +1141,14 @@ body {
  .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(6) {
   top: 120px;
  }
- .block-game__menu:checked ~ .block-game__menu-box .block-game__menu_size {
-  width: 200px;
- }
  .block-game__box-lvl_open {
   width: 70px;
  }
  .block-game__box-lvl-list {
   padding: 5px;
+ }
+ .block-game__menu_size-open {
+  width: 200px !important;
  }
  /* ----------------------- BLOCK 5-6 ------------------------ */
  .block-style_btn-back {
@@ -1264,7 +1266,7 @@ body {
  }
  .block-connect__info {
   width: 100%;
-  height: 100vh;
+  height: 60vh;
   height: calc(var(--vh, 1vh) * 60);
   padding: 0;
   -webkit-box-flex: 0;
@@ -1304,19 +1306,21 @@ body {
       -ms-flex-order: 3;
           order: 3;
  }
- .block-game__menu-box {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
- }
- .block-game__menu-box .block-game__menu_size {
-  width: 60px;
-  margin: 15px 0 0 0;
+ .block-game__box-block .block-game__menu_size {
+  padding: 15px 0 0 0;
+  width: 0;
+  height: 65px;
  }
  .block-game__menu-btn {
+  -webkit-box-ordinal-group: 3;
+      -ms-flex-order: 2;
+          order: 2;
   width: 60px;
   height: 60px;
   border-radius: 60px;
+  -webkit-transform: translateY(-100%) translateX(-50%);
+      -ms-transform: translateY(-100%) translateX(-50%);
+          transform: translateY(-100%) translateX(-50%);
  }
  .block-game__btn-close {
   -webkit-transform: translateY(50px);
@@ -1351,13 +1355,6 @@ body {
  .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(6) {
   top: 0;
   left: 120px;
- }
- .block-game__menu:checked ~ .block-game__menu-box .block-game__menu_size {
-  -webkit-box-ordinal-group: 2;
-      -ms-flex-order: 1;
-          order: 1;
-  width: 60px;
-  height: 140px;
  }
  .block-game__box-game {
   -webkit-box-ordinal-group: 3;
@@ -1395,6 +1392,12 @@ body {
   -webkit-transform: rotate(0);
       -ms-transform: rotate(0);
           transform: rotate(0);
+ }
+ .block-game__menu_size-open {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  width: 0 !important;
+  height: 195px !important;
  }
  /* ----------------------- BLOCK 5-6 ------------------------ */
  .block-style_nav-title {
@@ -1557,6 +1560,41 @@ body {
  .block-connect__info {
   padding: 0 10px;
  }
+ /* ------------------------ BLOCK 4 ------------------------- */
+ .block-game__box-block .block-game__menu_size {
+  width: 65px;
+ }
+ .block-game__menu-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(2) {
+  top: -70px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(3) {
+  top: -52px;
+  left: 55px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(4) {
+  left: 80px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(5) {
+  top: 52px;
+  left: 55px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(6) {
+  top: 70px;
+ }
+ .block-game__box-lvl_open {
+  width: 50px;
+ }
+ .block-game__box-lvl-list {
+  padding: 5px;
+ }
+ .block-game__menu_size-open {
+  width: 140px !important;
+ }
  /* ----------------------- BLOCK 5-6 ------------------------ */
  .block-style_btn-back {
   width: 50px;
@@ -1672,6 +1710,31 @@ body {
  /* ----------------------- BLOCK 2-3 ------------------------ */
  .block-connect__title {
   font-size: 2.5rem;
+ }
+ /* ------------------------ BLOCK 4 ------------------------- */
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(2) {
+  top: 0;
+  left: -90px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(3) {
+  top: -60px;
+  left: -60px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(4) {
+  top: -90px;
+  left: 0;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(5) {
+  top: -60px;
+  left: 60px;
+ }
+ .block-game__menu:checked ~ .block-game__menu-box .block-game__menu-btn:nth-child(6) {
+  top: 0;
+  left: 90px;
+ }
+ .block-game__menu_size-open {
+  width: 0 !important;
+  height: 165px !important;
  }
  /* ----------------------- BLOCK 5-6 ------------------------ */
  .block-style_nav-title {

@@ -37,23 +37,18 @@ let lastTimeFrame = 0; // для выполнения функции через 
 let fixNum = 0; // фикс первого запуска функции gameLoop
 const formInRegPage = document.forms['reg-form']; // форма на странице регистрации
 const formInLogPage = document.forms['login-form']; // форма на странице залогиниться
-
 const ajaxHandlerScript = "https://fe.it-academy.by/AjaxStringStorage2.php"; // серверный скрип с БД https://fe.it-academy.by/AjaxStringStorage2.php
 const ajaxListUsers = 'DUDEVICH_GAME_LOOPS_USERS'; // хранение информации пользователей {'ник':{pass:'пароль',lvl: значение}, ...}
 let updateAjaxPassword; // пароль доступа к БД
 let userInfo = {}; // данные пользователя {nick:'ник',pass:'пароль',lvl: значение}
 let cookieUsersInfo = {}; // переменная временного хранения списка пользователей
-let keyReg = false; // ключ раздела "регистрация" для "асинхронного" выполнения регистрации с разделом "загрузка"
-let keyLog = false; // ключ раздела "логин" для "асинхронного" выполнения авторизации с разделом "загрузка"
-let keyAjax = false; // служебный ключ AJAX
-let keyStart = false; // ключ раздела "старт" для "асинхронного" выполнения подключения с разделом "загрузка"
-let keyTops = false; // ключ раздела "топ" для "асинхронного" выполнения генерации списка с разделом "загрузка"
-let keyWarUpdate = false; // ключ предупреждения о несохранённых данных
-let keyGo = false; // ключ начала
-let keySave = false; // ключ обновления и сохранения данных
+let cookieUrl = {pagename: window.location.hash.substr(1)}; // переменная временного хранения закладки URL
+// ключ: регистрации, авторизации, админа, старта, топов, предупреждения о потери данных, начала, write/read данные
+let keySetup = {kReg: false, kLog: false, kAdmin: false, kStart: false, kTops: false, kWarUpdate: false,
+				kGo: false, kSave: false}; // ключи настроек
 let calendar; // объект класса календарь
 let gameLvl; // объект класса уровень
-let cookieUrl = {pagename: window.location.hash.substr(1)}; // переменная временного хранения закладки URL
+
 
 // ---------- Проверка поддержки методов / Полифилы ----------
 if (!window.requestAnimationFrame) {
@@ -277,16 +272,16 @@ class Level {
 		this.levelPlayInfo = this.allLevelInfo[this.enterGameLevel];
 		let codeHtml = `<div class="js-game-grid" style="grid-template-columns: repeat(${this.levelPlayInfo['column']}, auto); grid-template-rows: repeat(${this.levelPlayInfo['row']}, auto)">`;
 		let i = 0;
-		for (let element of this.levelPlayInfo['elements']) {
-			this.rotElemsGame.push(element.trueRot);
-			this.rotElemsUser.push(element.rot);
-			codeHtml += `<svg class="svg-elem-game" data-num="${i}" data-access-rot="${element.accessRot}" width=100 height=100>`;
-			if (element.type === 6 || element.type === 7 || element.type === 8) {
-				codeHtml += `<use xlink:href="#svg-elem-5" style="transform-origin: center center; transform: rotate(${element.rot}deg);"></use>`;
-				codeHtml += `<use xlink:href="#svg-elem-${element.type}"></use>`;
+		for (let element of this.levelPlayInfo['elem']) {
+			this.rotElemsGame.push(element.tR);
+			this.rotElemsUser.push(element.r);
+			codeHtml += `<svg class="svg-elem-game" data-num="${i}" data-access-rot="${element.aR}" width=100 height=100>`;
+			if (element.t === 6 || element.t === 7 || element.t === 8) {
+				codeHtml += `<use xlink:href="#svg-elem-5" style="transform-origin: center center; transform: rotate(${element.r}deg);"></use>`;
+				codeHtml += `<use xlink:href="#svg-elem-${element.t}"></use>`;
 			}
 			else {
-				codeHtml += `<use xlink:href="#svg-elem-${element.type}" style="transform-origin: center center; transform: rotate(${element.rot}deg);"></use>`;
+				codeHtml += `<use xlink:href="#svg-elem-${element.t}" style="transform-origin: center center; transform: rotate(${element.r}deg);"></use>`;
 			}
 			if (element.animFrame === true) {
 				codeHtml += `<use class="js-anim-frame" style="stroke-dashoffset: ${this.animFrameSetting.rotationValue}; opacity: ${this.animFrameSetting.opacityValue}" xlink:href="#svg-elem-9"></use>`;
@@ -325,14 +320,9 @@ class Level {
 	validLevel() {
 		let stepRot = this.levelPlayInfo['stepRot'];
 		let keyGood = false;
-		console.log(`**********************************`)
 		for (let keyA = 0; keyA < this.rotElemsGame.length; keyA++) {
 			let validValue = this.rotElemsGame[keyA];
-			console.log(`------------`)
 			for (let enterValue of validValue) {
-				console.log(`Массив правильных чисел ` +validValue);
-				console.log(`Правильное значение ` +enterValue);
-				console.log(`Проверочное значение ` +this.rotElemsUser[keyA]);
 				let a = enterValue / stepRot;
 				let b = (((this.rotElemsUser[keyA] / 360) % 1) * 360) / stepRot;
 				if (a !==b) {
@@ -342,8 +332,6 @@ class Level {
 					keyGood = true;
 					break;
 				}
-				//(a !== b) ? keyGood = false : {keyGood = true break;};
-				console.log(`Ключ `+keyGood);
 			}
 			if (keyGood === false) {
 				break;
@@ -395,12 +383,12 @@ window.addEventListener('resize', function() {
 // Активация ключа о потери данных
 function checkUpdatePage(EO) {
 	EO = EO || window.event;
-	keyWarUpdate = true;
+	keySetup.kWarUpdate = true;
 }
 // Слушатель несохранённых изменений
 window.onbeforeunload = (EO) => {
 	EO = EO || window.event;
-	if (keyWarUpdate === true) {
+	if (keySetup.kWarUpdate === true) {
 		EO.returnValue = 'Есть несохранённые данные!';
 	}
 };
@@ -514,6 +502,10 @@ function updateVisibleHtmlPage(load) {
 	if (load === true) {
 		if (!cookieUrl === undefined) {
 			document.querySelector(`.js-${cookieUrl.pagename}_visible`).style.display = 'none';
+
+
+
+
 		}
 		document.querySelector(`.js-loading_visible`).style.display = 'flex';
 	}
@@ -562,10 +554,10 @@ function loadPage() {
 loadPage();
 // Авто авторизация и обновление
 function openGame() {
-	if (keyStart === false){
+	if (keySetup.kStart === false){
 		console.log('GAME: Подключение...');
 		if (readLocalStorage() === true){
-			keyStart = true;
+			keySetup.kStart = true;
 			restoreInfo('read');
 		}
 		else {
@@ -573,20 +565,14 @@ function openGame() {
 		}
 	}
 	else {
-		keyStart = false;
+		keySetup.kStart = false;
 		if ((userInfo.name in cookieUsersInfo) && (userInfo.pass === cookieUsersInfo[userInfo.name].pass)) {
 			userInfo.lvl = cookieUsersInfo[userInfo.name].lvl;
 			generateGame();
 			console.log('GAME: Успешная автоматическая авторизация пользователя!');
-			let keysSorts = Object.keys(cookieUsersInfo).sort(function(a, b) {
-				return cookieUsersInfo[b].lvl - cookieUsersInfo[a].lvl
-			});
-			for (let i = 0; i < 3; i++) {
-				let rowEl = document.querySelector('.js-tops-list-'+ CSS.escape(String(i+1)));
-				rowEl.innerHTML = `<td>${i+1}</td><td>${keysSorts[i]}</td><td>${cookieUsersInfo[keysSorts[i]].lvl}</td>`;
-			}
+			sortTops();
 			cookieUsersInfo = {};
-			if (keyGo === true) {
+			if (keySetup.kGo === true) {
 				goToStatePage('game');
 			}
 			else {
@@ -605,6 +591,7 @@ function chekedMenu(EO) {
 	EO = EO || window.event;
 	animUpdate.key = true;
 	document.querySelector('.js-lvl-list').classList.toggle('block-game__box-lvl_open');
+	document.querySelector('.block-game__menu_size').classList.toggle('block-game__menu_size-open');
 	gameLvl.updateKeyListener();
 	if (this.checked) {
 		document.querySelector('.js-game').addEventListener('click', clickMenu);
@@ -625,14 +612,14 @@ function generateGame() {
 }
 // Сохраняем пройденный уровень
 function saveProgress() {
-	keyWarUpdate = true;
-	if (keySave === false) {
-		keySave = true;
+	keySetup.kWarUpdate = true;
+	if (keySetup.kSave === false) {
+		keySetup.kSave = true;
 		console.log(userInfo);
 		restoreInfo();
 	}
-	else if (keySave === true) {
-		keySave = false
+	else if (keySetup.kSave === true) {
+		keySetup.kSave = false
 		userInfo.lvl = (gameLvl.maxGameLevel - 1);
 		console.log(userInfo);
 		cookieUsersInfo[userInfo.name].lvl = userInfo.lvl;
@@ -644,21 +631,35 @@ function saveProgress() {
 // Создание таблицы топов
 function topsList(EO) {
 	//EO = EO || window.event;
-	if (keyTops === false) {
+	if (keySetup.kTops === false) {
 		restoreInfo('read');
-		keyTops = true;
+		keySetup.kTops = true;
 	}
 	else {
-		let keysSort = Object.keys(cookieUsersInfo).sort(function(a, b) {
-			return cookieUsersInfo[b].lvl - cookieUsersInfo[a].lvl
-		});
-		for (let i = 0; i < 3; i++) {
-			let rowEl = document.querySelector('.js-tops-list-'+ CSS.escape(String(i+1)));
-			rowEl.innerHTML = `<td>${i+1}</td><td>${keysSort[i]}</td><td>${cookieUsersInfo[keysSort[i]].lvl}</td>`;
-		}
+		sortTops();
 		cookieUsersInfo = {};
-		keyTops = false;
+		keySetup.kTops = false;
 		goToStatePage('tops');
+	}
+}
+// Сортировка и генерация списка топов
+function sortTops() {
+	let keysSort = Object.keys(cookieUsersInfo).sort(function(a, b) {
+		return cookieUsersInfo[b].lvl - cookieUsersInfo[a].lvl;
+	});
+	for (let i = 0; i < 3; i++) {
+		let nameTop;
+		let lvlTop;
+		if (!keysSort[i]) {
+			nameTop = '';
+			lvlTop = '';
+		}
+		else {
+			nameTop = keysSort[i];
+			lvlTop = cookieUsersInfo[keysSort[i]].lvl;
+		}
+		let rowEl = document.querySelector('.js-tops-list-'+ CSS.escape(String(i+1)));
+		rowEl.innerHTML = `<td>${i+1}</td><td>${nameTop}</td><td>${lvlTop}</td>`;
 	}
 }
 
@@ -674,7 +675,7 @@ function registerUser(EO) { // форма регистрации
 	let formPassR = formInRegPage.elements['password'].value;
 	let errLogin = false;
 	let errPass = false;
-	if (keyReg === false) {
+	if (keySetup.kReg === false) {
 		cookieUsersInfo = {};
 	}
 	// валидация пароля
@@ -696,18 +697,18 @@ function registerUser(EO) { // форма регистрации
 		errLogin = true;
 	}
 	else {
-		keyWarUpdate = true;
-		if (keyReg === false) { // 1 вызов функции - сначала запросим информацию
+		keySetup.kWarUpdate = true;
+		if (keySetup.kReg === false) { // 1 вызов функции - сначала запросим информацию
 			restoreInfo('read');
-			keyReg = true;
+			keySetup.kReg = true;
 			return false;
 		}
-		if (keyReg === true) { // 2 вызов функции AJAXом когда пришли данные
+		if (keySetup.kReg === true) { // 2 вызов функции AJAXом когда пришли данные
 			for (let cookieUsersInfoKey in cookieUsersInfo) {
 				if (formLoginR === cookieUsersInfoKey) {
 					infoErrLogin.textContent = '*Такой логин существует!';
 					errLogin = true;
-					keyReg = false;
+					keySetup.kReg = false;
 					cookieUsersInfo = {};
 					break;
 				}
@@ -717,7 +718,7 @@ function registerUser(EO) { // форма регистрации
 				cookieUsersInfo[formLoginR] = {pass: formPassR, lvl: 0}; // {'ник':{pass:'пароль',lvl: значение}, ...}
 				storeAjaxInfo('write');
 				userInfo = {name: (formLoginR), pass: (formPassR), lvl: 0};
-				// обнуляем форму, сброс ключа keyWarUpdate и переход по странице - после успешной записи в БД
+				// обнуляем форму, сброс ключа keySetup.kWarUpdate и переход по странице - после успешной записи в БД
 				console.log('GAME: Регистрируем пользователя...'); 
 			}
 			return false;
@@ -735,7 +736,7 @@ function logInUser(EO) {
 	let formPassL = formInLogPage.elements['password'].value;
 	let errLogin = false;
 	let errPass = false;
-	if (keyLog === false) {
+	if (keySetup.kLog === false) {
 		cookieUsersInfo = {};
 	}
 	// проверка заполненных полей
@@ -753,18 +754,18 @@ function logInUser(EO) {
 	else {
 		infoErrLogin.textContent = '';
 	}
-	keyWarUpdate = true;
+	keySetup.kWarUpdate = true;
 	if (errLogin === false && errPass === false) {
-		if (keyLog === false) { // 1 вызов функции - сначала запросим информацию
+		if (keySetup.kLog === false) { // 1 вызов функции - сначала запросим информацию
 			restoreInfo('read');
-			keyLog = true;
+			keySetup.kLog = true;
 			return false;
 		}
-		if (keyLog === true) { // 2 вызов функции AJAXом когда пришли данные
+		if (keySetup.kLog === true) { // 2 вызов функции AJAXом когда пришли данные
 			for (let cookieUsersInfoKey in cookieUsersInfo) {
 				if (formLoginL === cookieUsersInfoKey) {
 					errLogin = false;
-					keyLog = false;
+					keySetup.kLog = false;
 					break;
 				}
 				errLogin = true;
@@ -775,7 +776,7 @@ function logInUser(EO) {
 			if (errLogin === false && cookieUsersInfo[formLoginL].pass !== formPassL){
 				infoErrPass.textContent = '*Пароль неверный!';
 				cookieUsersInfo = {};
-				keyLog = false;
+				keySetup.kLog = false;
 				errPass = true;
 			}
 			if (errLogin === false && errPass === false){
@@ -785,7 +786,7 @@ function logInUser(EO) {
 				writeLocalStorage();
 				console.log('GAME: Пользователь авторизован!');
 				cookieUsersInfo = {};
-				keyWarUpdate = false;
+				keySetup.kWarUpdate = false;
 				formInLogPage.reset();
 				generateGame();
 				goToStatePage('game');
@@ -804,7 +805,7 @@ function storeAjaxInfo(type) {
 	if (type === 'write') {
 		goToStatePage('loading');
 	}
-	keyWarUpdate = true;
+	keySetup.kWarUpdate = true;
 	console.log('AJAX: Подключение к серверу...');
 	$.ajax({
 		url: ajaxHandlerScript, type: 'POST', cache: false, dataType:'json',
@@ -816,12 +817,12 @@ function storeAjaxInfo(type) {
 function writeAjaxUsers(callresult) {
 	if (callresult.error !== undefined) {
 		alert(callresult.error + '\n\n Ошибка №1 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
-		if (keyReg === true) {
+		if (keySetup.kReg === true) {
 			goToStatePage('reg');
-			keyReg = false;
+			keySetup.kReg = false;
 		} else {
 			goToStatePage('login');
-			keyLog = false;
+			keySetup.kLog = false;
 		}
 	}
 	else {
@@ -837,33 +838,33 @@ function writeAjaxUsers(callresult) {
 function updateReady(callresult) {
 	if (callresult.error !== undefined) {
 		alert(callresult.error +'\n\n Ошибка №2 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
-		if (keyReg === true) {
+		if (keySetup.kReg === true) {
 			goToStatePage('reg');
-			keyReg = false;
+			keySetup.kReg = false;
 		} else {
 			goToStatePage('login');
-			keyLog = false;
+			keySetup.kLog = false;
 		}
 	}
 	else {
 		writeLocalStorage();
-		if (keyReg === true) {
-			keyReg = false;
+		if (keySetup.kReg === true) {
+			keySetup.kReg = false;
 			cookieUsersInfo = {};
 			formInRegPage.reset();
-			keyWarUpdate = false;
+			keySetup.kWarUpdate = false;
 			console.log('AJAX: Пользователь успешно добавлен!');
 			generateGame();
 			goToStatePage('game');
 		}
-		if (keyAjax === true) {
-			keyAjax = false;
+		if (keySetup.kAdmin === true) {
+			keySetup.kAdmin = false;
 			goToStatePage('reg');
 		}
 		else {
 			console.log('AJAX: Данный пользователя успешно обновлены!');
 		}
-		keyWarUpdate = false;
+		keySetup.kWarUpdate = false;
 	}
 }
 // Чтение данных по AJAX
@@ -883,49 +884,49 @@ function restoreInfo(type) {
 function readReady(callresult) {
 	if (callresult.error !== undefined) {
 		alert(callresult.error +'\n\n Ошибка №3 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
-		if (keyReg === true) {
+		if (keySetup.kReg === true) {
 			goToStatePage('reg');
-			keyReg = false;
+			keySetup.kReg = false;
 		} else {
 			goToStatePage('login');
-			keyLog = false;
+			keySetup.kLog = false;
 		}
 	}
 	else if (callresult.result !== "") {
 		console.log('AJAX: Данные получены!')
 		cookieUsersInfo = JSON.parse(callresult.result);
-		if (keyReg === true) {
+		if (keySetup.kReg === true) {
 			goToStatePage('reg');
 			registerUser();
 		}
-		if (keyLog === true) {
+		if (keySetup.kLog === true) {
 			goToStatePage('login');
 			logInUser();
 		}
-		if (keyStart === true) {
+		if (keySetup.kStart === true) {
 			openGame();
 		}
-		if (keyTops === true) {
+		if (keySetup.kTops === true) {
 			topsList();
 		}
-		if (keySave === true) {
+		if (keySetup.kSave === true) {
 			saveProgress();
 		}
-		if (keyAjax === true) { // админ
+		if (keySetup.kAdmin === true) { // админ
 			console.log(cookieUsersInfo);
-			keyAjax = false;
+			keySetup.kAdmin = false;
 		}
 	}
 }
 // Ошибка AJAX
 function errorAjaxUsers(jqXHR,statusStr,errorStr) {
 	alert(statusStr+' '+errorStr +'\n\n Ошибка №4 обращения к серверу! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
-	if (keyReg === true) {
+	if (keySetup.kReg === true) {
 		goToStatePage('reg');
-		keyReg = false;
+		keySetup.kReg = false;
 	} else {
 		goToStatePage('login');
-		keyLog = false;
+		keySetup.kLog = false;
 	}
 }
 // Запись в LocalStorage
@@ -954,7 +955,7 @@ function readLocalStorage() {
 // Добавить проверку админа !!!
 function startAjax() {
 	updateAjaxPassword = Math.random();
-	keyAjax = true;
+	keySetup.kAdmin = true;
 	cookieUsersInfo = {};
 	console.log('AJAX: Выполняем сброс...');
 	$.ajax({
@@ -965,7 +966,7 @@ function startAjax() {
 	goToStatePage('reg');
 }
 function getInfoAjax() {
-	keyAjax = true;
+	keySetup.kAdmin = true;
 	restoreInfo();
 }
 function resetLocalStorage() {

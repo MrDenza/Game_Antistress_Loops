@@ -330,16 +330,16 @@ body {
 	}
 	&__box-block {
 		position: relative;
-	}
-	&__menu-box {
+		width: auto;
 		& .block-game__menu_size {
-			display: block;
 			width: 100px;
 			height: 0;
-			margin: 0 15px 0 0;
+			padding: 0 15px 0 0;
 			transition: all 1s linear;
-			border: 1px solid red;
 		}
+	}
+	&__menu-box {
+		position: absolute;
 	}
 	&__menu-btn {
 		width: 100px;
@@ -356,7 +356,7 @@ body {
 		background-color: white;
 		border: 2px solid var(--colorItem, black);
 		transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-		&:not(:first-child) {
+		&:not(:nth-child(1)) {
 			opacity: 0;
 			-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 			z-index: -2;
@@ -406,7 +406,7 @@ body {
 					transform: translateX(0px);
 					opacity: 1;
 				}
-				&:not(:first-child) {
+				&:not(:nth-child(1)) {
 					z-index: 1;
 					opacity: 1;
 					-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
@@ -429,10 +429,10 @@ body {
 					top: 150px;
 				}
 			}
-			& .block-game__menu_size {
-				width: 300px;
-			}
 		}
+	}
+	&__menu_size-open {
+		width: 250px !important;
 	}
 	&__btn {
 		&_font {
@@ -732,7 +732,7 @@ body {
 	}
 	/* ------------------------ BLOCK 4 ------------------------- */
 	.block-game {
-		&__menu-box {
+		&__box-block {
 			& .block-game__menu_size {
 				width: 80px;
 			}
@@ -763,9 +763,6 @@ body {
 						top: 120px;
 					}
 				}
-				& .block-game__menu_size {
-					width: 200px;
-				}
 			}
 		}
 		&__box-lvl_open {
@@ -773,6 +770,9 @@ body {
 		}
 		&__box-lvl-list {
 			padding: 5px;
+		}
+		&__menu_size-open {
+			width: 200px !important;
 		}
 	}
 	/* ----------------------- BLOCK 5-6 ------------------------ */
@@ -877,7 +877,7 @@ body {
 		}
 		&__info {
 			width: 100%;
-			height: 100vh;
+			height: 60vh;
 			height: calc(var(--vh,1vh)*60);
 			padding: 0;
 			flex: 0 1 200px;
@@ -904,20 +904,18 @@ body {
 		}
 		&__box-block {
 			order: 3;
-		}
-		&__menu-box {
-			display: flex;
-			&__menu-btn {
-			}
 			& .block-game__menu_size {
-				width: 60px;
-				margin: 15px 0 0 0;
+				padding: 15px 0 0 0;
+				width: 0;
+				height: 65px;
 			}
 		}
 		&__menu-btn {
+			order: 2;
 			width: 60px;
 			height: 60px;
 			border-radius: 60px;
+			transform: translateY(-100%) translateX(-50%);
 		}
 		&__btn-close {
 			transform: translateY(50px);
@@ -925,7 +923,6 @@ body {
 		&__menu {
 			&:checked ~ .block-game__menu-box {
 				& .block-game__menu-btn {
-					//order: 2;
 					& .block-game__btn-menu {
 						transform: translateY(-50px);
 					}
@@ -951,12 +948,6 @@ body {
 						top: 0;
 						left: 120px;
 					}
-				}
-				& .block-game__menu_size {
-					order: 1;
-
-					width: 60px;
-					height: 140px;
 				}
 			}
 		}
@@ -986,6 +977,16 @@ body {
 		&__btn-next {
 			transform: rotate(0);
 		}
+		&__menu_size-open {
+			box-sizing: border-box;
+			width: 0 !important;
+			height: 195px !important;
+		}
+	}
+	.js-game-grid {
+		//transform: rotate(90deg) scale(1.3);
+		//width: 90vh;
+		//height: 80vw;
 	}
 	/* ----------------------- BLOCK 5-6 ------------------------ */
 	.block-style {
@@ -1135,6 +1136,51 @@ body {
 			padding: 0 10px;
 		}
 	}
+	/* ------------------------ BLOCK 4 ------------------------- */
+	.block-game {
+		&__box-block {
+			& .block-game__menu_size {
+				width: 65px;
+			}
+		}
+		&__menu-btn {
+			width: 60px;
+			height: 60px;
+			border-radius: 60px;
+		}
+		&__menu {
+			&:checked ~ .block-game__menu-box {
+				& .block-game__menu-btn {
+					&:nth-child(2) {
+						top: -70px;
+					}
+					&:nth-child(3) {
+						top: -52px;
+						left: 55px;
+					}
+					&:nth-child(4) {
+						left: 80px;
+					}
+					&:nth-child(5) {
+						top: 52px;
+						left: 55px;
+					}
+					&:nth-child(6) {
+						top: 70px;
+					}
+				}
+			}
+		}
+		&__box-lvl_open {
+			width: 50px;
+		}
+		&__box-lvl-list {
+			padding: 5px;
+		}
+		&__menu_size-open {
+			width: 140px !important;
+		}
+	}
 	/* ----------------------- BLOCK 5-6 ------------------------ */
 	.block-style {
 		&_btn-back {
@@ -1261,6 +1307,40 @@ body {
 	.block-connect {
 		&__title {
 			font-size: 2.5rem;
+		}
+	}
+	/* ------------------------ BLOCK 4 ------------------------- */
+	.block-game {
+		&__menu {
+			&:checked ~ .block-game__menu-box {
+				& .block-game__menu-btn {
+					&:nth-child(2) {
+						top: 0;
+						left: -90px;
+					}
+					&:nth-child(3) {
+						top: -60px;
+						left: -60px;
+					}
+					&:nth-child(4) {
+						top: -90px;
+						left: 0;
+					}
+					&:nth-child(5) {
+						top: -60px;
+						left: 60px;
+					}
+					&:nth-child(6) {
+						top: 0;
+						left: 90px;
+					}
+				}
+			}
+		}
+		&__menu_size-open {
+
+			width: 0 !important;
+			height: 165px !important;
 		}
 	}
 	/* ----------------------- BLOCK 5-6 ------------------------ */

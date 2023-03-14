@@ -4,19 +4,28 @@
 		<meta http-equiv="content-type" content="text/html, charset=utf-8">
 		<meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<link rel="icon" href=""> <!-- иконка 32×32 -->
+		<link rel="icon" href="favicon.ico"> <!-- иконка 32×32 -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Jura&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="font/css/Icon-Font.css"> <!-- иконочный шрифт -->
-		<link rel="stylesheet" href="style/style.css" type="text/css"> <!-- Стили общие -->
+		<link rel="stylesheet" href="style/style.css" type="text/css"> <!-- стили общие -->
 		<title>ENERGY</title>
 	</head>
 	<body class="body_gradient">
 		<div class="body_update-box">
 			<div class="body__update"></div>
 		</div>
+		<!-- Анимация фона -->
 		<canvas class="body_animation"></canvas>
+		<!-- Аудио -->
+		<audio class="js-game-music" controls loop="loop" autoplay="autoplay">
+			<source src="./resource/audio/scott-buckley-childhood.mp3" type="audio/mpeg">
+		</audio>
+		<audio class="js-game-tone" controls>
+			<source src="./resource/audio/btn-click.mp3" type="audio/mpeg">
+		</audio>
+		<!-- Содержимое -->
 		<main class="body__container">
 			<!-- Библиотека элементов игры -->
 			<svg xmlns="http://www.w3.org/2000/svg" style="display: none" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -115,9 +124,7 @@
 							<!-- <label for="r-btn-login"></label>
  							<input class="block-connect__btn1-login btn_opacity" type="button" id="r-btn-login" value="Залогиниться"> -->
 							<label for="r-btn-login"></label>
-							<a class="block-connect__link" href="#login" title="Перейти на страницу авторизации">
-								<input class="block-connect__btn1-login btn_opacity" type="button" id="r-btn-login" value="Залогиниться">
-							</a>
+							<input class="block-connect__btn1-login btn_opacity js-go-login" type="button" id="r-btn-login" value="Залогиниться">
 							<label for="r-btn-reg"></label>
 							<input class="block-connect__btn1-reg" type="submit" id="r-btn-reg" value="Создать аккаунт">
 						</div>
@@ -153,9 +160,7 @@
 						</div>
 						<div class="block-connect__box-btn">
 							<label for="l-btn-reg"></label>
-							<a class="block-connect__link" href="#reg" title="Перейти на страницу регистрации">
-								<input class="block-connect__btn2-reg btn_opacity" type="button" id="l-btn-reg" value="Создать аккаунт">
-							</a>
+							<input class="block-connect__btn2-reg btn_opacity js-go-reg" type="button" id="l-btn-reg" value="Создать аккаунт">
 							<label for="l-btn-login"></label>
 							<input class="block-connect__btn2-login" type="submit" id="l-btn-login" value="Авторизоваться">
 						</div>
@@ -173,7 +178,9 @@
 							<i class="block-game__btn_font block-game__btn-close icon-close"></i>
 						</span>
 						<span class="block-game__menu-btn js-menu-1">
-							<i class="block-game__btn_font icon-melody"></i>
+							<i class="block-game__btn_font icon-melody js-melody block-game__btn-sound ="></i>
+							<i class="block-game__btn_font icon-sound js-tone block-game__btn-sound block-game__btn-sound_dis"></i>
+							<i class="block-game__btn_font icon-n-sound js-no-sound block-game__btn-sound block-game__btn-sound_dis"></i>
 						</span>
 						<span class="block-game__menu-btn js-menu-2">
 							<i class="block-game__btn_font icon-reset"></i>
@@ -189,7 +196,6 @@
 							<i class="block-game__btn_font icon-top"></i>
 						</span>
 					</label>
-
 				</div>
 				<div class="block-game__box-game js-game">
 					<!-- Игровое поле генерируется через JS -->
@@ -205,9 +211,7 @@
 			<!-- Блок 5 - Раздел с календарём -->
 			<section class="block-calendar__box block-style_box js-calendar_visible" style="display: none">
 				<div class="block-style_nav">
-					<a href="#game" title="Вернуться обратно">
-						<button class="block-style_btn-back icon-left" type="button" title="Назад"></button>
-					</a>
+					<button class="block-style_btn-back icon-left js-btn-back" type="button" title="Назад"></button>
 					<h2 class="block-style_nav-title">Ежедневное испытание</h2>
 				</div>
 				<div class="block-calendar__box-info block-style_box-info">
@@ -229,16 +233,11 @@
 						<button class="block-calendar__btnNext-2 icon-right js-cal-btnNext" type="button" title="Следующий месяц"></button>
 					</div>
 				</div>
-				<!-- <div class="block-calendar__btn">
- 					<button class="block-calendar__btn-game" type="button" title="Запустить игру">Играть</button>
- 				</div> -->
 			</section>
 			<!-- Блок 6 - Комната топов -->
-			<section class="block-tops__box block-style_box js-tops_visible" style="display: none">
+			<section class="block-tops__box block-style_box js-tops_visible js-btn-back" style="display: none">
 				<div class="block-style_nav">
-					<a href="#game" title="Вернуться обратно">
-						<button class="block-style_btn-back icon-left" type="button" title="Назад"></button>
-					</a>
+					<button class="block-style_btn-back icon-left" type="button" title="Назад"></button>
 					<h2 class="block-style_nav-title">Комната топ игроков</h2>
 				</div>
 				<div class="block-style_box-info">

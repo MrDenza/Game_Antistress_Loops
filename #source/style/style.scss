@@ -16,6 +16,9 @@ body {
 * {
 	user-select: none;
 }
+audio {
+	display: none;
+}
 .body_gradient {
 	background: linear-gradient(45deg, #1CB5E0 0%, #000851 100%) fixed;
 }
@@ -134,7 +137,7 @@ body {
 	}
 	&__box-svg {
 		max-width: 700px;
-		height: 100vh;
+		height: 97vh;
 		height: calc(var(--vh,1vh)*97);
 	}
 	&__text {
@@ -221,7 +224,7 @@ body {
 	}
 	&__info {
 		width: 40%;
-		height: 100vh;
+		height: 97vh;
 		height: calc(var(--vh,1vh)*97);
 		padding: 5px 15px;
 		display: flex;
@@ -238,7 +241,7 @@ body {
 		flex: 0 1 700px;
 	}
 	&__box-form {
-		height: 100vh;
+		height: 97vh;
 		height: calc(var(--vh,1vh)*97);
 		padding: 5px 15px;
 		display: flex;
@@ -363,7 +366,6 @@ body {
 			-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 			z-index: -2;
 			transition: all 0.7s cubic-bezier(.87,-.41,.19,1.44);
-
 		}
 		&:nth-child(2), &:nth-child(3), &:nth-child(4), &:nth-child(5), &:nth-child(6) {
 			top: 0;
@@ -385,7 +387,7 @@ body {
 			transition-delay: 0.8s;
 		}
 	}
-	&__btn-menu, &__btn-close, &__btn-vibro_img {
+	&__btn-menu, &__btn-close, &__btn-vibro_img, &__btn-sound {
 		position: absolute;
 		transition: all 0.2s ease;
 	}
@@ -393,7 +395,7 @@ body {
 		transform: translateX(0px);
 		opacity: 1;
 	}
-	&__btn-close, &__btn-vibro_dis {
+	&__btn-close, &__btn-vibro_dis, &__btn-sound_dis {
 		transform: translateX(50px);
 		opacity: 0;
 	}
@@ -534,6 +536,7 @@ body {
 }
 /* ----------------------- BLOCK 5-6 ------------------------ */
 .block-style {
+	//box-svg-lamp {  } // создаёт JS
 	&_box {
 		box-sizing: border-box;
 		max-width: 100%;
@@ -577,6 +580,7 @@ body {
 }
 /* ------------------------ BLOCK 5 ------------------------- */
 .block-calendar {
+	//box-svg-lamp {  } // создаёт JS
 	&__box {
 	}
 	&__box-info {
@@ -607,9 +611,6 @@ body {
 		color: var(--colorItem, black);
 		border: 1px solid var(--colorItem, black);
 		box-shadow: none;
-		&:hover {
-			//animation: rotBtn 1s ease infinite;
-		}
 	}
 	&__btnPrv {
 	}
@@ -661,6 +662,7 @@ body {
 }
 /* ------------------------ BLOCK 6 ------------------------- */
 .block-tops {
+	//box-svg-lamp {  } // создаёт JS
 	&__box {
 	}
 	&__box-table {
@@ -824,7 +826,10 @@ body {
 			order: 1;
 			margin-bottom: 20px;
 		}
-		&__link {
+		&__btn1-login {
+			order: 2;
+		}
+		&__btn2-reg {
 			order: 2;
 		}
 		&__btn2-login {
@@ -930,13 +935,12 @@ body {
 				transition: all 0.7s cubic-bezier(.87,-.41,.19,1.44);
 			}
 		}
-		&__btn-close {
+		&__btn-close, &__btn-vibro_dis, &__btn-sound_dis {
 			transform: translateY(50px);
 		}
 		&__menu {
 			&:checked ~ .block-game__menu-box {
 				& .block-game__menu-btn {
-					//transform: translateY(-100%) translateX(-50%);
 					& .block-game__btn-menu {
 						transform: translateY(-50px);
 					}
@@ -1022,7 +1026,6 @@ body {
 	.block-calendar {
 		&__calendar {
 			padding: 10px;
-
 			& td {
 				width: 40px;
 				height: 40px;
@@ -1077,14 +1080,6 @@ body {
 		}
 	}
 }
-@media screen and (max-height: 700px) and (orientation:portrait) {
-	/* ------------------------ BLOCK 5 ------------------------- */
-	.block-calendar {
-		&__box-calendar {
-			//height: 398px;
-		}
-	}
-}
 @media screen and (max-height: 520px) and (max-width: 920px) and (orientation:landscape) {
 	html {
 		font-size: 20px;
@@ -1124,7 +1119,7 @@ body {
 			order: 2;
 			margin-bottom: 0;
 		}
-		&__link {
+		&__btn1-login {
 			order: 1;
 		}
 		&__btn2-login {
@@ -1276,12 +1271,6 @@ body {
 @media screen and (max-height: 760px) and (max-width: 500px) {
 	/* ------------------------ BLOCK 5 ------------------------- */
 	.block-calendar {
-		&__calendar {
-			//padding: 5px;
-		}
-		&__box-calendar {
-			//height: 360px;
-		}
 		&__btnPrv-2, &__btnNext-2 {
 			font-size: 1rem;
 			width: 34px;
@@ -1390,7 +1379,6 @@ body {
 			}
 		}
 		&__menu_size-open {
-
 			width: 0 !important;
 			height: 165px !important;
 		}
@@ -1419,33 +1407,4 @@ body {
 			display: none;
 		}
 	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@media all and (orientation:landscape) {
-}
-@media screen and (max-width: 1200px) {
-}
-@media screen and (max-width: 980px) {
-}
-@media screen and (max-width: 768px) {
-}
-@media screen and (max-width: 640px) {
-}
-@media screen and (max-width: 480px) {
-}
-@media screen and (max-width: 320px) {
 }

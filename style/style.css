@@ -190,6 +190,10 @@ body {
          user-select: none;
 }
 
+audio {
+ display: none;
+}
+
 .body_gradient {
  background: -o-linear-gradient(45deg, #1CB5E0 0%, #000851 100%) fixed;
  background: linear-gradient(45deg, #1CB5E0 0%, #000851 100%) fixed;
@@ -357,7 +361,7 @@ body {
 }
 .block-loading__box-svg {
  max-width: 700px;
- height: 100vh;
+ height: 97vh;
  height: calc(var(--vh, 1vh) * 97);
 }
 .block-loading__text {
@@ -459,7 +463,7 @@ body {
 }
 .block-connect__info {
  width: 40%;
- height: 100vh;
+ height: 97vh;
  height: calc(var(--vh, 1vh) * 97);
  padding: 5px 15px;
  display: -webkit-box;
@@ -489,7 +493,7 @@ body {
          flex: 0 1 700px;
 }
 .block-connect__box-form {
- height: 100vh;
+ height: 97vh;
  height: calc(var(--vh, 1vh) * 97);
  padding: 5px 15px;
  display: -webkit-box;
@@ -697,7 +701,7 @@ body {
       -o-transition-delay: 0.8s;
          transition-delay: 0.8s;
 }
-.block-game__btn-menu, .block-game__btn-close, .block-game__btn-vibro_img {
+.block-game__btn-menu, .block-game__btn-close, .block-game__btn-vibro_img, .block-game__btn-sound {
  position: absolute;
  -webkit-transition: all 0.2s ease;
  -o-transition: all 0.2s ease;
@@ -709,7 +713,7 @@ body {
          transform: translateX(0px);
  opacity: 1;
 }
-.block-game__btn-close, .block-game__btn-vibro_dis {
+.block-game__btn-close, .block-game__btn-vibro_dis, .block-game__btn-sound_dis {
  -webkit-transform: translateX(50px);
      -ms-transform: translateX(50px);
          transform: translateX(50px);
@@ -1208,7 +1212,12 @@ body {
           order: 1;
   margin-bottom: 20px;
  }
- .block-connect__link {
+ .block-connect__btn1-login {
+  -webkit-box-ordinal-group: 3;
+      -ms-flex-order: 2;
+          order: 2;
+ }
+ .block-connect__btn2-reg {
   -webkit-box-ordinal-group: 3;
       -ms-flex-order: 2;
           order: 2;
@@ -1340,7 +1349,7 @@ body {
   -o-transition: all 0.7s cubic-bezier(0.87, -0.41, 0.19, 1.44);
   transition: all 0.7s cubic-bezier(0.87, -0.41, 0.19, 1.44);
  }
- .block-game__btn-close {
+ .block-game__btn-close, .block-game__btn-vibro_dis, .block-game__btn-sound_dis {
   -webkit-transform: translateY(50px);
       -ms-transform: translateY(50px);
           transform: translateY(50px);
@@ -1508,9 +1517,6 @@ body {
           align-items: center;
  }
 }
-@media screen and (max-height: 700px) and (orientation: portrait) {
- /* ------------------------ BLOCK 5 ------------------------- */
-}
 @media screen and (max-height: 520px) and (max-width: 920px) and (orientation: landscape) {
  html {
   font-size: 20px;
@@ -1559,7 +1565,7 @@ body {
           order: 2;
   margin-bottom: 0;
  }
- .block-connect__link {
+ .block-connect__btn1-login {
   -webkit-box-ordinal-group: 2;
       -ms-flex-order: 1;
           order: 1;

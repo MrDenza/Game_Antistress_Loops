@@ -21,7 +21,6 @@ let gradientBody = {num: 0,
 	8: ['#31a207','#1372c8','#238C5F','#8fcc79'],
 }
 const bodyAnimation = document.querySelector('.body_animation');// canvas
-//const bodyContainer = document.querySelector('.body__container'); // main
 let screenSizeW = (bodyAnimation.width = window.innerWidth); // ширина окна
 let screenSizeH = (bodyAnimation.height = window.innerHeight); // высота окна
 let vhFix = screenSizeH * 0.01; // фикс для мобильной версии - вписать по высоте без адресной строки
@@ -32,7 +31,7 @@ const svgLink = 'http://www.w3.org/2000/svg';
 // massAnimLamp объект всех линий анимации Lamp во всех дубликатах, где ключ:
 // num - счёт от 1 до 9 линий; lot - кол-во дубликатов анимации; mass - массив всех линий
 let massAnimLamp = {};
-let animUpdate = {key: false, count: 0, obj: document.querySelector('.body__update')}; // ключ запуска анимации вспышки
+let animUpdate = {key: false, count: 0, obj: document.querySelector('.body__update')}; // данные анимации вспышки (key = true - старт)
 let lastTimeFrame = 0; // для выполнения функции через определённое время в цикле requestAnimationFrame
 let fixNum = 0; // фикс первого запуска функции gameLoop
 const formInRegPage = document.forms['reg-form']; // форма на странице регистрации
@@ -44,12 +43,15 @@ let userInfo = {}; // данные пользователя {nick:'ник',pass:
 let cookieUsersInfo = {}; // переменная временного хранения списка пользователей
 let cookieUrl = {pagename: window.location.hash.substr(1)}; // переменная временного хранения закладки URL
 // ключ: регистрации, авторизации, админа, старта, топов, предупреждения о потери данных, начала, write/read данные
-//		статус вибрации,
+//		статус вибрации, фоновая музыка, звук щелчка (режими 1-офф, 2-щелчки только, 3- плюс музыка
 let keySetup = {kReg: false, kLog: false, kAdmin: false, kStart: false, kTops: false, kWarUpdate: false,
-				kGo: false, kSave: false, kVibro: true}; // ключи настроек
+				kGo: false, kSave: false, kVibro: true, kMusic: 3}; // ключи настроек
 let calendar; // объект класса календарь
 let gameLvl; // объект класса уровень
-
+const musicElem = document.querySelector('.js-game-music'); // фоновая музыка
+const toneElem = document.querySelector('.js-game-tone'); // звук нажатия
+let touchStart = 0; // переменная для жестов
+let touchEnd = 0; // переменная для жестов
 // ---------- Проверка поддержки методов / Полифилы ----------
 if (!window.requestAnimationFrame) {
 	window.requestAnimationFrame = function(){
@@ -170,7 +172,7 @@ class Calendar {
 			if (rowN === 1) { // ПН
 				codeHtml += `<tr>`;
 			}
-			else if (keyA === 1) {// если первый день не ПН показать дни прошлого месяца
+			else if (keyA === 1) { // если первый день не ПН показать дни прошлого месяца
 				codeHtml += `<tr>`;
 				let keyK = lastDayOfLastMonth - firstDayOfMonth + 1;
 				for (let j = 0; j < firstDayOfMonth; j++) {
@@ -211,7 +213,6 @@ class Calendar {
 			return;
 		}
 		if (!cellTable.classList[0] === false && (cellTable.classList[0].includes('dayNorm') === true || cellTable.classList[0].includes('dayNow') === true)) {
-			action(0,0,1,1);
 			let clickDate = `${cellTable.innerHTML}_${this.currMonth+1}_${this.currYear}`;
 			this.openDate = clickDate;
 			console.log(`GAME: Выбрано ежедневное испытание от ${clickDate}`);
@@ -393,21 +394,113 @@ window.onbeforeunload = (EO) => {
 };
 // Добавляем слушателей DOM элементам
 function updateListener() {
-	document.querySelector('.block-start__btn').onclick = () => {action(0,0,1,1); /*cookieUrl.pagename = 'game';*/keySetup.kGo = true; openGame();};
+	document.querySelector('.block-start__btn').onclick = () => {action(0,0,1,1); keySetup.kGo = true; openGame();};
 	formInRegPage.addEventListener('submit',() => {action(0,0,1,1); registerUser()},false);
 	formInLogPage.addEventListener('submit',() => {action(0,0,1,1); logInUser()},false);
-	document.querySelector('.js-menu').addEventListener('change', chekedMenu);
-	//document.querySelector('.js-menu-1').onclick = () => /* todo: музыка */ ;
+	document.querySelector('.js-go-login').onclick = () => {action(0, 0, 1, 1); goToStatePage('login');};
+	document.querySelector('.js-go-reg').onclick = () => {action(0, 0, 1, 1); goToStatePage('reg');};
+	document.querySelector('.js-menu').addEventListener('change', checkedMenu);
+	document.querySelector('.js-menu-1').onclick = (EO) => {EO.preventDefault(); soundStatus();};
 	document.querySelector('.js-menu-2').onclick = (EO) => {EO.preventDefault(); action(0,0,1,1); gameLvl.buildGame();};
 	document.querySelector('.js-menu-3').onclick = (EO) => {EO.preventDefault(); vibroStatus(); action(1,0,1,1);} ;
 	document.querySelector('.js-menu-4').onclick = () => {action(0,0,1,1); goToStatePage('calendar')};
 	document.querySelector('.js-menu-5').onclick = () => {action(0,0,1,1); topsList()};
 	document.querySelector('.js-lvl-prev').onclick = () => gameLvl.prevLevel();
 	document.querySelector('.js-lvl-next').onclick = () => gameLvl.nextLevel();
+	document.querySelectorAll('.js-btn-back').forEach((el) => {el.onclick = () => {action(0,0,1,1); goToStatePage('game');}});
 	document.querySelectorAll('.js-cal-btnNext').forEach((el) => {el.onclick = () => calendar.nextMonth()});
 	document.querySelectorAll('.js-cal-btnPrv').forEach((el) => {el.onclick = () => calendar.prevMonth()});
 }
 updateListener();
+// Слушатели клавиш и жестов
+function otherPageLis(selectPage) {
+	document.onkeydown = null;
+	let tableTop = document.querySelector('.block-calendar__table');
+	if (tableTop) {
+		tableTop.removeEventListener('touchstart', startTouch);
+		tableTop.removeEventListener('touchend', endTouch);
+	}
+	switch (selectPage) {
+		case 'start':
+			document.onkeydown = function(EO) {
+				EO = EO || window.event;
+				if (EO.keyCode === 13) { // enter
+					document.querySelector('.block-start__btn').click();
+				}
+			}
+			document.addEventListener('touchstart', e => {touchStart = e.changedTouches[0].screenX
+			})
+			break;
+		case 'game':
+			document.onkeydown = function(EO) {
+				EO = EO || window.event;
+				if (EO.keyCode === 27) { // esc
+					clickMenu();
+				}
+				if (EO.keyCode === 38 && document.querySelector('.js-menu').checked) { // стрелка вверх
+					gameLvl.prevLevel();
+				}
+				if (EO.keyCode === 40 && document.querySelector('.js-menu').checked) { // стрелка вниз
+					gameLvl.nextLevel();
+				}
+			};
+			break;
+		case 'calendar':
+			document.onkeydown = function(EO) {
+				EO = EO || window.event;
+				if (EO.keyCode === 27) { // esc
+					action(0,0,1,1);
+					goToStatePage('game');
+				}
+				if (EO.keyCode === 37) { // стрелка влево
+					calendar.prevMonth();
+				}
+				if (EO.keyCode === 39) { // стрелка вправо
+					calendar.nextMonth();
+				}
+			}
+			document.querySelector('.block-calendar__table').addEventListener('touchstart', startTouch);
+			document.querySelector('.block-calendar__table').addEventListener('touchend', endTouch);
+			break;
+		case 'tops':
+			document.onkeydown = function(EO) {
+				EO = EO || window.event;
+				if (EO.keyCode === 27 && tableTop) { // esc
+					action(0,0,1,1);
+					goToStatePage('game');
+				}
+			}
+			break;
+		case 'reg':
+		case 'login':
+			document.onkeydown = function(EO) {
+				EO = EO || window.event;
+				if (EO.keyCode === 27) { // esc
+					action(0,0,0,1);
+					goToStatePage('start');
+				}
+			}
+			break;
+	}
+}
+// Функции для тачскрин слушателей
+function startTouch(EO) {
+	touchStart = EO.changedTouches[0].screenX
+}
+function endTouch(EO) {
+	touchEnd = EO.changedTouches[0].screenX
+	flippingCalendar();
+}
+function flippingCalendar() {
+	if (touchEnd < touchStart) {
+		calendar.prevMonth();
+	}
+	if (touchEnd > touchStart) {
+		calendar.nextMonth();
+	}
+}
+// Автозапуск фоновой музыки
+document.querySelector('.body__container').addEventListener('pointerdown',musicGamePlay,false);
 
 // ---------- Работа с фоном/звуков/вибро ----------
 // Установка градиента фона и цвета для значков
@@ -461,6 +554,51 @@ function vibration(longFlag) {
 		}
 	}
 }
+// Управление звуком игры
+function soundStatus() {
+	keySetup.kMusic--;
+	if (keySetup.kMusic === 0) {
+		keySetup.kMusic = 3;
+	}
+	switch (keySetup.kMusic) {
+		case 3:
+			console.log(`GAME: Музыка - вкл, звук интерфейса - вкл.`);
+			document.querySelector('.js-melody').classList.toggle('block-game__btn-sound_dis');
+			document.querySelector('.js-no-sound').classList.toggle('block-game__btn-sound_dis');
+			musicGamePlay();
+			break;
+		case 2:
+			console.log(`GAME: Музыка - выкл, звук интерфейса - вкл.`);
+			document.querySelector('.js-melody').classList.toggle('block-game__btn-sound_dis');
+			document.querySelector('.js-tone').classList.toggle('block-game__btn-sound_dis');
+			musicGameStop();
+			break;
+		case 1:
+			console.log(`GAME: Беззвучный режим.`);
+			document.querySelector('.js-tone').classList.toggle('block-game__btn-sound_dis');
+			document.querySelector('.js-no-sound').classList.toggle('block-game__btn-sound_dis');
+			break;
+	}
+}
+// Музыкальное сопровождение
+function musicGamePlay() {
+	if (keySetup.kMusic === 3) {
+		musicElem.play();
+		musicElem.volume = 1;
+	}
+}
+function musicGameStop() {
+	musicElem.pause();
+	musicElem.currentTime = 0;
+}
+// Звук нажатия
+function toneGamePlay() {
+	if (keySetup.kMusic >= 2) {
+		toneElem.currentTime = 0;
+		toneElem.volume = 1;
+		toneElem.play();
+	}
+}
 // Генерация зрительной, вибро и звуковой реакции на действия
 function action(flash, background, vibro, tone) {
 	// flash (вспышка): 0 - нет, 1 - да
@@ -480,7 +618,7 @@ function action(flash, background, vibro, tone) {
 		vibration(true);
 	}
 	if (tone === 1) {
-		// todo: звоночек
+		toneGamePlay();
 	}
 }
 
@@ -543,10 +681,6 @@ function updateVisibleHtmlPage(load) {
 	if (load === true) {
 		if (cookieUrl !== undefined) {
 			document.querySelector(`.js-${cookieUrl.pagename}_visible`).style.display = 'none';
-
-
-
-
 		}
 		document.querySelector(`.js-loading_visible`).style.display = 'flex';
 	}
@@ -560,6 +694,7 @@ function updateVisibleHtmlPage(load) {
 		for (let HtmlElement of allSectionHtml) {
 			HtmlElement.style.display = 'none';
 		}
+		otherPageLis(cookieUrl.pagename);
 		document.querySelector(`.js-${cookieUrl.pagename}_visible`).style.display = 'flex';
 		console.log(`GAME: Переход в раздел \"${cookieUrl.pagename}\".`);
 	}
@@ -628,7 +763,7 @@ function openGame() {
 
 // ---------- Раздел "Game" ----------
 // Состояния меню
-function chekedMenu() {
+function checkedMenu() {
 	action(1,0,1,1);
 	document.querySelector('.js-lvl-list').classList.toggle('block-game__box-lvl_open');
 	document.querySelector('.block-game__menu_size').classList.toggle('block-game__menu_size-open');
@@ -654,13 +789,11 @@ function saveProgress() {
 	keySetup.kWarUpdate = true;
 	if (keySetup.kSave === false) {
 		keySetup.kSave = true;
-		console.log(userInfo);
 		restoreInfo();
 	}
 	else if (keySetup.kSave === true) {
 		keySetup.kSave = false
 		userInfo.lvl = (gameLvl.maxGameLevel - 1);
-		console.log(userInfo);
 		cookieUsersInfo[userInfo.name].lvl = userInfo.lvl;
 		storeAjaxInfo();
 	}
@@ -754,7 +887,13 @@ function registerUser(EO) { // форма регистрации
 			if (errLogin === false && errPass === false) {
 				infoErrLogin.textContent = infoErrPass.textContent = '';
 				cookieUsersInfo[formLoginR] = {pass: formPassR, lvl: 0}; // {'ник':{pass:'пароль',lvl: значение}, ...}
-				storeAjaxInfo('write');
+				if (cookieUsersInfo) {
+					storeAjaxInfo('write');
+				}
+				else {
+					alert('Ошибка №6 запиcи данных на сервере! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
+					goToStatePage('start');
+				}
 				userInfo = {name: (formLoginR), pass: (formPassR), lvl: 0};
 				// обнуляем форму, сброс ключа keySetup.kWarUpdate и переход по странице - после успешной записи в БД
 				console.log('GAME: Регистрируем пользователя...'); 
@@ -800,12 +939,17 @@ function logInUser(EO) {
 			return false;
 		}
 		if (keySetup.kLog === true) { // 2 вызов функции AJAXом когда пришли данные
-			for (let cookieUsersInfoKey in cookieUsersInfo) {
-				if (formLoginL === cookieUsersInfoKey) {
-					errLogin = false;
-					keySetup.kLog = false;
-					break;
+			if (cookieUsersInfo.length) {
+				for (let cookieUsersInfoKey in cookieUsersInfo) {
+					if (formLoginL === cookieUsersInfoKey) {
+						errLogin = false;
+						keySetup.kLog = false;
+						break;
+					}
+					errLogin = true;
 				}
+			}
+			else {
 				errLogin = true;
 			}
 			if (errLogin === true) {
@@ -843,6 +987,11 @@ function storeAjaxInfo(type) {
 	if (type === 'write') {
 		goToStatePage('loading');
 	}
+	if (!cookieUsersInfo) {
+		alert('Ошибка №7 запиcи данных на сервере! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
+		goToStatePage('start');
+		return;
+	}
 	keySetup.kWarUpdate = true;
 	console.log('AJAX: Подключение к серверу...');
 	$.ajax({
@@ -863,13 +1012,17 @@ function writeAjaxUsers(callresult) {
 			keySetup.kLog = false;
 		}
 	}
-	else {
+	else if (cookieUsersInfo) {
 		console.log('AJAX: Запись информации...');
 		$.ajax({
 			url: ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
 			data: {f: 'UPDATE', n: ajaxListUsers, v: JSON.stringify(cookieUsersInfo), p: updateAjaxPassword},
 			success: updateReady, error: errorAjaxUsers, timeout: 10000
 		});
+	}
+	else {
+		alert('Ошибка №5 запиcи данных на сервере! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
+		goToStatePage('start');
 	}
 }
 // Статус записи данных по AJAX
@@ -990,30 +1143,35 @@ function readLocalStorage() {
 }
 
 // ---------- Служебные функции ----------
-/*function startAjax() {
-	action(0,0,1,1);
-	updateAjaxPassword = Math.random();
-	keySetup.kAdmin = true;
-	cookieUsersInfo = {};
-	console.log('AJAX: Выполняем сброс...');
-	$.ajax({
-		url: ajaxHandlerScript, type: 'POST', cache: false, dataType:'json',
-		data: {f: 'LOCKGET', n: ajaxListUsers, p: updateAjaxPassword},
-		success: writeAjaxUsers, error: errorAjaxUsers, timeout: 10000
-	});
-	goToStatePage('reg');
+// Класс доп управления
+/*class Adm {
+	startAjax() {
+		action(0,0,1,1);
+		updateAjaxPassword = Math.random();
+		keySetup.kAdmin = true;
+		cookieUsersInfo = {'ROOT':{pass: 2023,lvl: 0}};
+		console.log('AJAX: Выполняем сброс...');
+		$.ajax({
+			url: ajaxHandlerScript, type: 'POST', cache: false, dataType:'json',
+			data: {f: 'LOCKGET', n: ajaxListUsers, p: updateAjaxPassword},
+			success: writeAjaxUsers, error: errorAjaxUsers, timeout: 10000
+		});
+		goToStatePage('reg');
+	}
+	getInfoAjax() {
+		action(0,0,1,1);
+		keySetup.kAdmin = true;
+		restoreInfo();
+	}
+	resetLocalStorage() {
+		action(0,0,1,1);
+		localStorage.removeItem('name');
+		localStorage.removeItem('pass');
+		console.log('LocalStorage: Данные обнулены!');
+	}
 }
-function getInfoAjax() {
-	action(0,0,1,1);
-	keySetup.kAdmin = true;
-	restoreInfo();
-}
-function resetLocalStorage() {
-	action(0,0,1,1);
-	localStorage.removeItem('name');
-	localStorage.removeItem('pass');
-	console.log('LocalStorage: Данные обнулены!');
-}*/
+let adm = new Adm();
+window.adm = adm;*/
 
 // ---------- Игровой цикл ----------
 function gameLoop(nowTimeFrame) {

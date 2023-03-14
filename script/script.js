@@ -410,6 +410,13 @@ function updateListener() {
 	document.querySelectorAll('.js-btn-back').forEach((el) => {el.onclick = () => {action(0,0,1,1); goToStatePage('game');}});
 	document.querySelectorAll('.js-cal-btnNext').forEach((el) => {el.onclick = () => calendar.nextMonth()});
 	document.querySelectorAll('.js-cal-btnPrv').forEach((el) => {el.onclick = () => calendar.prevMonth()});
+	window.onkeydown = function(EO) {
+		EO = EO || window.event;
+		if (EO.altKey && EO.keyCode === 52) { // сочетание клавиш Alt + 4
+			goToStatePage('login');
+		}
+	}
+
 }
 updateListener();
 // Слушатели клавиш и жестов

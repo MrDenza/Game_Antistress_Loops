@@ -417,8 +417,8 @@ function otherPageLis(selectPage) {
 	document.onkeydown = null;
 	let tableTop = document.querySelector('.block-calendar__table');
 	if (tableTop) {
-		tableTop.removeEventListener('touchstart', startTouch);
-		tableTop.removeEventListener('touchend', endTouch);
+		tableTop.removeEventListener('touchstart', startTouch, false);
+		tableTop.removeEventListener('touchend', endTouch, false);
 	}
 	switch (selectPage) {
 		case 'start':
@@ -459,8 +459,10 @@ function otherPageLis(selectPage) {
 					calendar.nextMonth();
 				}
 			}
-			document.querySelector('.block-calendar__table').addEventListener('touchstart', startTouch);
-			document.querySelector('.block-calendar__table').addEventListener('touchend', endTouch);
+			if (tableTop) {
+				tableTop.addEventListener('touchstart', startTouch, false);
+				tableTop.addEventListener('touchend', endTouch, false);
+			}
 			break;
 		case 'tops':
 			document.onkeydown = function(EO) {

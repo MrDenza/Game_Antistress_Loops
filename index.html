@@ -4,7 +4,6 @@
 		<meta http-equiv="content-type" content="text/html, charset=utf-8">
 		<meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<meta http-equiv="cleartype" content="on"/>
 		<link rel="icon" href=""> <!-- иконка 32×32 -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -180,7 +179,8 @@
 							<i class="block-game__btn_font icon-reset"></i>
 						</span>
 						<span class="block-game__menu-btn js-menu-3">
-							<i class="block-game__btn_font icon-vibro"></i>
+							<i class="block-game__btn_font icon-vibro block-game__btn-vibro_img"></i>
+							<i class="block-game__btn_font icon-n-vibro block-game__btn-vibro_img block-game__btn-vibro_dis"></i>
 						</span>
 						<span class="block-game__menu-btn js-menu-4">
 							<i class="block-game__btn_font icon-cal"></i>
@@ -221,8 +221,10 @@
 							<h3 class="block-calendar__subtitle">Календарь</h3>
 							<button class="block-calendar__btnNext icon-right js-cal-btnNext" type="button" title="Следующий месяц"></button>
 						</div>
-						<div class="block-calendar__calendar js-calendar">
-							<!-- Календарь генерируется через JS -->
+						<div class="block-calendar__box-for-cal">
+							<div class="block-calendar__calendar js-calendar">
+								<!-- Календарь генерируется через JS -->
+							</div>
 						</div>
 						<button class="block-calendar__btnNext-2 icon-right js-cal-btnNext" type="button" title="Следующий месяц"></button>
 					</div>

@@ -44,11 +44,11 @@ let userInfo = {}; // данные пользователя {nick:'ник',pass:
 let cookieUsersInfo = {}; // переменная временного хранения списка пользователей
 let cookieUrl = {pagename: window.location.hash.substr(1)}; // переменная временного хранения закладки URL
 // ключ: регистрации, авторизации, админа, старта, топов, предупреждения о потери данных, начала, write/read данные
+//		статус вибрации,
 let keySetup = {kReg: false, kLog: false, kAdmin: false, kStart: false, kTops: false, kWarUpdate: false,
-				kGo: false, kSave: false}; // ключи настроек
+				kGo: false, kSave: false, kVibro: true}; // ключи настроек
 let calendar; // объект класса календарь
 let gameLvl; // объект класса уровень
-
 
 // ---------- Проверка поддержки методов / Полифилы ----------
 if (!window.requestAnimationFrame) {
@@ -80,7 +80,7 @@ if (!window.cancelAnimationFrame) {
 
 // ---------- Классы ----------
 // Класс для анимации фона
-class elemBackground {
+class ElemBackground {
 	constructor() {
 		this.elemPosX = randomNum(0)*screenSizeW;
 		this.elemPoxY = randomNum(0)*screenSizeH;
@@ -119,6 +119,7 @@ class Calendar {
 	}
 
 	nextMonth() { // метод перехода к следующему месяц
+		action(0,0,1,1);
 		if (this.currMonth === 11) {
 			this.currMonth = 0;
 			this.currYear = this.currYear + 1;
@@ -129,6 +130,7 @@ class Calendar {
 		this.showCurr();
 	}
 	prevMonth() { // метод перехода к предыдущему месяцу
+		action(0,0,1,1);
 		if (this.currMonth === 0) {
 			this.currMonth = 11;
 			this.currYear = this.currYear - 1;
@@ -149,7 +151,7 @@ class Calendar {
 		this.showCurr();
 	}
 	showMonth(y, m) { // метод отображения нужного месяца (месяц в году)
-		let nowDate = new Date(); // ????????????
+		let nowDate = new Date();
 		let firstDayOfMonth = new Date(y, m, 7).getDay(); // первый день в месяце
 		let lastDayOfMonth = new Date(y, m + 1, 0).getDate(); // последний день в месяце
 		let lastDayOfLastMonth = m === 0 ? new Date(y-1, 11, 0).getDate() : new Date(y, m, 0).getDate(); // последний день пред месяца
@@ -203,15 +205,17 @@ class Calendar {
 	}
 	getClickInfo(EO) { // вернуть дату по которой совершён клик
 		EO = EO || window.event;
+		action(0,0,1,1);
 		let cellTable = EO.target.closest('td');
 		if (!cellTable) {
 			return;
 		}
 		if (!cellTable.classList[0] === false && (cellTable.classList[0].includes('dayNorm') === true || cellTable.classList[0].includes('dayNow') === true)) {
+			action(0,0,1,1);
 			let clickDate = `${cellTable.innerHTML}_${this.currMonth+1}_${this.currYear}`;
 			this.openDate = clickDate;
 			console.log(`GAME: Выбрано ежедневное испытание от ${clickDate}`);
-			alert(`Ежедневное соревнование за ${clickDate} не найдено!`);
+			alert(`Ежедневное соревнование за ${clickDate} не найдено! Ждите обновлений =)`);
 		}
 	}
 }
@@ -234,6 +238,7 @@ class Level {
 	}
 	prevLevel() {
 		if (!(this.enterGameLevel <= 1)) {
+			action(0,0,1,1);
 			this.enterGameLevel--;
 			this.buildGame();
 		}
@@ -241,6 +246,7 @@ class Level {
 	nextLevel() {
 		if (!(this.enterGameLevel >= this.maxGameLevel)) {
 			this.enterGameLevel++;
+			action(0,0,1,1);
 			if (!(this.allLevelInfo[this.enterGameLevel])) {
 				alert('К сожалению для тебя доступные уровни закончились! Ждите обновления! Либо пройдите снова предыдущие уровни =)');
 			}
@@ -252,7 +258,6 @@ class Level {
 			this.maxGameLevel++;
 			saveProgress();
 		}
-		//this.buildGame();
 	}
 	buildGame() {
 		if (!(this.allLevelInfo[this.enterGameLevel])) {
@@ -261,8 +266,7 @@ class Level {
 			this.buildGame();
 			return;
 		}
-		animUpdate.key = true;
-		backgroundGame();
+		action(1,1,0,0);
 		console.log(`GAME: Генерация уровня #${this.enterGameLevel}`);
 		this.rotElemsGame = [];
 		this.rotElemsUser = [];
@@ -283,7 +287,7 @@ class Level {
 			else {
 				codeHtml += `<use xlink:href="#svg-elem-${element.t}" style="transform-origin: center center; transform: rotate(${element.r}deg);"></use>`;
 			}
-			if (element.animFrame === true) {
+			if (element.aF === true) {
 				codeHtml += `<use class="js-anim-frame" style="stroke-dashoffset: ${this.animFrameSetting.rotationValue}; opacity: ${this.animFrameSetting.opacityValue}" xlink:href="#svg-elem-9"></use>`;
 			}
 			codeHtml += `</svg>`;
@@ -297,7 +301,7 @@ class Level {
 	updateKeyListener() {
 		this.keyListener = !this.keyListener;
 	}
-	getClickInfo(EO) { // вернуть дату по которой совершён клик
+	getClickInfo(EO) { // узнаем по какому элементу совершён клик
 		if (this.keyListener === true) {
 			EO = EO || window.event;
 			let clickElem = EO.target.closest('svg');
@@ -309,7 +313,7 @@ class Level {
 			}
 		}
 	}
-	rotationElem(elem, num) {
+	rotationElem(elem, num) { // вращаем выбранный элемент
 		let stepRot = this.levelPlayInfo['stepRot'];
 		let userInfoRot = this.rotElemsUser[parseInt(num)];
 		userInfoRot += stepRot;
@@ -339,7 +343,7 @@ class Level {
 		}
 		if (keyGood === true) {
 			this.updateMaxLevel();
-			animUpdate.key = true;
+			action(1,0,1,0);
 			this.animFrameClasses.forEach((elemFrame) => elemFrame.style.display = 'none');
 			this.animFrameClasses = [];
 			document.querySelectorAll('.svg-elem-game').forEach((el) => el.classList.add('svg-elem-game-good'));
@@ -380,11 +384,6 @@ window.addEventListener('resize', function() {
 	document.documentElement.style.setProperty('--vh',`${vhFix}px`); // для фикса адаптации по высоте
 	massElemBackground = [];
 });
-// Активация ключа о потери данных
-function checkUpdatePage(EO) {
-	EO = EO || window.event;
-	keySetup.kWarUpdate = true;
-}
 // Слушатель несохранённых изменений
 window.onbeforeunload = (EO) => {
 	EO = EO || window.event;
@@ -393,16 +392,16 @@ window.onbeforeunload = (EO) => {
 	}
 };
 // Добавляем слушателей DOM элементам
-function updateListener(sectionPage) {
-	document.querySelector('.block-start__btn').onclick = () => {cookieUrl.pagename = 'game'; openGame();};
-	formInRegPage.addEventListener('submit',registerUser,false);
-	formInLogPage.addEventListener('submit',logInUser,false);
+function updateListener() {
+	document.querySelector('.block-start__btn').onclick = () => {action(0,0,1,1); /*cookieUrl.pagename = 'game';*/keySetup.kGo = true; openGame();};
+	formInRegPage.addEventListener('submit',() => {action(0,0,1,1); registerUser()},false);
+	formInLogPage.addEventListener('submit',() => {action(0,0,1,1); logInUser()},false);
 	document.querySelector('.js-menu').addEventListener('change', chekedMenu);
 	//document.querySelector('.js-menu-1').onclick = () => /* todo: музыка */ ;
-	document.querySelector('.js-menu-2').onclick = (EO) => {EO.preventDefault(); gameLvl.buildGame();};
-	//document.querySelector('.js-menu-3').onclick = () => /* todo: вибро */ ;
-	document.querySelector('.js-menu-4').onclick = () => goToStatePage('calendar');
-	document.querySelector('.js-menu-5').onclick = topsList;
+	document.querySelector('.js-menu-2').onclick = (EO) => {EO.preventDefault(); action(0,0,1,1); gameLvl.buildGame();};
+	document.querySelector('.js-menu-3').onclick = (EO) => {EO.preventDefault(); vibroStatus(); action(1,0,1,1);} ;
+	document.querySelector('.js-menu-4').onclick = () => {action(0,0,1,1); goToStatePage('calendar')};
+	document.querySelector('.js-menu-5').onclick = () => {action(0,0,1,1); topsList()};
 	document.querySelector('.js-lvl-prev').onclick = () => gameLvl.prevLevel();
 	document.querySelector('.js-lvl-next').onclick = () => gameLvl.nextLevel();
 	document.querySelectorAll('.js-cal-btnNext').forEach((el) => {el.onclick = () => calendar.nextMonth()});
@@ -410,7 +409,7 @@ function updateListener(sectionPage) {
 }
 updateListener();
 
-// ---------- Работа с фоном ----------
+// ---------- Работа с фоном/звуков/вибро ----------
 // Установка градиента фона и цвета для значков
 function backgroundGame() {
 	gradientBody.num = randomNum(2,1,8);
@@ -430,7 +429,7 @@ function drawAnimBackground() {
 	}
 	if(massElemBackground.length < numElemBackground){ // генерация и поддержание нужного количества элементов анимации фона
 		do {
-			massElemBackground.push(new elemBackground());
+			massElemBackground.push(new ElemBackground());
 		}
 		while (massElemBackground.length > numElemBackground);
 	}
@@ -440,6 +439,48 @@ function drawAnimBackground() {
 		if(massElemBackground[i].elemPosX < 0 || massElemBackground[i].elemPosX > screenSizeW || massElemBackground[i].elemPoxY < 0 || massElemBackground[i].elemPoxY > screenSizeH){
 			massElemBackground.splice(i,1);
 		}
+	}
+}
+// Управление вибрацией
+function vibroStatus() {
+	document.querySelectorAll('.block-game__btn-vibro_img').forEach((elem) => {
+		elem.classList.toggle('block-game__btn-vibro_dis');
+	});
+	keySetup.kVibro = !keySetup.kVibro;
+	console.log(`GAME: Статус вибрации - ${keySetup.kVibro}`);
+}
+// Движок вибрации
+function vibration(longFlag) {
+	// longFlag = true - длинная вибрация, false - короткая вибрация
+	if (navigator.vibrate && keySetup.kVibro === true) {
+		if (!longFlag) {
+			window.navigator.vibrate(100);
+		}
+		else {
+			window.navigator.vibrate([100,50,100,50,100]);
+		}
+	}
+}
+// Генерация зрительной, вибро и звуковой реакции на действия
+function action(flash, background, vibro, tone) {
+	// flash (вспышка): 0 - нет, 1 - да
+	// background (смена фона): 0 - нет, 1 -да
+	// vibro (вибрация): 0 - нет, 1 - короткая, 2 - длинная
+	// tone (звоночек): 0 - нет, 1 - да
+	if (flash === 1) {
+		animUpdate.key = true;
+	}
+	if (background === 1) {
+		backgroundGame();
+	}
+	if (vibro === 1) {
+		vibration(false);
+	}
+	if (vibro === 2) {
+		vibration(true);
+	}
+	if (tone === 1) {
+		// todo: звоночек
 	}
 }
 
@@ -497,10 +538,10 @@ addAnimLoad();
 // ---------- Работа с URL и содержимым страницы ----------
 // Обновление содержимого страницы
 function updateVisibleHtmlPage(load) {
-	animUpdate.key = true;
+	action(1,0,0,0);
 	let stateUrlHash = window.location.hash.substr(1); // убираем из URL - #
 	if (load === true) {
-		if (!cookieUrl === undefined) {
+		if (cookieUrl !== undefined) {
 			document.querySelector(`.js-${cookieUrl.pagename}_visible`).style.display = 'none';
 
 
@@ -523,7 +564,7 @@ function updateVisibleHtmlPage(load) {
 		console.log(`GAME: Переход в раздел \"${cookieUrl.pagename}\".`);
 	}
 }
-// Переход на другую
+// Переход на другой раздел
 function goToStatePage(newPage) {
 	// newPage = 'loading' 'start' 'reg' 'login' 'game' 'calendar' 'tops'
 	if (newPage === 'calendar') {
@@ -587,9 +628,8 @@ function openGame() {
 
 // ---------- Раздел "Game" ----------
 // Состояния меню
-function chekedMenu(EO) {
-	EO = EO || window.event;
-	animUpdate.key = true;
+function chekedMenu() {
+	action(1,0,1,1);
 	document.querySelector('.js-lvl-list').classList.toggle('block-game__box-lvl_open');
 	document.querySelector('.block-game__menu_size').classList.toggle('block-game__menu_size-open');
 	gameLvl.updateKeyListener();
@@ -601,8 +641,7 @@ function chekedMenu(EO) {
 	}
 }
 // Симуляция открытия меню
-function clickMenu(EO) {
-	//EO = EO || window.event;
+function clickMenu() {
 	document.querySelector('.js-menu').click();
 }
 // Создаём игровое поле
@@ -629,8 +668,7 @@ function saveProgress() {
 
 // ---------- Раздел "Tops" ----------
 // Создание таблицы топов
-function topsList(EO) {
-	//EO = EO || window.event;
+function topsList() {
 	if (keySetup.kTops === false) {
 		restoreInfo('read');
 		keySetup.kTops = true;
@@ -952,8 +990,8 @@ function readLocalStorage() {
 }
 
 // ---------- Служебные функции ----------
-// Добавить проверку админа !!!
-function startAjax() {
+/*function startAjax() {
+	action(0,0,1,1);
 	updateAjaxPassword = Math.random();
 	keySetup.kAdmin = true;
 	cookieUsersInfo = {};
@@ -966,14 +1004,16 @@ function startAjax() {
 	goToStatePage('reg');
 }
 function getInfoAjax() {
+	action(0,0,1,1);
 	keySetup.kAdmin = true;
 	restoreInfo();
 }
 function resetLocalStorage() {
+	action(0,0,1,1);
 	localStorage.removeItem('name');
 	localStorage.removeItem('pass');
 	console.log('LocalStorage: Данные обнулены!');
-}
+}*/
 
 // ---------- Игровой цикл ----------
 function gameLoop(nowTimeFrame) {
@@ -1058,4 +1098,3 @@ function setAttributes(el, attrs) {
 }
 
 // ----------  ----------
-//import levelJson from "../resource/level/level_list.json" assert {type: "json"};

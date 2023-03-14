@@ -941,7 +941,7 @@ function logInUser(EO) {
 			return false;
 		}
 		if (keySetup.kLog === true) { // 2 вызов функции AJAXом когда пришли данные
-			if (cookieUsersInfo.length) {
+			if (cookieUsersInfo) {
 				for (let cookieUsersInfoKey in cookieUsersInfo) {
 					if (formLoginL === cookieUsersInfoKey) {
 						errLogin = false;
@@ -957,25 +957,25 @@ function logInUser(EO) {
 			if (errLogin === true) {
 				infoErrLogin.textContent = '*Такого логина не существует!';
 			}
-			if (errLogin === false && cookieUsersInfo[formLoginL].pass !== formPassL){
+			if (errLogin === false && cookieUsersInfo[formLoginL].pass !== formPassL) {
 				infoErrPass.textContent = '*Пароль неверный!';
 				cookieUsersInfo = {};
 				keySetup.kLog = false;
 				errPass = true;
 			}
-			if (errLogin === false && errPass === false){
+			if (errLogin === false && errPass === false) {
 				infoErrLogin.textContent = infoErrPass.textContent = '';
 				console.log('GAME: Авторизация пользователя...');
 				userInfo = {name: (formLoginL), pass: (cookieUsersInfo[formLoginL].pass), lvl: (cookieUsersInfo[formLoginL].lvl)};
 				writeLocalStorage();
 				console.log('GAME: Пользователь авторизован!');
-				cookieUsersInfo = {};
-				keySetup.kWarUpdate = false;
 				formInLogPage.reset();
 				generateGame();
 				goToStatePage('game');
 			}
-			return false;
+			cookieUsersInfo = {};
+			keySetup.kWarUpdate = false;
+			return;
 		}
 	}
 	return false;

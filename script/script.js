@@ -50,8 +50,8 @@ let calendar; // объект класса календарь
 let gameLvl; // объект класса уровень
 const musicElem = document.querySelector('.js-game-music'); // фоновая музыка
 const toneElem = document.querySelector('.js-game-tone'); // звук нажатия
-let touchStart = 0; // переменная для жестов
-let touchEnd = 0; // переменная для жестов
+let touchX = null; // переменная для жестов
+
 // ---------- Проверка поддержки методов / Полифилы ----------
 if (!window.requestAnimationFrame) {
 	window.requestAnimationFrame = function(){
@@ -415,11 +415,10 @@ updateListener();
 // Слушатели клавиш и жестов
 function otherPageLis(selectPage) {
 	document.onkeydown = null;
-	let tableTop = document.querySelector('.block-calendar__table');
-	if (tableTop) {
-		tableTop.removeEventListener('touchstart', startTouch, false);
-		tableTop.removeEventListener('touchend', endTouch, false);
-	}
+	let tableTop = document.querySelector('.block-style_box-info');
+	tableTop.removeEventListener('touchstart', touchOnPageStart, false);
+	tableTop.removeEventListener('touchmove', touchOnPageMove, false);
+
 	switch (selectPage) {
 		case 'start':
 			document.onkeydown = function(EO) {
@@ -428,8 +427,6 @@ function otherPageLis(selectPage) {
 					document.querySelector('.block-start__btn').click();
 				}
 			}
-			document.addEventListener('touchstart', e => {touchStart = e.changedTouches[0].screenX
-			})
 			break;
 		case 'game':
 			document.onkeydown = function(EO) {
@@ -459,10 +456,8 @@ function otherPageLis(selectPage) {
 					calendar.nextMonth();
 				}
 			}
-			if (tableTop) {
-				tableTop.addEventListener('touchstart', startTouch, false);
-				tableTop.addEventListener('touchend', endTouch, false);
-			}
+			tableTop.addEventListener('touchstart', touchOnPageStart, false);
+			tableTop.addEventListener('touchmove', touchOnPageMove, false);
 			break;
 		case 'tops':
 			document.onkeydown = function(EO) {
@@ -486,20 +481,31 @@ function otherPageLis(selectPage) {
 	}
 }
 // Функции для тачскрин слушателей
-function startTouch(EO) {
-	touchStart = EO.changedTouches[0].screenX
+function getTouches(EO) {
+	return EO.touches || EO.originalEvent.touches;
 }
-function endTouch(EO) {
-	touchEnd = EO.changedTouches[0].screenX
-	flippingCalendar();
+function touchOnPageStart(EO) {
+	const firstTouch = getTouches(EO)[0];
+	touchX = firstTouch.clientX;
+	//touchY = firstTouch.clientY;
 }
-function flippingCalendar() {
-	if (touchEnd < touchStart) {
-		calendar.prevMonth();
+function touchOnPageMove(EO) {
+	if (!touchX) { // || ! touchY
+		return;
 	}
-	if (touchEnd > touchStart) {
-		calendar.nextMonth();
-	}
+	let xUp = EO.touches[0].clientX;
+	//let yUp = EO.touches[0].clientY;
+	let xDiff = touchX - xUp;
+	//let yDiff = touchY - yUp;
+	if (Math.abs(xDiff)) { // > Math.abs( yDiff )
+		if (xDiff > 0) {
+			calendar.prevMonth();
+		} else {
+			calendar.nextMonth();
+		}
+	} // else { if ( yDiff > 0 ) { } else {} } для дополнительных жестов по вертикали
+	touchX = null;
+	//yDown = null;
 }
 // Автозапуск фоновой музыки
 document.querySelector('.body__container').addEventListener('pointerdown',musicGamePlay,false);

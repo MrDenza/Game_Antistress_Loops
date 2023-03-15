@@ -7,7 +7,7 @@ function importJson() {
 	let xhr = new XMLHttpRequest();
 	xhr.open('GET', '../resource/level/level_list.json', false);
 	xhr.send();
-	if (xhr.status !== 200) {
+	if (xhr.status != 200) {
 		alert('Ошибка загрузки файла уровней! Сделайте скриншот и обратитесь к администратору TG: @aimpik \n\n' + xhr.status + ': ' + xhr.statusText );
 	} else {
 		levelJson = JSON.parse(xhr.responseText);

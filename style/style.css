@@ -190,8 +190,11 @@ body {
          user-select: none;
 }
 
-audio {
- display: none;
+input, input:before, input:after {
+ -webkit-user-select: initial;
+    -moz-user-select: initial;
+     -ms-user-select: initial;
+         user-select: initial;
 }
 
 .body_gradient {
@@ -871,6 +874,7 @@ audio {
  stroke: var(--colorItemGame, darkgrey);
  stroke-width: 2;
  cursor: pointer;
+ overflow: hidden;
  fill: none;
  width: 100%;
  height: 100%;

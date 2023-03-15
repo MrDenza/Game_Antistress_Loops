@@ -19,10 +19,10 @@
 		<!-- Анимация фона -->
 		<canvas class="body_animation"></canvas>
 		<!-- Аудио -->
-		<audio class="js-game-music" controls loop="loop" autoplay="autoplay">
+		<audio class="js-game-music" controls loop="loop" autoplay="autoplay" style="display: none">
 			<source src="./resource/audio/scott-buckley-childhood.mp3" type="audio/mpeg">
 		</audio>
-		<audio class="js-game-tone" controls>
+		<audio class="js-game-tone" controls style="display: none">
 			<source src="./resource/audio/btn-click.mp3" type="audio/mpeg">
 		</audio>
 		<!-- Содержимое -->
@@ -33,17 +33,21 @@
 					<line x1=0 y1=25 x2=50 y2=25 />
 				</symbol>
 				<symbol id="svg-elem-2" viewBox="0 0 50 50"> <!-- угловая связь -->
-					<circle cx=50 cy=50 r=25 />
+					<!-- <circle cx=50 cy=50 r=25 /> -->
+					<path d="M25 50 Q 27 27 50 25" fill=none />
 				</symbol>
 				<symbol id="svg-elem-3" viewBox="0 0 50 50"> <!-- Т-образная связь -->
-					<circle cx=50 cy=50 r=25 />
-					<circle cx=0 cy=50 r=25 />
+					<!-- <circle cx=50 cy=50 r=25 /><circle cx=0 cy=50 r=25 /> -->
+					<path d="M25 50 Q 27 27 50 25" fill=none />
+					<path d="M25 50 Q 23 27 0 25" fill=none />
 				</symbol>
 				<symbol id="svg-elem-4" viewBox="0 0 50 50"> <!-- крестовая связь -->
-					<circle cx=50 cy=50 r=25 />
-					<circle cx=0 cy=50 r=25 />
-					<circle cx=0 cy=0 r=25 />
-					<circle cx=50 cy=0 r=25 />
+					<!-- <circle cx=50 cy=50 r=25 /><circle cx=0 cy=50 r=25 />
+					<circle cx=0 cy=0 r=25 /><circle cx=50 cy=0 r=25 /> -->
+					<path d="M25 50 Q 27 27 50 25" fill=none />
+					<path d="M25 50 Q 23 27 0 25" fill=none />
+					<path d="M25 0 Q 23 23 0 25" fill=none />
+					<path d="M25 0 Q 27 23 50 25" fill=none />
 				</symbol>
 				<symbol id="svg-elem-5" viewBox="0 0 50 50"> <!-- основа элемента -->
 					<circle cx=25 cy=25 r=15 />

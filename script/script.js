@@ -1,10 +1,20 @@
 "use strict"; // Строгий режим
 // ----------------------- JavaScript -----------------------
-
 // ---------- JSON параметры ----------
-console.log('JSON: Загружаем данные...');
-import levelJson from "../resource/level/level_list.json" assert {type: "json"};
-console.log('JSON: Данные получены!');
+let levelJson;
+function importJson() {
+	console.log('JSON: Загружаем данные...');
+	let xhr = new XMLHttpRequest();
+	xhr.open('GET', '../resource/level/level_list.json', false);
+	xhr.send();
+	if (xhr.status !== 200) {
+		alert('Ошибка загрузки файла уровней! Сделайте скриншот и обратитесь к администратору TG: @aimpik \n\n' + xhr.status + ': ' + xhr.statusText );
+	} else {
+		levelJson = JSON.parse(xhr.responseText);
+		console.log('JSON: Данные получены!');
+	}
+}
+importJson();
 
 // ---------- Переменные ----------
 const bodyBackground = document.body; // body
@@ -370,9 +380,8 @@ class Level {
 }
 
 // ---------- Слушатели / Адаптация ----------
-window.onload = () => {
-	calendar = new Calendar('.js-calendar');
-}
+// Календарь
+calendar = new Calendar('.js-calendar');
 // Слушатель изменения URL страницы
 window.onhashchange = updateVisibleHtmlPage;
 // Фикс адаптации по высоте
@@ -771,6 +780,7 @@ function openGame() {
 			}
 		}
 		else {
+			console.log('GAME: LocalStorage не актуален!')
 			goToStatePage('login');
 		}
 	}
@@ -902,19 +912,13 @@ function registerUser(EO) { // форма регистрации
 			if (errLogin === false && errPass === false) {
 				infoErrLogin.textContent = infoErrPass.textContent = '';
 				cookieUsersInfo[formLoginR] = {pass: formPassR, lvl: 0}; // {'ник':{pass:'пароль',lvl: значение}, ...}
-				if (cookieUsersInfo) {
-					storeAjaxInfo('write');
-				}
-				else {
-					alert('Ошибка №6 запиcи данных на сервере! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
-					goToStatePage('start');
-				}
+				storeAjaxInfo('write');
 				userInfo = {name: (formLoginR), pass: (formPassR), lvl: 0};
 				// обнуляем форму, сброс ключа keySetup.kWarUpdate и переход по странице - после успешной записи в БД
-				console.log('GAME: Регистрируем пользователя...'); 
+				console.log('GAME: Регистрируем пользователя...');
 			}
-			return false;
 		}
+		return false;
 	}
 }
 // Авторизация
@@ -954,7 +958,7 @@ function logInUser(EO) {
 			return false;
 		}
 		if (keySetup.kLog === true) { // 2 вызов функции AJAXом когда пришли данные
-			if (cookieUsersInfo) {
+			if (isEmpty(cookieUsersInfo) === false) {
 				for (let cookieUsersInfoKey in cookieUsersInfo) {
 					if (formLoginL === cookieUsersInfoKey) {
 						errLogin = false;
@@ -969,6 +973,8 @@ function logInUser(EO) {
 			}
 			if (errLogin === true) {
 				infoErrLogin.textContent = '*Такого логина не существует!';
+				keySetup.kLog = false;
+				return false;
 			}
 			if (errLogin === false && cookieUsersInfo[formLoginL].pass !== formPassL) {
 				infoErrPass.textContent = '*Пароль неверный!';
@@ -988,7 +994,7 @@ function logInUser(EO) {
 			}
 			cookieUsersInfo = {};
 			keySetup.kWarUpdate = false;
-			return;
+			return false;
 		}
 	}
 	return false;
@@ -1002,7 +1008,7 @@ function storeAjaxInfo(type) {
 	if (type === 'write') {
 		goToStatePage('loading');
 	}
-	if (!cookieUsersInfo) {
+	if (isEmpty(cookieUsersInfo) === true) {
 		alert('Ошибка №7 запиcи данных на сервере! Сделайте скриншот экрана и обратитесь к администратору TG: @aimpik');
 		goToStatePage('start');
 		return;
@@ -1027,7 +1033,7 @@ function writeAjaxUsers(callresult) {
 			keySetup.kLog = false;
 		}
 	}
-	else if (cookieUsersInfo) {
+	else if (isEmpty(cookieUsersInfo) === false) {
 		console.log('AJAX: Запись информации...');
 		$.ajax({
 			url: ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
@@ -1268,6 +1274,10 @@ function setAttributes(el, attrs) {
 	for(let key in attrs) {
 		el.setAttribute(key, attrs[key]);
 	}
+}
+// Проверка пустой ли объект
+function isEmpty(obj) {
+	return Object.keys(obj).length === 0;
 }
 
 // ----------  ----------
